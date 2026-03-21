@@ -8,7 +8,7 @@ build:
 # Deploy to the server via rsync + SSH
 deploy:
     @orb push . ~/
-    @orb sudo nixos-rebuild switch --flake ~/sorbet.nix#{{config}}
+    @orb sudo nixos-rebuild switch --flake /home/daniel/sorbet.nix#{{config}} --option substituters "https://nix-community.cachix.org https://cache.nixos.org" --option trusted-public-keys "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
 
 
 # Format all Nix files
