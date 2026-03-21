@@ -17,12 +17,6 @@ let
 
   # Overlays
   overlays = [
-    inputs.nixkit.overlays.default
-    (_final: prev: {
-      kitty = prev.kitty.overrideAttrs (_oldAttrs: {
-        doCheck = false;
-      });
-    })
   ];
 in
 {
@@ -33,13 +27,13 @@ in
   # Declare the module options using flake-parts-modules
   flake = {
     modules = {
-      nixos = { };
-      homeManager = { };
+      nixos = {};
+      homeManager = {};
     };
 
-    # Darwin configuration for macbook-m4-pro
+    # NixOS configuration for sorbet
     nixosConfigurations.sorbet = inputs.nixpkgs.lib.nixosSystem {
-      system = "";
+      system = "x86_64-linux";
       modules = [
         # Core modules
         inputs.home-manager.nixosModules.home-manager
@@ -67,7 +61,7 @@ in
           };
         }
       ]
-      ++ collectModules config.flake.modules.darwin;
+      ++ collectModules config.flake.modules.nixos;
       specialArgs = {
         inherit inputs;
         inherit (config.flake) defaults;
