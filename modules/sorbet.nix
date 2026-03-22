@@ -11,11 +11,6 @@ _: {
     inherit (defaults) user;
   in {
 
-  imports =
-    [ # Include the results of the hardware scan.
-(modulesPath + "/installer/scan/not-detected.nix")
-    ];
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
