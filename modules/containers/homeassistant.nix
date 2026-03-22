@@ -1,6 +1,6 @@
 _: {
   # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
-  flake.modules.nixos.sorbet = _: {
+  flake.modules.nixos.homeassistant = _: {
     networking.firewall = {
       allowedTCPPorts = [8123];
 
