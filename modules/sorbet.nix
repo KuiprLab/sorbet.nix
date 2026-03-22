@@ -4,41 +4,45 @@ _: {
     lib,
     config,
     defaults,
-    modulesPath,
     inputs,
+    modulesPath
     ...
   }: let
     inherit (defaults) user;
   in {
-    imports = [
-      (modulesPath + "/installer/scan/not-detected.nix")
-      /etc/nixos/hardware-configuration.nix
+
+  imports =
+    [ # Include the results of the hardware scan.
+(modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-    system.stateVersion = "24.05";
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
-    # Boot configuration
-    boot = {
-      loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
-      };
-      # kernelPackages = pkgs.linuxPackages_zen;
-      initrd = {
-        availableKernelModules = [
-          "xhci_pci"
-          "ahci"
-          "nvme"
-          "usb_storage"
-          "usbhid"
-          "sd_mod"
-        ];
-        kernelModules = [];
-      };
-      kernelModules = ["kvm-intel"];
-      extraModulePackages = [];
+  # Use latest kernel.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/82c51ce1-bd98-46e5-85be-2185b36572b2";
+      fsType = "ext4";
     };
 
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/382A-C4BF";
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
+
+  swapDevices = [ ];
+
+    system.stateVersion = "24.05";
 
     # Networking
     networking = {
@@ -113,11 +117,6 @@ _: {
           "wheel"
         ];
       };
-    };
-
-    # Hardware
-    hardware = {
-      cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     };
 
     # Documentation
