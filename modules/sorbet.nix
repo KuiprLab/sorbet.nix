@@ -46,7 +46,7 @@ _: {
       networkmanager.enable = true;
       useDHCP = lib.mkDefault true;
       # TODO: Update
-      interfaces."enp4s0".wakeOnLan.enable = true;
+      # interfaces."enp4s0".wakeOnLan.enable = true;
     };
 
     # Nix settings
