@@ -1,147 +1,157 @@
 _: {
-  flake.modules.nixos.sorbet = {
-    pkgs,
-    lib,
-    config,
-    defaults,
-    modulesPath,
-    inputs,
-    ...
-  }: let
-    inherit (defaults) user;
-  in {
-    imports = [
-      (modulesPath + "/installer/scan/not-detected.nix")
-      /etc/nixos/hardware-configuration.nix
-    ];
+  flake.modules.nixos.sorbet =
+    {
+      pkgs,
+      lib,
+      config,
+      defaults,
+      modulesPath,
+      inputs,
+      ...
+    }:
+    let
+      inherit (defaults) user;
+    in
+    {
+      imports = [
+        (modulesPath + "/installer/scan/not-detected.nix")
+        /etc/nixos/hardware-configuration.nix
+      ];
 
-    system.stateVersion = "24.05";
+      system.stateVersion = "24.05";
 
-    # Boot configuration
-    boot = {
-      loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
+      # Boot configuration
+      boot = {
+        loader = {
+          systemd-boot.enable = true;
+          efi.canTouchEfiVariables = true;
+        };
+        # kernelPackages = pkgs.linuxPackages_zen;
+        initrd = {
+          availableKernelModules = [
+            "xhci_pci"
+            "ahci"
+            "nvme"
+            "usb_storage"
+            "usbhid"
+            "sd_mod"
+          ];
+          kernelModules = [ ];
+        };
+        kernelModules = [ "kvm-intel" ];
+        extraModulePackages = [ ];
       };
-      # kernelPackages = pkgs.linuxPackages_zen;
-      initrd = {
-        availableKernelModules = [
-          "xhci_pci"
-          "ahci"
-          "nvme"
-          "usb_storage"
-          "usbhid"
-          "sd_mod"
-        ];
-        kernelModules = [];
+
+      environment.systemPackages = with pkgs; [
+        git
+        neovim
+        curl
+        wget
+        htop
+      ];
+
+      # Networking
+      networking = {
+        hostName = "sorbet";
+        networkmanager.enable = true;
+        useDHCP = lib.mkDefault true;
+        # TODO: Update
+        # interfaces."enp4s0".wakeOnLan.enable = true;
       };
-      kernelModules = ["kvm-intel"];
-      extraModulePackages = [];
-    };
 
-
-    # Networking
-    networking = {
-      hostName = "sorbet";
-      networkmanager.enable = true;
-      useDHCP = lib.mkDefault true;
-      # TODO: Update
-      # interfaces."enp4s0".wakeOnLan.enable = true;
-    };
-
-    # Nix settings
-    nix = {
-      channel.enable = false;
-      extraOptions = ''
-        experimental-features = nix-command flakes
-        warn-dirty = false
-      '';
-      settings = {
-        substituters = [
-          "https://cache.nixos.org/"
-          "https://nix-community.cachix.org"
-        ];
-        trusted-public-keys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        ];
+      # Nix settings
+      nix = {
+        channel.enable = false;
+        extraOptions = ''
+          experimental-features = nix-command flakes
+          warn-dirty = false
+        '';
+        settings = {
+          substituters = [
+            "https://cache.nixos.org/"
+            "https://nix-community.cachix.org"
+          ];
+          trusted-public-keys = [
+            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          ];
+        };
       };
-    };
 
-    # Time and locale
-    time.timeZone = defaults.system.timeZone;
-    i18n.defaultLocale = defaults.system.locale;
-    i18n.extraLocaleSettings = {
-      LC_ADDRESS = "de_DE.UTF-8";
-      LC_IDENTIFICATION = "de_DE.UTF-8";
-      LC_MEASUREMENT = "de_DE.UTF-8";
-      LC_MONETARY = "de_DE.UTF-8";
-      LC_NAME = "de_DE.UTF-8";
-      LC_NUMERIC = "de_DE.UTF-8";
-      LC_PAPER = "de_DE.UTF-8";
-      LC_TELEPHONE = "de_DE.UTF-8";
-      LC_TIME = "de_DE.UTF-8";
-    };
+      # Time and locale
+      time.timeZone = defaults.system.timeZone;
+      i18n.defaultLocale = defaults.system.locale;
+      i18n.extraLocaleSettings = {
+        LC_ADDRESS = "de_DE.UTF-8";
+        LC_IDENTIFICATION = "de_DE.UTF-8";
+        LC_MEASUREMENT = "de_DE.UTF-8";
+        LC_MONETARY = "de_DE.UTF-8";
+        LC_NAME = "de_DE.UTF-8";
+        LC_NUMERIC = "de_DE.UTF-8";
+        LC_PAPER = "de_DE.UTF-8";
+        LC_TELEPHONE = "de_DE.UTF-8";
+        LC_TIME = "de_DE.UTF-8";
+      };
 
-    environment.pathsToLink = [
-      "/libexec"
-    ];
+      environment.pathsToLink = [
+        "/libexec"
+      ];
 
-    # Services
-    services = {
-      openssh.enable = true;
-      pipewire = {
-        enable = true;
-        alsa = {
+      # Services
+      services = {
+        openssh.enable = true;
+        pipewire = {
           enable = true;
+          alsa = {
+            enable = true;
+          };
+          pulse.enable = true;
         };
-        pulse.enable = true;
       };
-    };
 
-    # User configuration
-    programs.fish.enable = true;
-    users = {
-      defaultUserShell = pkgs.fish;
-      users.${user} = {
-        isNormalUser = true;
-        description = user;
-        initialPassword = "nixos";
-        extraGroups = [
-          "networkmanager"
-          "root"
-          "wheel"
-        ];
+      # User configuration
+      programs.fish.enable = true;
+      users = {
+        defaultUserShell = pkgs.fish;
+        users.${user} = {
+          isNormalUser = true;
+          description = user;
+          initialPassword = "nixos";
+          extraGroups = [
+            "networkmanager"
+            "root"
+            "wheel"
+          ];
+        };
       };
-    };
 
-    # Hardware
-    hardware = {
-      cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    };
+      # Hardware
+      hardware = {
+        cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+      };
 
-    # Documentation
-    documentation = {
-      enable = true;
-      man = {
+      # Documentation
+      documentation = {
         enable = true;
-        cache.enable = true;
-      };
-      dev.enable = true;
-    };
-
-    # Home Manager
-    home-manager.users.${user} = _: {
-      home = {
-        stateVersion = "23.11";
-        username = user;
-        homeDirectory = "/home/${user}";
-        sessionVariables = {
-          NH_FLAKE = "$HOME/${defaults.paths.flake}";
-          EDITOR = "nvim";
+        man = {
+          enable = true;
+          cache.enable = true;
         };
+        dev.enable = true;
       };
-      programs.home-manager.enable = true;
+
+      # Home Manager
+      home-manager.users.${user} = _: {
+        home = {
+          stateVersion = "23.11";
+          username = user;
+          homeDirectory = "/home/${user}";
+          sessionVariables = {
+            NH_FLAKE = "$HOME/${defaults.paths.flake}";
+            EDITOR = "nvim";
+          };
+        };
+        programs.home-manager.enable = true;
+      };
     };
-  };
 }
