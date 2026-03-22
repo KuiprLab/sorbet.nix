@@ -63,6 +63,23 @@ _: {
         curl
       ];
 
+      virtualisation = {
+        podman = {
+          enable = true;
+          # extraPackages = [pkgs.podman-compose];
+          dockerCompat = true;
+          dockerSocket.enable = true;
+          defaultNetwork.settings.dns_enabled = true;
+          autoPrune = {
+            enable = true;
+            dates = "weekly";
+            flags = [ "--all" ];
+          };
+        };
+        # Enable container features
+        containers.enable = true;
+      };
+
       # Networking
       networking = {
         hostName = "sorbet";
