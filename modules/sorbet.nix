@@ -1,48 +1,66 @@
 _: {
-  flake.modules.nixos.sorbet = {
-    pkgs,
-    lib,
-    config,
-    defaults,
-    inputs,
-    modulesPath,
-    ...
-  }: let
-    inherit (defaults) user;
-  in {
+  flake.modules.nixos.sorbet =
+    {
+      pkgs,
+      lib,
+      config,
+      defaults,
+      inputs,
+      modulesPath,
+      ...
+    }:
+    let
+      inherit (defaults) user;
+    in
+    {
+      imports = [
+        # Include the results of the hardware scan.
+        (modulesPath + "/installer/scan/not-detected.nix")
+      ];
 
-  imports =
-    [ # Include the results of the hardware scan.
-(modulesPath + "/installer/scan/not-detected.nix")
-    ];
+      # Bootloader.
+      boot.loader.systemd-boot.enable = true;
+      boot.loader.efi.canTouchEfiVariables = true;
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+      # Use latest kernel.
+      boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+      boot.initrd.availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usb_storage"
+        "usbhid"
+        "sd_mod"
+      ];
+      boot.initrd.kernelModules = [ ];
+      boot.kernelModules = [ "kvm-intel" ];
+      boot.extraModulePackages = [ ];
 
+      fileSystems."/" = {
+        device = "/dev/disk/by-uuid/82c51ce1-bd98-46e5-85be-2185b36572b2";
+        fsType = "ext4";
+      };
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+      fileSystems."/boot" = {
+        device = "/dev/disk/by-uuid/382A-C4BF";
+        fsType = "vfat";
+        options = [
+          "fmask=0077"
+          "dmask=0077"
+        ];
+      };
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/82c51ce1-bd98-46e5-85be-2185b36572b2";
-      fsType = "ext4";
-    };
+      swapDevices = [ ];
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/382A-C4BF";
-      fsType = "vfat";
-      options = [ "fmask=0077" "dmask=0077" ];
-    };
+      system.stateVersion = "24.05";
 
-  swapDevices = [ ];
-
-    system.stateVersion = "24.05";
+      environment.systemPackages = with pkgs; [
+        # Base system
+        neovim
+        git
+        curl
+      ];
 
       # Networking
       networking = {
@@ -119,30 +137,31 @@ _: {
         };
       };
 
-    # Documentation
-    documentation = {
-      enable = true;
-      man = {
+      # Documentation
+      documentation = {
         enable = true;
         man = {
           enable = true;
-          cache.enable = true;
-        };
-        dev.enable = true;
-      };
-
-      # Home Manager
-      home-manager.users.${user} = _: {
-        home = {
-          stateVersion = "23.11";
-          username = user;
-          homeDirectory = "/home/${user}";
-          sessionVariables = {
-            NH_FLAKE = "$HOME/${defaults.paths.flake}";
-            EDITOR = "nvim";
+          man = {
+            enable = true;
+            cache.enable = true;
           };
+          dev.enable = true;
         };
-        programs.home-manager.enable = true;
+
+        # Home Manager
+        home-manager.users.${user} = _: {
+          home = {
+            stateVersion = "23.11";
+            username = user;
+            homeDirectory = "/home/${user}";
+            sessionVariables = {
+              NH_FLAKE = "$HOME/${defaults.paths.flake}";
+              EDITOR = "nvim";
+            };
+          };
+          programs.home-manager.enable = true;
+        };
       };
     };
 }
