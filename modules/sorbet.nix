@@ -12,6 +12,7 @@ _: {
   in {
     imports = [
       (modulesPath + "/installer/scan/not-detected.nix")
+      /etc/nixos/hardware-configuration.nix
     ];
 
     system.stateVersion = "24.05";
