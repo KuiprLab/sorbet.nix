@@ -139,18 +139,18 @@ _: {
       };
 
       # Documentation
-      documentation = {
-        enable = true;
-        man = {
-          enable = true;
-          man = {
-            enable = true;
-            cache.enable = true;
-          };
-          dev.enable = true;
-        };
-
-      };
+      # documentation = {
+      #   enable = true;
+      #   man = {
+      #     enable = true;
+      #     man = {
+      #       enable = true;
+      #       cache.enable = true;
+      #     };
+      #     dev.enable = true;
+      #   };
+      #
+      # };
 
       # Home Manager
       home-manager.users.${user} = _: {
