@@ -28,6 +28,19 @@
           efi.canTouchEfiVariables = true;
         };
         kernelPackages = pkgs.linuxPackages_zen;
+        initrd = {
+          availableKernelModules = [
+            "xhci_pci"
+            "ahci"
+            "nvme"
+            "usb_storage"
+            "usbhid"
+            "sd_mod"
+          ];
+          kernelModules = [ ];
+        };
+        kernelModules = [ "kvm-intel" ];
+        extraModulePackages = [ ];
       };
 
       disko.devices = {

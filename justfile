@@ -6,9 +6,17 @@ build:
     @nix build ".#nixosConfigurations.sorbet.config.system.build.toplevel" --system x86_64-linux
 
 # Deploy to the server via rsync + SSH
-deploy:
-    @orb push . ~/
-    @orb sudo nixos-rebuild switch --flake /home/daniel/sorbet.nix#{{config}} --option substituters "https://nix-community.cachix.org https://cache.nixos.org" --option trusted-public-keys "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+[doc("Deploy the NixOS configuration to the server using nixos-anywhere")]
+deploy target:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    read -s -p "Enter SSH password for {{target}}: " SSHPASS
+    echo
+    export SSHPASS
+    nix run github:nix-community/nixos-anywhere -- --flake .#{{config}} \
+      --env-password \
+      --target-host {{target}} \
+      --option substituters "https://nix-community.cachix.org https://cache.nixos.org" --option trusted-public-keys "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
 
 
 # Format all Nix files
