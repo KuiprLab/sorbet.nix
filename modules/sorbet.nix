@@ -59,6 +59,7 @@ _: {
         # Base system
         neovim
         git
+        just
         curl
       ];
 
