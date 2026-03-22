@@ -5,11 +5,16 @@ _: {
     config,
     defaults,
     inputs,
-    modulesPath
+    modulesPath,
     ...
   }: let
     inherit (defaults) user;
   in {
+
+  imports =
+    [ # Include the results of the hardware scan.
+(modulesPath + "/installer/scan/not-detected.nix")
+    ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
