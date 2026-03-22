@@ -1,4 +1,4 @@
-{inputs, ...}: {
+_: {
   # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
   flake.modules.nixos.sorbet = _: {
     networking.firewall = {
