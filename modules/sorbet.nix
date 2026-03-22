@@ -23,7 +23,7 @@ _: {
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = true;
       };
-      kernelPackages = pkgs.linuxPackages_zen;
+      # kernelPackages = pkgs.linuxPackages_zen;
       initrd = {
         availableKernelModules = [
           "xhci_pci"
