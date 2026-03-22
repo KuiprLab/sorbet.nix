@@ -1,9 +1,9 @@
 {
   "todos": {
-    "modules/sorbet.nix:58:TODO: Update": {
-      "issueNumber": 13,
+    "modules/sorbet.nix:52:TODO: Update": {
+      "issueNumber": 14,
       "file": "modules/sorbet.nix",
-      "line": 58,
+      "line": 52,
       "text": "TODO: Update"
     }
   }
