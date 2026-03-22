@@ -150,19 +150,20 @@ _: {
           dev.enable = true;
         };
 
-        # Home Manager
-        home-manager.users.${user} = _: {
-          home = {
-            stateVersion = "23.11";
-            username = user;
-            homeDirectory = "/home/${user}";
-            sessionVariables = {
-              NH_FLAKE = "$HOME/${defaults.paths.flake}";
-              EDITOR = "nvim";
-            };
+      };
+
+      # Home Manager
+      home-manager.users.${user} = _: {
+        home = {
+          stateVersion = "23.11";
+          username = user;
+          homeDirectory = "/home/${user}";
+          sessionVariables = {
+            NH_FLAKE = "$HOME/${defaults.paths.flake}";
+            EDITOR = "nvim";
           };
-          programs.home-manager.enable = true;
         };
+        programs.home-manager.enable = true;
       };
     };
 }
