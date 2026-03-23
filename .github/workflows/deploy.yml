@@ -30,7 +30,7 @@ jobs:
           chmod 600 ~/.ssh/config
 
       - name: Deploy
-        run: nix run nixpkgs#deploy-rs -- --remote-build .#"sorbet"
+        run: nix run nixpkgs#deploy-rs -- --remote-build --ssh-opts "StrictHostKeyChecking=no" .#"sorbet" 
         env:
           NIX_CONFIG: |
-            experimental-features = nix-command flakes
+            experimen--ssh-optstal-features = nix-command flakes
