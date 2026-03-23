@@ -11,6 +11,7 @@
       profiles.system = {
         inherit user;
         sshUser = user;
+        sudo = "sudo -u";
         remoteBuild = true;
         interactiveSudo = true;
         path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.sorbet;
