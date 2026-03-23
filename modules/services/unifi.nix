@@ -3,7 +3,7 @@ _: {
     services.unifi = {
       enable = true;
       openFirewall = true;
-      package = pkgs.unifi;
+      unifiPackage = pkgs.unifi;
       mongodbPackage = pkgs.mongodb;
     };
   };
