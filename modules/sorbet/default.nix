@@ -1,6 +1,8 @@
-{ self, inputs, ... }:
-let
-
+{
+  self,
+  inputs,
+  ...
+}: let
   # Shared nixpkgs config
   nixpkgsConfig = {
     allowUnfree = true;
@@ -11,8 +13,7 @@ let
   # Overlays
   overlays = [
   ];
-in
-{
+in {
   flake.nixosConfigurations.sorbet = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
@@ -39,5 +40,4 @@ in
       }
     ];
   };
-
 }
