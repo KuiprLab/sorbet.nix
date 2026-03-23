@@ -2,9 +2,10 @@ _: {
   flake.nixosModules.caddy = {
     pkgs,
     config,
+    inputs,
     ...
   }: {
-    sops.secrets = {
+    inputs.sops.secrets = {
       "token" = {
         sopsFile = ./token;
         format = "binary";
