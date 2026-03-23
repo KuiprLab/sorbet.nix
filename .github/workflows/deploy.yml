@@ -18,9 +18,6 @@ jobs:
         with:
           extra-conf: |
             extra-experimental-features = nix-command flakes
-      - uses: DeterminateSystems/magic-nix-cache-action@v13
-        with:
-          use-flakehub: false
 
       - name: Write SSH keys
         run: |
