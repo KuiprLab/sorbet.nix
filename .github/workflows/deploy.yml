@@ -1,0 +1,40 @@
+name: "Deploy Configuration"
+on:
+  push:
+    branches:
+      - "main"
+  schedule:
+    - cron: "0 0 * * 5"
+  workflow_dispatch:
+
+jobs:
+  check-validation:
+    runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.check.outputs.passed }}
+    steps:
+      - name: Check Nix Configuration Validation status
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          conclusion=$(gh api \
+            "/repos/${{ github.repository }}/actions/workflows/nix-validation.yml/runs?branch=main&per_page=1" \
+            --jq '.workflow_runs[0].conclusion')
+          echo "passed=$([[ "$conclusion" == "success" ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: check-validation
+    if: needs.check-validation.outputs.passed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Determinate Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Install just
+        uses: extractions/setup-just@v2
+
+      - name: Deploy
+        run: just deploy
