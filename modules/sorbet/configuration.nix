@@ -130,7 +130,6 @@ in {
     #
     # };
 
-
     # Home Manager
     home-manager.users.${user} = _: {
       home = {

@@ -1,9 +1,13 @@
-{self, inputs,...}: {
-    flake.deploy.nodes =let 
-        user = "daniel";
-    in{
+{
+  self,
+  inputs,
+  ...
+}: {
+  flake.deploy.nodes = let
+    user = "daniel";
+  in {
     sorbet = {
-      hostname = "sorbet";
+      hostname = "192.168.0.85";
       profiles.system = {
         inherit user;
         sshUser = user;
