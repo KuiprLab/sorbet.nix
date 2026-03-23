@@ -12,7 +12,6 @@
         inherit user;
         sshUser = user;
         remoteBuild = true;
-        sudo = "doas -u";
         interactiveSudo = true;
         path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.sorbet;
       };
