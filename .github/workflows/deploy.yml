@@ -18,19 +18,13 @@ jobs:
 
       - name: Write SSH keys
         run: |
-          mkdir -p $HOME/.ssh
-          chmod 700 $HOME/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          chmod 600 $HOME/.ssh/id_rsa
-          ssh-keyscan -H 192.168.0.85 >> $HOME/.ssh/known_hosts
-          chmod 600 $HOME/.ssh/known_hosts
-          cat > $HOME/.ssh/config <<EOF
-          Host 192.168.0.85
-            IdentityFile $HOME/.ssh/id_rsa
-            UserKnownHostsFile $HOME/.ssh/known_hosts
-            StrictHostKeyChecking yes
-          EOF
-          chmod 600 $HOME/.ssh/config
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+          echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
 
 
       - name: Debug SSH
