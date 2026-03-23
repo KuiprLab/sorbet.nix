@@ -8,22 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  
-  setup-ssh:
-    runs-on: self-hosted
-    steps:
-      - name: Install Determinate Nix
-        uses: DeterminateSystems/nix-installer-action@main
-
-      - name: Write SSH keys
-        run: |
-          nix-env -i openssh
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          # host='192.168.0.85'
-          # hosts="$(dig +short "$host" | grep -v '\.$' | sed -z 's|\n|,|g')$host"
-          # ssh-keyscan -H "$hosts" > ~/.ssh/known_hosts
-
   deploy:
     needs: [setup-ssh]
     runs-on: self-hosted
@@ -32,6 +16,15 @@ jobs:
 
       - name: Install Determinate Nix
         uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Write SSH keys
+        run: |
+          nix-env -i openssh
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          host='192.168.0.85'
+          hosts="$(dig +short "$host" | grep -v '\.$' | sed -z 's|\n|,|g')$host"
+          ssh-keyscan -H "$hosts" > ~/.ssh/known_hosts
 
       - name: Install just
         uses: extractions/setup-just@v2
