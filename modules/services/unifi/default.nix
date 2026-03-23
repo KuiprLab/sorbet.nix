@@ -1,6 +1,20 @@
 _: {
   flake.nixosModules.unifi = {pkgs, ...}: {
     imports = [../../../pkgs/unifi-os-server-image/module.nix];
+
+    networking.firewall = {
+      allowedTCPPorts = [
+        8080
+        8443
+        8843
+      ];
+
+      allowedUDPPorts = [
+        10001
+        3478
+      ];
+    };
+
     services.unifi-os-server = {
       enable = true;
       package = pkgs.callPackage ../../../pkgs/unifi-os-server-image {
