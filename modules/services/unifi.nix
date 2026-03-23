@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.unifi = {pkgs}: {
+  flake.nixosModules.unifi = {pkgs, ...}: {
     services.unifi = {
       enable = true;
       openFirewall = true;
