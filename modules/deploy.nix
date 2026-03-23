@@ -9,7 +9,7 @@
     sorbet = {
       hostname = "192.168.0.85";
       profiles.system = {
-        uset = "root";
+        # inherit user;
         sshUser = user;
         remoteBuild = true;
         interactiveSudo = false;
