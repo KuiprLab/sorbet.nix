@@ -11,10 +11,16 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Install Determinate Nix
-        uses: DeterminateSystems/nix-installer-action@main
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3.17.0
+        with:
+          extra-conf: |
+            extra-experimental-features = nix-command flakes
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+        with:
+          use-flakehub: false
 
       - name: Write SSH keys
         run: |
@@ -26,8 +32,8 @@ jobs:
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
           chmod 600 ~/.ssh/config
 
-      - name: Install just
-        uses: extractions/setup-just@v2
-
       - name: Deploy
-        run: just deploy
+        run: nix run nixpkgs#deploy-rs -- --remote-build .#"sorbet"
+        env:
+          NIX_CONFIG: |
+            experimental-features = nix-command flakes
