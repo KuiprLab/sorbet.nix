@@ -1,10 +1,5 @@
 _: {
-  flake.nixosModules.caddy = {
-    pkgs,
-    config,
-    inputs,
-    ...
-  }: {
+  flake.nixosModules.caddy = {config, ...}: {
     sops.secrets = {
       "gh_runner" = {
         sopsFile = ./token;

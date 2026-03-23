@@ -1,10 +1,4 @@
-{
-  self,
-  inputs,
-  ...
-}: let
-  user = "daniel";
-in {
+_: {
   # Define the systems for per-system outputs
   systems = [
     "x86_64-linux"

@@ -1,8 +1,4 @@
-{
-  self,
-  inputs,
-  ...
-}: let
+_: let
   user = "daniel";
 in {
   flake.nixosModules.sorbetConfiguration = {

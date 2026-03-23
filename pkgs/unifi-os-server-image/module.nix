@@ -92,8 +92,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    virtualisation.podman.enable = true;
-    virtualisation.oci-containers.backend = "podman";
+    virtualisation = {
+      podman.enable = true;
+      oci-containers.backend = "podman";
+    };
 
     # https://www.crosstalksolutions.com/complete-unifi-os-server-installation-on-linux-best-practices/
     networking.firewall = mkIf cfg.openFirewall {

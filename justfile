@@ -32,7 +32,7 @@ fmt:
     nix fmt .
 
 # Run flake checks
-check:
+check: fmt
     nix flake check --all-systems
 
 
