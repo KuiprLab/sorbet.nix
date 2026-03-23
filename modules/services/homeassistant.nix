@@ -1,4 +1,9 @@
 _: {
+  flake.caddyVirtualHosts."homeassistant.lan" = ''
+    reverse_proxy localhost:8123
+    tls internal
+  '';
+
   # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
   flake.nixosModules.homeassistant = _: {
     networking.firewall = {
