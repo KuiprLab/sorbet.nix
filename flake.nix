@@ -3,10 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # nixpkgs.url = "git+file:///Users/daniel/Developer/github.com/frostplexx/nixpkgs";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
+
+    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -20,11 +21,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-anywhere = {
-      url = "github:nix-community/nixos-anywhere";
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 }

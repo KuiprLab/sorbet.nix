@@ -22,8 +22,10 @@ install target:
       --option extra-trusted-public-keys cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM= \
       --target-host {{target}} 
 
-
 deploy: 
+  @./scripts/deploy.sh
+
+deploy-local: 
     sudo nixos-rebuild switch --flake .#{{config}} \
       --option extra-substituters 'https://install.determinate.systems' \
       --option trusted-substituters 'https://sorbet.cachix.org https://cache.nixos.org https://frostplexx.cachix.org https://nvf.cachix.org https://nix-community.cachix.org' \
