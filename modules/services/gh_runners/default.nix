@@ -6,7 +6,7 @@ _: {
     ...
   }: {
     sops.secrets = {
-      "token" = {
+      "gh_runner" = {
         sopsFile = ./token;
         format = "binary";
         key = "";
@@ -17,7 +17,7 @@ _: {
       deploy = {
         enable = true;
         name = "deploy-runner";
-        tokenFile = config.sops.secrets.token.sopsFile;
+        tokenFile = config.sops.secrets."gh_runner".path;
         url = "https://github.com/KuiprLab/sorbet.nix";
       };
     };
