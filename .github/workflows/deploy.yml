@@ -25,15 +25,28 @@ jobs:
           ssh-keyscan -H 192.168.0.85 >> $HOME/.ssh/known_hosts
           chmod 600 $HOME/.ssh/known_hosts
 
-      - name: Debug SSH
+      - name: Write SSH keys
         run: |
-          echo "User: $(whoami)"
-          echo "Home: $HOME"
-          cat ~/.ssh/known_hosts
-          ssh -vT root@192.168.0.85 || true
+          mkdir -p $HOME/.ssh
+          chmod 700 $HOME/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
+          chmod 600 $HOME/.ssh/id_rsa
+          ssh-keyscan -H 192.168.0.85 >> $HOME/.ssh/known_hosts
+          chmod 600 $HOME/.ssh/known_hosts
+          cat > $HOME/.ssh/config <<EOF
+          Host 192.168.0.85
+            IdentityFile $HOME/.ssh/id_rsa
+            UserKnownHostsFile $HOME/.ssh/known_hosts
+            StrictHostKeyChecking yes
+          EOF
+          chmod 600 $HOME/.ssh/config
+
 
       - name: Install just
         uses: extractions/setup-just@v2
 
       - name: Deploy
+        env:
+          HOME: /run/github-runner/deploy
+          GIT_SSH_COMMAND: "ssh -F /run/github-runner/deploy/.ssh/config"
         run: just deploy
