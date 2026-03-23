@@ -9,7 +9,6 @@ on:
 
 jobs:
   deploy:
-    needs: [setup-ssh]
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
