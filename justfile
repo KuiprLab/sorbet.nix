@@ -1,7 +1,7 @@
 config := "sorbet"
 
 # Build the NixOS config locally (requires a Linux builder on macOS)
-build:
+build: fmt check
     @git add .
     @nix build ".#nixosConfigurations.sorbet.config.system.build.toplevel" --system x86_64-linux
 
