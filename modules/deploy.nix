@@ -4,7 +4,7 @@
   ...
 }: {
   flake.deploy.nodes = let
-    user = "daniel";
+    user = "root";
   in {
     sorbet = {
       hostname = "192.168.0.85";
