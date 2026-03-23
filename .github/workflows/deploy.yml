@@ -18,9 +18,12 @@ jobs:
 
       - name: Write SSH keys
         run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H 192.168.0.85 >> ~/.ssh/known_hosts
+          mkdir -p $HOME/.ssh
+          chmod 700 $HOME/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
+          chmod 600 $HOME/.ssh/id_rsa
+          ssh-keyscan -H 192.168.0.85 >> $HOME/.ssh/known_hosts
+          chmod 600 $HOME/.ssh/known_hosts
 
       - name: Debug SSH
         run: |
