@@ -19,10 +19,8 @@
   collectModules = attrs: lib.attrValues (lib.filterAttrs (_n: v: v != {}) attrs);
 in {
   flake = {
-    modules = {
-      nixosModules = {};
-      homeManagerModules = {};
-    };
+    nixosModules = {};
+    homeManagerModules = {};
 
     nixosConfigurations.sorbet = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
