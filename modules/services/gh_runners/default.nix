@@ -17,7 +17,7 @@ _: {
       deploy = {
         enable = true;
         name = "deploy-runner";
-        tokenFile = "${config.sops.secrets.token.sopsFile}";
+        tokenFile = config.sops.secrets.token.sopsFile;
         url = "https://github.com/KuiprLab/sorbet.nix";
       };
     };
