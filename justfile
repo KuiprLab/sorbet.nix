@@ -34,3 +34,7 @@ fmt:
 # Run flake checks
 check:
     nix flake check --all-systems
+
+
+upload-secrets host:
+    @./scripts/upload-secrets.sh {{host}}

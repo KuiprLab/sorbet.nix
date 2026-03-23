@@ -20,6 +20,12 @@ in {
       curl
     ];
 
+    sops = {
+      age.keyFile = "/var/lib/sops/age-key.txt";
+      age.generateKey = false;
+      secrets = {};
+    };
+
     virtualisation = {
       podman = {
         enable = true;
