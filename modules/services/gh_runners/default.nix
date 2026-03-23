@@ -14,6 +14,9 @@ _: {
         name = "deploy-runner";
         tokenFile = config.sops.secrets."gh_runner".path;
         url = "https://github.com/KuiprLab/sorbet.nix";
+        serviceOverrides = {
+          restartIfChanged = false;
+        };
       };
     };
   };
