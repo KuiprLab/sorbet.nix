@@ -5,7 +5,7 @@ _: {
     inputs,
     ...
   }: {
-    inputs.sops.secrets = {
+    sops.secrets = {
       "token" = {
         sopsFile = ./token;
         format = "binary";
