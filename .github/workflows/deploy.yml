@@ -26,7 +26,7 @@ jobs:
 
       - name: Deploy
         run: |
-            nix-env -i openssH
+            nix-env -i openssh
             nix run nixpkgs#deploy-rs -- --remote-build --ssh-opts "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ./id_rsa" .#"sorbet" 
         env:
           NIX_CONFIG: |
