@@ -186,6 +186,9 @@ in {
         [
           "--systemd=always"
           "--add-host=host.docker.internal:host-gateway"
+          "--network=host"
+          "--cap-add=SYS_ADMIN"
+          "--cap-add=DAC_READ_SEARCH"
         ]
         ++ cfg.extraOptions;
     };
