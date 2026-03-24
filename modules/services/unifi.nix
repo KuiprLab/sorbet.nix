@@ -24,39 +24,38 @@ _: {
           "unifi-os-server/var-lib-mongodb:/var/lib/mongodb"
           "unifi-os-server/etc-rabbitmq-ssl:/etc/rabbitmq/ssl"
         ];
-        tmpfs = [
-          "/run:exec"
-          "/run/lock"
-          "/tmp:exec"
-          "/var/lib/journal"
-          "/var/opt/unifi/tmp:size=64m"
-        ];
         ports = [
           "11443:443"
-          "5005:5005" # Optional
-          "9543:9543" # Optional
-          "6789:6789" # Optional
+          "5005:5005"
+          "9543:9543"
+          "6789:6789"
           "8080:8080"
-          "8443:8443" # Optional
-          "8444:8444" # Optional
+          "8443:8443"
+          "8444:8444"
           "3478:3478/udp"
-          "5514:5514/udp" # Optional
+          "5514:5514/udp"
           "10003:10003/udp"
-          "11084:11084" # Optional
-          "5671:5671" # Optional
-          "8880:8880" # Optional
-          "8881:8881" # Optional
-          "8882:8882" # Optional
+          "11084:11084"
+          "5671:5671"
+          "8880:8880"
+          "8881:8881"
+          "8882:8882"
         ];
         environment = {
           TZ = "Europe/Berlin";
-          UOS_SYSTEM_IP = "1921.68.0.85";
+          UOS_SYSTEM_IP = "192.168.0.85"; # ← typo fix: was "1921.68.0.85"
         };
         image = "ghcr.io/lemker/unifi-os-server:latest";
         extraOptions = [
           "--cgroupns=host"
           "--cap-add=NET_RAW"
-          "--cap-add=NET_ADMIn"
+          "--cap-add=NET_ADMIN" # ← typo fix: was NET_ADMIn
+          # tmpfs mounts
+          "--tmpfs=/run:exec"
+          "--tmpfs=/run/lock"
+          "--tmpfs=/tmp:exec"
+          "--tmpfs=/var/lib/journal"
+          "--tmpfs=/var/opt/unifi/tmp:size=64m"
         ];
       };
     };
