@@ -54,15 +54,22 @@ in {
       '';
     };
 
+    systemIp = mkOption {
+      type = types.str;
+      default = "";
+      example = "unifi.example.com";
+      description = ''
+        Hostname or IP address for the UniFi OS Server inform URL (UOS_SYSTEM_IP).
+        Devices will use this to reach the controller. Set to your host's
+        externally reachable hostname or IP.
+      '';
+    };
+
     openFirewall = mkOption {
       type = types.bool;
       default = false;
       description = ''
-        Whether or not to open the minimum required ports on the firewall.
-
-        This is necessary to allow firmware upgrades and device discovery to
-        work. For remote login, you should additionally open (or forward) port
-        8443.
+        Whether or not to open all UniFi OS Server ports on the firewall.
       '';
     };
 
@@ -92,19 +99,25 @@ in {
       oci-containers.backend = "podman";
     };
 
-    # https://www.crosstalksolutions.com/complete-unifi-os-server-installation-on-linux-best-practices/
     networking.firewall = mkIf cfg.openFirewall {
       allowedTCPPorts = [
-        443 # HTTPS portal
-        8080 # UAP device inform
-        8443 # Controller HTTPS
-        8843 # HTTPS portal redirect
-        8880 # HTTP portal redirect
+        11443 # UniFi OS Server GUI/API
+        8080 # Device and application communication (inform)
+        5005 # RTP control protocol
+        9543 # UniFi Identity Hub
         6789 # Mobile speed test
+        8443 # UniFi Network Application GUI/API
+        8444 # Secure Portal for Hotspot
+        11084 # UniFi Site Supervisor
+        5671 # AQMPS
+        8880 # Hotspot portal redirect
+        8881 # Hotspot portal redirect
+        8882 # Hotspot portal redirect
       ];
       allowedUDPPorts = [
         3478 # STUN
-        10001 # Device discovery
+        5514 # Remote syslog
+        10003 # Device discovery
       ];
     };
 
@@ -144,19 +157,26 @@ in {
       privileged = true;
 
       ports = [
-        "443:443"
-        "8080:8080"
-        "8443:8443"
-        "8843:8843"
-        "8880:8880"
-        "6789:6789"
-        "3478:3478/udp"
-        "10001:10001/udp"
+        "11443:443" # UniFi OS Server GUI/API
+        "8080:8080" # Device and application communication (inform)
+        "5005:5005" # RTP control protocol
+        "9543:9543" # UniFi Identity Hub
+        "6789:6789" # Mobile speed test
+        "8443:8443" # UniFi Network Application GUI/API
+        "8444:8444" # Secure Portal for Hotspot
+        "3478:3478/udp" # STUN
+        "5514:5514/udp" # Remote syslog
+        "10003:10003/udp" # Device discovery
+        "11084:11084" # UniFi Site Supervisor
+        "5671:5671" # AQMPS
+        "8880:8880" # Hotspot portal redirect
+        "8881:8881" # Hotspot portal redirect
+        "8882:8882" # Hotspot portal redirect
       ];
 
       environment =
         {
-          UOS_SYSTEM_IP = "127.0.0.1";
+          UOS_SYSTEM_IP = cfg.systemIp;
           UOS_SERVER_VERSION = cfg.package.version;
           FIRMWARE_PLATFORM =
             if pkgs.stdenv.hostPlatform.isAarch64
