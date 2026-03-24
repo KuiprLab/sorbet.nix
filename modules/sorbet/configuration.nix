@@ -29,10 +29,6 @@ in {
         dockerCompat = true;
         dockerSocket.enable = true;
         defaultNetwork.settings.dns_enabled = true;
-        autoUpdate = {
-          enable = true;
-          onCalendar = "Sun *-*-* 00:00";
-        };
         autoPrune = {
           enable = true;
           dates = "weekly";
