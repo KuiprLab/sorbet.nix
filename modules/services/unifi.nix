@@ -22,7 +22,6 @@ _: {
       package = pkgs.callPackage ../../pkgs/unifi-os-server-image {
         sha256 = "sha256-IPoWR5GTiy7J1WgMEYdTxGo26qM2nO+U1c742pRo354=";
       };
-      imageTag = "uosserver:0.0.54";
       openFirewall = true;
       environment = {
         UOS_SYSTEM_IP = "192.168.0.85";
