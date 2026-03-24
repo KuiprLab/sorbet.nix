@@ -48,7 +48,7 @@ _: {
         };
         image = "ghcr.io/lemker/unifi-os-server:latest";
         extraOptions = [
-          "--cgroupns=host"
+          "--cgroupns_mode=host"
           "--cap-add=NET_RAW"
           "--cap-add=NET_ADMIN"
           # tmpfs mounts
