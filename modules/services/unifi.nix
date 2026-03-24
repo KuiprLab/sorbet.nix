@@ -42,13 +42,14 @@ _: {
           "8881:8881"
           "8882:8882"
         ];
+        privileged = true;
         environment = {
           TZ = "Europe/Berlin";
           UOS_SYSTEM_IP = "192.168.0.85";
         };
         image = "ghcr.io/lemker/unifi-os-server:latest";
         extraOptions = [
-          "--cgroupns_mode=host"
+          "--cgroupns=host"
           "--cap-add=NET_RAW"
           "--cap-add=NET_ADMIN"
           # tmpfs mounts
