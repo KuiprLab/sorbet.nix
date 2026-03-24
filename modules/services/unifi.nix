@@ -50,6 +50,10 @@ _: {
           TZ = "Europe/Berlin";
           UOS_SYSTEM_IP = "192.168.0.85";
         };
+        labels = {
+          "io.containers.autoupdate" = "registry";
+        };
+
         image = "ghcr.io/lemker/unifi-os-server:latest";
         extraOptions = [
           "--cgroupns=host"

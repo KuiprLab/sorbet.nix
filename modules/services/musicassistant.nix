@@ -9,6 +9,10 @@ _: {
         environment = {
           "LOG_LEVEL" = "info";
         };
+        labels = {
+          "io.containers.autoupdate" = "registry";
+        };
+
         extraOptions = [
           "--network=host"
           "--cap-add=SYS_ADMIN"
