@@ -1,142 +1,150 @@
-_: let
+_:
+let
   user = "daniel";
-in {
-  flake.nixosModules.sorbetConfiguration = {
-    pkgs,
-    lib,
-    ...
-  }: {
-    system.stateVersion = "24.05";
+in
+{
+  flake.nixosModules.sorbetConfiguration =
+    {
+      pkgs,
+      lib,
+      ...
+    }:
+    {
+      system.stateVersion = "24.05";
 
-    environment.systemPackages = with pkgs; [
-      # Base system
-      neovim
-      git
-      just
-      curl
-    ];
+      environment.systemPackages = with pkgs; [
+        # Base system
+        neovim
+        git
+        just
+        curl
+      ];
 
-    sops = {
-      age.keyFile = "/var/lib/sops/age-key.txt";
-      age.generateKey = false;
-      secrets = {};
-    };
+      sops = {
+        age.keyFile = "/var/lib/sops/age-key.txt";
+        age.generateKey = false;
+        secrets = { };
+      };
 
-    virtualisation = {
-      podman = {
-        enable = true;
-        extraPackages = [pkgs.podman-compose];
-        dockerCompat = true;
-        dockerSocket.enable = true;
-        defaultNetwork.settings.dns_enabled = true;
-        autoPrune = {
+      virtualisation = {
+        podman = {
           enable = true;
-          dates = "weekly";
-          flags = ["--all"];
+          extraPackages = [ pkgs.podman-compose ];
+          dockerCompat = true;
+          dockerSocket.enable = true;
+          defaultNetwork.settings.dns_enabled = true;
+          autoUpdate = {
+            enable = true;
+            onCalendar = "Sun *-*-* 00:00";
+          };
+          autoPrune = {
+            enable = true;
+            dates = "weekly";
+            flags = [ "--all" ];
+          };
+        };
+        # Enable container features
+        containers.enable = true;
+      };
+
+      # Networking
+      networking = {
+        firewall.enable = false;
+        hostName = "sorbet";
+        networkmanager.enable = true;
+        useDHCP = lib.mkDefault true;
+        # TODO: Update
+        # interfaces."enp4s0".wakeOnLan.enable = true;
+      };
+
+      # Nix settings
+      nix = {
+        channel.enable = false;
+        extraOptions = ''
+          experimental-features = nix-command flakes
+          warn-dirty = false
+        '';
+        settings = {
+          substituters = [
+            "https://cache.nixos.org/"
+            "https://nix-community.cachix.org"
+          ];
+          trusted-public-keys = [
+            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          ];
         };
       };
-      # Enable container features
-      containers.enable = true;
-    };
 
-    # Networking
-    networking = {
-      firewall.enable = false;
-      hostName = "sorbet";
-      networkmanager.enable = true;
-      useDHCP = lib.mkDefault true;
-      # TODO: Update
-      # interfaces."enp4s0".wakeOnLan.enable = true;
-    };
-
-    # Nix settings
-    nix = {
-      channel.enable = false;
-      extraOptions = ''
-        experimental-features = nix-command flakes
-        warn-dirty = false
-      '';
-      settings = {
-        substituters = [
-          "https://cache.nixos.org/"
-          "https://nix-community.cachix.org"
-        ];
-        trusted-public-keys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        ];
+      # Time and locale
+      time.timeZone = "Europe/Berlin";
+      i18n.defaultLocale = "en_US.UTF-8";
+      i18n.extraLocaleSettings = {
+        LC_ADDRESS = "de_DE.UTF-8";
+        LC_IDENTIFICATION = "de_DE.UTF-8";
+        LC_MEASUREMENT = "de_DE.UTF-8";
+        LC_MONETARY = "de_DE.UTF-8";
+        LC_NAME = "de_DE.UTF-8";
+        LC_NUMERIC = "de_DE.UTF-8";
+        LC_PAPER = "de_DE.UTF-8";
+        LC_TELEPHONE = "de_DE.UTF-8";
+        LC_TIME = "de_DE.UTF-8";
       };
-    };
 
-    # Time and locale
-    time.timeZone = "Europe/Berlin";
-    i18n.defaultLocale = "en_US.UTF-8";
-    i18n.extraLocaleSettings = {
-      LC_ADDRESS = "de_DE.UTF-8";
-      LC_IDENTIFICATION = "de_DE.UTF-8";
-      LC_MEASUREMENT = "de_DE.UTF-8";
-      LC_MONETARY = "de_DE.UTF-8";
-      LC_NAME = "de_DE.UTF-8";
-      LC_NUMERIC = "de_DE.UTF-8";
-      LC_PAPER = "de_DE.UTF-8";
-      LC_TELEPHONE = "de_DE.UTF-8";
-      LC_TIME = "de_DE.UTF-8";
-    };
+      environment.pathsToLink = [
+        "/libexec"
+      ];
 
-    environment.pathsToLink = [
-      "/libexec"
-    ];
-
-    # Services
-    services = {
-      openssh.enable = true;
-      pipewire = {
-        enable = true;
-        alsa = {
+      # Services
+      services = {
+        openssh.enable = true;
+        pipewire = {
           enable = true;
+          alsa = {
+            enable = true;
+          };
+          pulse.enable = true;
         };
-        pulse.enable = true;
       };
-    };
 
-    # User configuration
-    programs.fish.enable = true;
-    users = {
-      defaultUserShell = pkgs.fish;
+      # User configuration
+      programs.fish.enable = true;
       users = {
-        root = {
-          openssh.authorizedKeys.keys = [
-            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo089vTmBwFAMv6d7ix3D6gPx0X0DEwOELB0i9AyDpct4kj3II8IjtwovZDalE53CZAlczhae+/9EV+3cn1YwvKMEU9MkY3nY6/HIPqvQaWVNrhLAP7W1JWNMwNl+ndkm+Xa1ZlaYbOJrKED8E63j2j5WNnNN6WUld7d4Nf5oog0YaYYoD22fiMvnTMdFg2pE2lLFZ4mX2NBHU8r/1hcy6XTXdryoZB4KuzvnMOZPb5j48rsH6AZG5i9CMq7iSi3+DeSGzdrxVvJ1HWKTpTlKlvz/7LKhrCwtXrvFwzxh4xxFig/As05LfmxShThUb1QqS874USBwM5lacrZ4lJbIEwbtQ9zJad8p0pVzlby+BwLaQmmljrR9H0AZMagmD0Gv5K/DC035XCI9acSazL84qJ0IfGugfXdFQbT+ViFRrV7+9J5IbulOV40lwHrgnIeFc2Msbe2PelphKIlrx9JqW6ArtT7zbtbG8q+oZSb8TqCdFx5pZuQCA8gtj4Y5wxo0pFhym5qqN6Eh0CbliqYsDwIcUfmkj0omsFXFLN5U9D25jUxPmFZUFU/PJnbWxjfu6835PZtchHozV/vqYqc8WKBis+HWjBM1OH26fbo7FmT60hod8K6fsKV6HN/tpuY9gCQBD/CuVO+nlSBr/kVmO9KGi9jEaPTF2JylnujN1ow=="
-          ];
-        };
+        defaultUserShell = pkgs.fish;
+        users = {
+          root = {
+            openssh.authorizedKeys.keys = [
+              "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo089vTmBwFAMv6d7ix3D6gPx0X0DEwOELB0i9AyDpct4kj3II8IjtwovZDalE53CZAlczhae+/9EV+3cn1YwvKMEU9MkY3nY6/HIPqvQaWVNrhLAP7W1JWNMwNl+ndkm+Xa1ZlaYbOJrKED8E63j2j5WNnNN6WUld7d4Nf5oog0YaYYoD22fiMvnTMdFg2pE2lLFZ4mX2NBHU8r/1hcy6XTXdryoZB4KuzvnMOZPb5j48rsH6AZG5i9CMq7iSi3+DeSGzdrxVvJ1HWKTpTlKlvz/7LKhrCwtXrvFwzxh4xxFig/As05LfmxShThUb1QqS874USBwM5lacrZ4lJbIEwbtQ9zJad8p0pVzlby+BwLaQmmljrR9H0AZMagmD0Gv5K/DC035XCI9acSazL84qJ0IfGugfXdFQbT+ViFRrV7+9J5IbulOV40lwHrgnIeFc2Msbe2PelphKIlrx9JqW6ArtT7zbtbG8q+oZSb8TqCdFx5pZuQCA8gtj4Y5wxo0pFhym5qqN6Eh0CbliqYsDwIcUfmkj0omsFXFLN5U9D25jUxPmFZUFU/PJnbWxjfu6835PZtchHozV/vqYqc8WKBis+HWjBM1OH26fbo7FmT60hod8K6fsKV6HN/tpuY9gCQBD/CuVO+nlSBr/kVmO9KGi9jEaPTF2JylnujN1ow=="
+            ];
+          };
 
-        ${user} = {
-          isNormalUser = true;
-          description = user;
-          openssh.authorizedKeys.keys = [
-            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo089vTmBwFAMv6d7ix3D6gPx0X0DEwOELB0i9AyDpct4kj3II8IjtwovZDalE53CZAlczhae+/9EV+3cn1YwvKMEU9MkY3nY6/HIPqvQaWVNrhLAP7W1JWNMwNl+ndkm+Xa1ZlaYbOJrKED8E63j2j5WNnNN6WUld7d4Nf5oog0YaYYoD22fiMvnTMdFg2pE2lLFZ4mX2NBHU8r/1hcy6XTXdryoZB4KuzvnMOZPb5j48rsH6AZG5i9CMq7iSi3+DeSGzdrxVvJ1HWKTpTlKlvz/7LKhrCwtXrvFwzxh4xxFig/As05LfmxShThUb1QqS874USBwM5lacrZ4lJbIEwbtQ9zJad8p0pVzlby+BwLaQmmljrR9H0AZMagmD0Gv5K/DC035XCI9acSazL84qJ0IfGugfXdFQbT+ViFRrV7+9J5IbulOV40lwHrgnIeFc2Msbe2PelphKIlrx9JqW6ArtT7zbtbG8q+oZSb8TqCdFx5pZuQCA8gtj4Y5wxo0pFhym5qqN6Eh0CbliqYsDwIcUfmkj0omsFXFLN5U9D25jUxPmFZUFU/PJnbWxjfu6835PZtchHozV/vqYqc8WKBis+HWjBM1OH26fbo7FmT60hod8K6fsKV6HN/tpuY9gCQBD/CuVO+nlSBr/kVmO9KGi9jEaPTF2JylnujN1ow=="
-          ];
-          initialPassword = "nixos";
-          extraGroups = [
-            "networkmanager"
-            "root"
-            "wheel"
-          ];
+          ${user} = {
+            isNormalUser = true;
+            description = user;
+            openssh.authorizedKeys.keys = [
+              "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo089vTmBwFAMv6d7ix3D6gPx0X0DEwOELB0i9AyDpct4kj3II8IjtwovZDalE53CZAlczhae+/9EV+3cn1YwvKMEU9MkY3nY6/HIPqvQaWVNrhLAP7W1JWNMwNl+ndkm+Xa1ZlaYbOJrKED8E63j2j5WNnNN6WUld7d4Nf5oog0YaYYoD22fiMvnTMdFg2pE2lLFZ4mX2NBHU8r/1hcy6XTXdryoZB4KuzvnMOZPb5j48rsH6AZG5i9CMq7iSi3+DeSGzdrxVvJ1HWKTpTlKlvz/7LKhrCwtXrvFwzxh4xxFig/As05LfmxShThUb1QqS874USBwM5lacrZ4lJbIEwbtQ9zJad8p0pVzlby+BwLaQmmljrR9H0AZMagmD0Gv5K/DC035XCI9acSazL84qJ0IfGugfXdFQbT+ViFRrV7+9J5IbulOV40lwHrgnIeFc2Msbe2PelphKIlrx9JqW6ArtT7zbtbG8q+oZSb8TqCdFx5pZuQCA8gtj4Y5wxo0pFhym5qqN6Eh0CbliqYsDwIcUfmkj0omsFXFLN5U9D25jUxPmFZUFU/PJnbWxjfu6835PZtchHozV/vqYqc8WKBis+HWjBM1OH26fbo7FmT60hod8K6fsKV6HN/tpuY9gCQBD/CuVO+nlSBr/kVmO9KGi9jEaPTF2JylnujN1ow=="
+            ];
+            initialPassword = "nixos";
+            extraGroups = [
+              "networkmanager"
+              "root"
+              "wheel"
+            ];
+          };
         };
       };
-    };
 
-    # Home Manager
-    home-manager.users.${user} = _: {
-      home = {
-        stateVersion = "23.11";
-        username = user;
-        homeDirectory = "/home/${user}";
-        sessionVariables = {
-          EDITOR = "nvim";
+      # Home Manager
+      home-manager.users.${user} = _: {
+        home = {
+          stateVersion = "23.11";
+          username = user;
+          homeDirectory = "/home/${user}";
+          sessionVariables = {
+            EDITOR = "nvim";
+          };
         };
+        programs.home-manager.enable = true;
       };
-      programs.home-manager.enable = true;
     };
-  };
 }
