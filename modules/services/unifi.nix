@@ -4,12 +4,11 @@ _: {
 
     networking.firewall = {
       allowedTCPPorts = [
-        9443 # UniFi OS dashboard HTTPS
+        443 # HTTPS portal
         8080 # UAP device inform
         8443 # Controller HTTPS
         8843 # HTTPS portal redirect
         8880 # HTTP portal redirect
-        6443 # UniFi OS internal
         6789 # Mobile speed test
       ];
       allowedUDPPorts = [
@@ -24,9 +23,6 @@ _: {
         sha256 = "sha256-IPoWR5GTiy7J1WgMEYdTxGo26qM2nO+U1c742pRo354=";
       };
       openFirewall = true;
-      environment = {
-        UOS_SYSTEM_IP = "192.168.0.85";
-      };
     };
   };
 }
