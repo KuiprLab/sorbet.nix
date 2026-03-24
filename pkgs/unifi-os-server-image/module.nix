@@ -3,9 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
-  inherit (lib)
+}: let
+  inherit
+    (lib)
     mkEnableOption
     mkIf
     mkOption
@@ -39,8 +39,7 @@ let
   # Exact image name:tag embedded in `image.tar`.
   # Must match the repository:tag inside the archive.
   imageTag = "uosserver:0.0.54";
-in
-{
+in {
   # reverse engineered via
   # https://www.unihosted.com/blog/running-unifi-os-server-in-docker
   options.services.unifi-os-server = {
@@ -54,7 +53,6 @@ in
         `pkgs.callPackage ./package.nix { sha256 = "…"; }`
       '';
     };
-
 
     openFirewall = mkOption {
       type = types.bool;
@@ -70,20 +68,20 @@ in
 
     environment = mkOption {
       type = types.attrsOf types.str;
-      default = { };
+      default = {};
       description = "Additional environment variables for the container.";
     };
 
     extraVolumes = mkOption {
       type = types.listOf types.str;
-      default = [ ];
-      example = [ "/etc/ssl/certs:/etc/rabbitmq/ssl:ro" ];
+      default = [];
+      example = ["/etc/ssl/certs:/etc/rabbitmq/ssl:ro"];
       description = "Additional bind mounts beyond the defaults.";
     };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
       description = "Extra arguments passed to podman.";
     };
   };
@@ -112,7 +110,7 @@ in
 
     systemd.services.podman-unifi-os-server = {
       # Make sure package upgrades trigger a service restart
-      restartTriggers = [ cfg.package ];
+      restartTriggers = [cfg.package];
 
       serviceConfig = {
         StateDirectory = [
@@ -139,7 +137,7 @@ in
 
     virtualisation.oci-containers.containers.unifi-os-server = {
       image = imageTag;
-      imageFile = pkgs.runCommand "unifi-os-image.tar" { } ''
+      imageFile = pkgs.runCommand "unifi-os-image.tar" {} ''
         ln -s ${cfg.package}/image.tar $out
       '';
       autoStart = true;
@@ -156,33 +154,39 @@ in
         "10001:10001/udp"
       ];
 
-      environment = {
-        UOS_SYSTEM_IP = "127.0.0.1";
-        UOS_SERVER_VERSION = cfg.package.version;
-        FIRMWARE_PLATFORM = if pkgs.stdenv.hostPlatform.isAarch64 then "linux-arm64" else "linux-x64";
-      }
-      // cfg.environment;
+      environment =
+        {
+          UOS_SYSTEM_IP = "127.0.0.1";
+          UOS_SERVER_VERSION = cfg.package.version;
+          FIRMWARE_PLATFORM =
+            if pkgs.stdenv.hostPlatform.isAarch64
+            then "linux-arm64"
+            else "linux-x64";
+        }
+        // cfg.environment;
 
-      volumes = [
-        "${stateDir}/persistent:/persistent"
-        "/var/log/unifi-os:/var/log"
-        "${stateDir}/data:/data"
-        "${stateDir}/srv:/srv"
-        "${stateDir}/unifi:/var/lib/unifi"
-        "${stateDir}/mongodb:/var/lib/mongodb"
-        "${ucoreDebug}:/etc/systemd/system/unifi-core.service.d/debug.conf:ro"
-        "${ucorePreStartFix}:/etc/systemd/system/unifi-core.service.d/prestart-fix.conf:ro"
-        "${mongoPreStartFix}:/etc/systemd/system/mongodb.service.d/prestart-fix.conf:ro"
-      ]
-      ++ cfg.extraVolumes;
+      volumes =
+        [
+          "${stateDir}/persistent:/persistent"
+          "/var/log/unifi-os:/var/log"
+          "${stateDir}/data:/data"
+          "${stateDir}/srv:/srv"
+          "${stateDir}/unifi:/var/lib/unifi"
+          "${stateDir}/mongodb:/var/lib/mongodb"
+          "${ucoreDebug}:/etc/systemd/system/unifi-core.service.d/debug.conf:ro"
+          "${ucorePreStartFix}:/etc/systemd/system/unifi-core.service.d/prestart-fix.conf:ro"
+          "${mongoPreStartFix}:/etc/systemd/system/mongodb.service.d/prestart-fix.conf:ro"
+        ]
+        ++ cfg.extraVolumes;
 
-      extraOptions = [
-        "--systemd=always"
-        "--add-host=host.docker.internal:host-gateway"
-        "--cap-add=SYS_ADMIN"
-        "--cap-add=DAC_READ_SEARCH"
-      ]
-      ++ cfg.extraOptions;
+      extraOptions =
+        [
+          "--systemd=always"
+          "--add-host=host.docker.internal:host-gateway"
+          "--cap-add=SYS_ADMIN"
+          "--cap-add=DAC_READ_SEARCH"
+        ]
+        ++ cfg.extraOptions;
     };
   };
 }
