@@ -2,13 +2,63 @@ _: {
   flake.nixosModules.unifi = {pkgs, ...}: {
     imports = [../../pkgs/unifi-os-server-image/module.nix];
 
-    services.unifi-os-server = {
-      enable = true;
-      package = pkgs.callPackage ../../pkgs/unifi-os-server-image {
-        sha256 = "sha256-IPoWR5GTiy7J1WgMEYdTxGo26qM2nO+U1c742pRo354=";
+    # services.unifi-os-server = {
+    #   enable = true;
+    #   package = pkgs.callPackage ../../pkgs/unifi-os-server-image {
+    #     sha256 = "sha256-IPoWR5GTiy7J1WgMEYdTxGo26qM2nO+U1c742pRo354=";
+    #   };
+    #   systemIp = "192.168.0.85";
+    #   openFirewall = true;
+    # };
+
+    virtualisation.oci-containers = {
+      backend = "podman";
+      containers.unifi-os-server = {
+        volumes = [
+          "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+          "unifi-os-server/persistent:/persistent"
+          "unifi-os-server/var-log:/var/log"
+          "unifi-os-server/data:/data"
+          "unifi-os-server/srv:/srv"
+          "unifi-os-server/var-lib-unifi:/var/lib/unifi"
+          "unifi-os-server/var-lib-mongodb:/var/lib/mongodb"
+          "unifi-os-server/etc-rabbitmq-ssl:/etc/rabbitmq/ssl"
+        ];
+        tmpfs = [
+          "/run:exec"
+          "/run/lock"
+          "/tmp:exec"
+          "/var/lib/journal"
+          "/var/opt/unifi/tmp:size=64m"
+        ];
+        ports = [
+          "11443:443"
+          "5005:5005" # Optional
+          "9543:9543" # Optional
+          "6789:6789" # Optional
+          "8080:8080"
+          "8443:8443" # Optional
+          "8444:8444" # Optional
+          "3478:3478/udp"
+          "5514:5514/udp" # Optional
+          "10003:10003/udp"
+          "11084:11084" # Optional
+          "5671:5671" # Optional
+          "8880:8880" # Optional
+          "8881:8881" # Optional
+          "8882:8882" # Optional
+        ];
+        environment = {
+          TZ = "Europe/Berlin";
+          UOS_SYSTEM_IP = "1921.68.0.85";
+        };
+        image = "ghcr.io/lemker/unifi-os-server:latest";
+        extraOptions = [
+          "--cgroupns=host"
+          "--cap-add=NET_RAW"
+          "--cap-add=NET_ADMIn"
+        ];
       };
-      systemIp = "192.168.0.85";
-      openFirewall = true;
     };
   };
 }
