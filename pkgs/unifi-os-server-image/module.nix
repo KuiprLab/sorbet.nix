@@ -143,17 +143,6 @@ in {
       autoStart = true;
       privileged = true;
 
-      ports = [
-        "443:443"
-        "8080:8080"
-        "8443:8443"
-        "8843:8843"
-        "8880:8880"
-        "6789:6789"
-        "3478:3478/udp"
-        "10001:10001/udp"
-      ];
-
       environment =
         {
           UOS_SYSTEM_IP = "127.0.0.1";
@@ -182,7 +171,7 @@ in {
       extraOptions =
         [
           "--systemd=always"
-          "--add-host=host.docker.internal:host-gateway"
+          "--network=host"
           "--cap-add=SYS_ADMIN"
           "--cap-add=DAC_READ_SEARCH"
         ]
