@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.unifi = {pkgs, ...}: {
+  flake.nixosModules.unifi = _: {
     imports = [../../pkgs/unifi-os-server-image/module.nix];
 
     # services.unifi-os-server = {
@@ -11,6 +11,9 @@ _: {
     #   openFirewall = true;
     # };
 
+    # Important:
+    # SSH into device with username/password: ubnt/ubnt
+    # set-inform http://192.168.0.85:8080/inform
     virtualisation.oci-containers = {
       backend = "podman";
       containers.unifi-os-server = {
