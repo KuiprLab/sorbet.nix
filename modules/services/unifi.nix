@@ -16,13 +16,13 @@ _: {
       containers.unifi-os-server = {
         volumes = [
           "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-          "unifi-os-server/persistent:/persistent"
-          "unifi-os-server/var-log:/var/log"
-          "unifi-os-server/data:/data"
-          "unifi-os-server/srv:/srv"
-          "unifi-os-server/var-lib-unifi:/var/lib/unifi"
-          "unifi-os-server/var-lib-mongodb:/var/lib/mongodb"
-          "unifi-os-server/etc-rabbitmq-ssl:/etc/rabbitmq/ssl"
+          "unifi-os-server--persistent:/persistent"
+          "unifi-os-server--var-log:/var/log"
+          "unifi-os-server--data:/data"
+          "unifi-os-server--srv:/srv"
+          "unifi-os-server--var-lib-unifi:/var/lib/unifi"
+          "unifi-os-server--var-lib-mongodb:/var/lib/mongodb"
+          "unifi-os-server--etc-rabbitmq-ssl:/etc/rabbitmq/ssl"
         ];
         ports = [
           "11443:443"
@@ -43,13 +43,13 @@ _: {
         ];
         environment = {
           TZ = "Europe/Berlin";
-          UOS_SYSTEM_IP = "192.168.0.85"; # ← typo fix: was "1921.68.0.85"
+          UOS_SYSTEM_IP = "192.168.0.85";
         };
         image = "ghcr.io/lemker/unifi-os-server:latest";
         extraOptions = [
           "--cgroupns=host"
           "--cap-add=NET_RAW"
-          "--cap-add=NET_ADMIN" # ← typo fix: was NET_ADMIn
+          "--cap-add=NET_ADMIN"
           # tmpfs mounts
           "--tmpfs=/run:exec"
           "--tmpfs=/run/lock"
