@@ -41,7 +41,7 @@ in {
 
     # Networking
     networking = {
-      firewall.enable = true;
+      firewall.enable = false;
       hostName = "sorbet";
       networkmanager.enable = true;
       useDHCP = lib.mkDefault true;
