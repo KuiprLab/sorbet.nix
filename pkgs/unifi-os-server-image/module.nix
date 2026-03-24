@@ -95,11 +95,12 @@ in {
     # https://www.crosstalksolutions.com/complete-unifi-os-server-installation-on-linux-best-practices/
     networking.firewall = mkIf cfg.openFirewall {
       allowedTCPPorts = [
-        443 # HTTPS portal
+        9443 # UniFi OS dashboard HTTPS
         8080 # UAP device inform
         8443 # Controller HTTPS
         8843 # HTTPS portal redirect
         8880 # HTTP portal redirect
+        6443 # UniFi OS internal
         6789 # Mobile speed test
       ];
       allowedUDPPorts = [
