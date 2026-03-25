@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: {
   options.flake.gatusEndpoints = lib.mkOption {
@@ -29,15 +28,16 @@
   '';
 
   config.flake.nixosModules.gatus = let
+    # Pass the collected config into the NixOS module via closure
     endpoints = config.flake.gatusEndpoints;
     extraConfig = config.flake.gatusExtraConfig;
     gatusConfig = extraConfig // {inherit endpoints;};
-    gatusConfigFile = (pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig;
   in
-    _: {
+    {pkgs, ...}: {
       services.gatus = {
         enable = true;
-        configFile = gatusConfigFile;
+        # Generate the config file inside the NixOS module where pkgs is available
+        configFile = (pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig;
       };
 
       networking.firewall.allowedTCPPorts = [8080];
