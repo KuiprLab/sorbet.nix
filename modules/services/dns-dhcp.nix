@@ -1,111 +1,50 @@
 _: {
   flake.nixosModules.dnsDhcp = {
     lib,
-    pkgs,
     ...
   }: let
     serverIp = "192.168.0.85";
     networkInterface = "enp4s0";
-    domain = "lan";
   in {
     # -------------------------------------------------------------------------
-    # DHCP Server (ISC dhcpd)
+    # dnsmasq — handles both DHCP and DNS (.lan wildcard)
     # -------------------------------------------------------------------------
-    services.dhcpd4 = {
+    services.dnsmasq = {
       enable = true;
-      interfaces = [networkInterface];
-      extraConfig = ''
-        option domain-name "${domain}";
-        option domain-name-servers ${serverIp};
-        option routers 192.168.0.1;
+      settings = {
+        # Network interface to listen on
+        interface = networkInterface;
+        bind-interfaces = true;
 
-        default-lease-time 86400;
-        max-lease-time 86400;
+        # DNS: forward all *.lan queries to ourselves, everything else upstream
+        address = "/.lan/${serverIp}";
+        server = [ "1.1.1.1" "8.8.8.8" ];
 
-        subnet 192.168.0.0 netmask 255.255.255.0 {
-          range 192.168.0.2 192.168.0.254;
-          option broadcast-address 192.168.0.255;
-        }
+        # DHCP: hand out IPs in range, tell clients to use us as DNS
+        dhcp-range = "192.168.0.2,192.168.0.254,255.255.255.0,24h";
+        dhcp-option = [
+          "option:router,192.168.0.1"
+          "option:dns-server,${serverIp}"
+        ];
 
-        host sorbet {
-          hardware ethernet 18:31:bf:b7:fd:3f;
-          fixed-address ${serverIp};
-        }
-      '';
-    };
+        # Static lease for sorbet itself
+        dhcp-host = "18:31:bf:b7:fd:3f,sorbet,${serverIp},infinite";
 
-    # -------------------------------------------------------------------------
-    # BIND9 DNS Server
-    # -------------------------------------------------------------------------
-    services.bind = {
-      enable = true;
-      # Only listen on LAN interface + loopback
-      listenOn = ["${serverIp}" "127.0.0.1"];
-      # Allow queries from local network only
-      cacheNetworks = ["192.168.0.0/24" "127.0.0.0/8"];
+        # Don't read /etc/resolv.conf — we are the resolver
+        no-resolv = true;
 
-      forwarders = [
-        "1.1.1.1"
-        "8.8.8.8"
-      ];
-
-      zones = {
-        # Forward zone: resolve *.lan to this server
-        "${domain}" = {
-          master = true;
-          file = pkgs.writeText "db.lan" ''
-            $TTL 3600
-            @ IN SOA ns.lan. admin.lan. (
-              2024010101 ; Serial
-              3600       ; Refresh
-              1800       ; Retry
-              604800     ; Expire
-              3600 )     ; Negative Cache TTL
-
-            @ IN NS ns.lan.
-
-            ; All *.lan queries resolve to this server
-            ; Add your specific service records below
-            ns              IN A ${serverIp}
-            @               IN A ${serverIp}
-            *               IN A ${serverIp}
-          '';
-        };
-
-        # Reverse zone for 192.168.0.x
-        "0.168.192.in-addr.arpa" = {
-          master = true;
-          file = pkgs.writeText "db.192.168.0" ''
-            $TTL 3600
-            @ IN SOA ns.lan. admin.lan. (
-              2024010101 ; Serial
-              3600       ; Refresh
-              1800       ; Retry
-              604800     ; Expire
-              3600 )     ; Negative Cache TTL
-
-            @ IN NS ns.lan.
-
-            85 IN PTR sorbet.lan.
-          '';
-        };
+        # Log DHCP leases
+        log-dhcp = true;
       };
     };
 
     # Open firewall ports
     networking.firewall = {
-      allowedTCPPorts = [
-        53 # DNS
-        67 # DHCP
-      ];
-      allowedUDPPorts = [
-        53 # DNS
-        67 # DHCP
-        68 # DHCP client
-      ];
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 53 67 68 ];
     };
 
-    # Disable systemd-resolved to avoid port 53 conflicts
+    # Disable systemd-resolved to avoid port 53 conflict
     services.resolved.enable = lib.mkForce false;
   };
 }
