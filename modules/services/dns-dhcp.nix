@@ -1,4 +1,17 @@
 _: {
+  flake.gatusEndpoints = [
+    {
+      name = "DNS";
+      url = "dns://192.168.0.85";
+      dns = {
+        query-name = "homeassistant.lan";
+        query-type = "A";
+      };
+      conditions = ["[DNS_RCODE] == NOERROR"];
+      alerts = [{type = "discord";}];
+    }
+  ];
+
   flake.nixosModules.dnsDhcp = {lib, ...}: let
     serverIp = "192.168.0.85";
     networkInterface = "enp0s31f6";

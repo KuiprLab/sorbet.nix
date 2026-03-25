@@ -12,6 +12,7 @@ _: {
         "[STATUS] == 200"
         "[CERTIFICATE_EXPIRATION] > 2h"
       ];
+      alerts = [{type = "discord";}];
     }
   ];
 

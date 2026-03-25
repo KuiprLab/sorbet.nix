@@ -21,6 +21,18 @@
     '';
   };
 
+  config.flake.gatusEndpoints = [
+    {
+      name = "Caddy";
+      url = "https://gatus.lan";
+      conditions = [
+        "[STATUS] == 200"
+        "[CERTIFICATE_EXPIRATION] > 2h"
+      ];
+      alerts = [{type = "discord";}];
+    }
+  ];
+
   config.flake.caddyVirtualHosts."gatus.lan" = ''
     reverse_proxy localhost:8888
     tls internal
