@@ -16,7 +16,9 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install binwalk
-        run: sudo apt-get install -y binwalk
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y binwalk
 
       - name: Run update script
         id: update
