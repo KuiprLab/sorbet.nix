@@ -70,6 +70,11 @@
         443
       ];
 
+      systemd.services.caddy = {
+        after = ["step-ca.service"];
+        wants = ["step-ca.service"];
+      };
+
       services.caddy = {
         enable = true;
         virtualHosts = lib.mapAttrs (_: extraConfig: {inherit extraConfig;}) virtualHosts;
