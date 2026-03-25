@@ -12,55 +12,6 @@
     '';
   };
 
-  config.flake.nixosModules.stepCa = _: {
-    systemd.services."step-ca".serviceConfig = {
-      User = lib.mkForce "root";
-      Group = lib.mkForce "root";
-      DynamicUser = lib.mkForce false;
-    };
-
-    # The intermediate key password must be in a file (not in the Nix store)
-    # Create with: echo "your-password" > /var/lib/step-ca/password.txt && chmod 600 /var/lib/step-ca/password.txt
-    systemd.packages = lib.mkForce [];
-    services.step-ca = {
-      enable = true;
-      address = "127.0.0.1";
-      port = 9000;
-      intermediatePasswordFile = "/var/lib/step-ca/password.txt"; # or a sops secret path
-
-      settings = {
-        root = "/var/lib/step-ca/certs/root_ca.crt";
-        crt = "/var/lib/step-ca/certs/intermediate_ca.crt";
-        key = "/var/lib/step-ca/secrets/intermediate_ca_key";
-        dnsNames = [
-          "localhost"
-          "sorbet.lan"
-        ];
-        logger.format = "text";
-
-        authority = {
-          provisioners = [
-            {
-              type = "ACME";
-              name = "acme";
-              # 90-day cert lifetime
-              claims = {
-                minTLSCertDuration = "5m";
-                maxTLSCertDuration = "2160h";
-                defaultTLSCertDuration = "2160h";
-              };
-            }
-          ];
-        };
-
-        db = {
-          type = "badgerv2";
-          dataSource = "/var/lib/step-ca/db";
-        };
-      };
-    };
-  };
-
   config.flake.nixosModules.caddy = let
     virtualHosts = config.flake.caddyVirtualHosts;
   in
@@ -70,17 +21,6 @@
         80
         443
       ];
-
-      systemd.services.caddy = {
-        after = lib.mkForce [
-          "network-online.target"
-          "step-ca.service"
-        ];
-        wants = lib.mkForce [
-          "network-online.target"
-          "step-ca.service"
-        ];
-      };
 
       services.caddy = {
         enable = true;
