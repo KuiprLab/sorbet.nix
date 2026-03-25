@@ -30,6 +30,11 @@ _: {
           };
           extraOptions = [
             "--network=host"
+
+            "--cap-add=SYS_ADMIN"
+            "--cap-add=NET_ADMIN"
+            "--cap-add=NET_RAW"
+            "--cap-add=DAC_READ_SEARCH"
           ];
         };
       };
