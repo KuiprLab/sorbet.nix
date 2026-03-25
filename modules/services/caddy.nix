@@ -25,10 +25,6 @@
       services.caddy = {
         enable = true;
         virtualHosts = lib.mapAttrs (_: extraConfig: {inherit extraConfig;}) virtualHosts;
-        globalConfig = ''
-          acme_ca https://localhost:9000/acme/acme/directory
-          acme_ca_root /var/lib/step-ca/certs/root_ca.crt
-        '';
       };
     };
 }
