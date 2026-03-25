@@ -11,7 +11,7 @@ _: {
         url = "https://homeassistant.lan";
         conditions = [
           "[STATUS] == 200"
-          "[CERTIFICATE_EXPIRATION] > 48h"
+          "[CERTIFICATE_EXPIRATION] > 2h"
         ];
       }
     ];

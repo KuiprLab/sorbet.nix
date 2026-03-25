@@ -6,7 +6,7 @@ _: {
       client.insecure = true;
       conditions = [
         "[STATUS] == 200"
-        "[CERTIFICATE_EXPIRATION] > 48h"
+        "[CERTIFICATE_EXPIRATION] > 2h"
       ];
     }
   ];
