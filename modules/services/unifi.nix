@@ -37,7 +37,7 @@ _: {
           "unifi-os-server--etc-rabbitmq-ssl:/etc/rabbitmq/ssl"
         ];
         ports = [
-          "11443:443"
+          "127.0.0.1:11443:443"
           "5005:5005"
           "9543:9543"
           "6789:6789"
