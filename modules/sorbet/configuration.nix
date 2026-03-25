@@ -44,16 +44,21 @@ in {
       firewall.enable = true;
       hostName = "sorbet";
       networkmanager.enable = true;
-      useDHCP = false;
+      useDHCP = lib.mkDefault false; # disable global DHCP
+      interfaces."enp0s31f6" = {
+        wakeOnLan.enable = true;
+        ipv4.addresses = [
+          {
+            address = "192.168.0.85";
+            prefixLength = 24;
+          }
+        ];
+      };
       defaultGateway = "192.168.0.1";
-      nameservers = ["192.168.0.1"];
-      interfaces."enp0s31f6".ipv4.addresses = [
-        {
-          address = "192.168.0.85";
-          prefixLength = 24;
-        }
+      nameservers = [
+        "127.0.0.1"
+        "9.9.9.9"
       ];
-      interfaces."enp0s31f6".wakeOnLan.enable = true;
     };
 
     # Nix settings
