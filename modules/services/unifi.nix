@@ -3,7 +3,6 @@ _: {
     {
       name = "UniFi";
       url = "https://unifi.lan";
-      client.insecure = true;
       conditions = [
         "[STATUS] == 200"
         "[CERTIFICATE_EXPIRATION] > 2h"
