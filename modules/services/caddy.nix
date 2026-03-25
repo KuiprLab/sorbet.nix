@@ -48,7 +48,7 @@
 
         db = {
           type = "badgerv2";
-          dataSource = "/var/lib/step-ca/db";
+          dataSource = "/home/daniel/step-ca/db";
         };
       };
     };
