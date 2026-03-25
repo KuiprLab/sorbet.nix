@@ -2,7 +2,7 @@ _: {
   flake.gatusEndpoints = [
     {
       name = "DNS";
-      url = "dns://192.168.0.85";
+      url = "192.168.0.85";
       dns = {
         query-name = "homeassistant.lan";
         query-type = "A";
@@ -28,7 +28,10 @@ _: {
 
         # DNS: forward all *.lan queries to ourselves, everything else upstream
         address = "/.lan/${serverIp}";
-        server = ["9.9.9.9" "9.9.9.10"];
+        server = [
+          "9.9.9.9"
+          "9.9.9.10"
+        ];
 
         # DHCP: hand out IPs in range, tell clients to use us as DNS
         dhcp-range = "192.168.0.2,192.168.0.254,255.255.255.0,24h";
@@ -51,7 +54,11 @@ _: {
     # Open firewall ports
     networking.firewall = {
       allowedTCPPorts = [53];
-      allowedUDPPorts = [53 67 68];
+      allowedUDPPorts = [
+        53
+        67
+        68
+      ];
     };
 
     # Disable systemd-resolved to avoid port 53 conflict
