@@ -2,3 +2,13 @@
 
 ## Booststrap step-ca
 `nix-shell -p step-cli -p step-ca --run "step ca init --acme --name='Sorbet CA' --dns='localhost,sorbet.lan' --address=':9000' --provisioner='acme'"`
+
+
+### Then copy the generated files
+```bash
+sudo cp -r ~/.step/* /var/lib/step-ca/
+sudo chown -R step-ca:step-ca /var/lib/step-ca
+sudo chmod 600 /var/lib/step-ca/secrets/*
+sudo bash -c 'echo "your-password-here" > /var/lib/step-ca/password.txt'
+```
+
