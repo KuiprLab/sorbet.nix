@@ -3,6 +3,10 @@ _: {
     caddyVirtualHosts."homeassistant.lan" = ''
       reverse_proxy localhost:8123
       tls internal
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
     '';
 
     gatusEndpoints = [
