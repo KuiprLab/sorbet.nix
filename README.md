@@ -7,8 +7,6 @@
 ### Then copy the generated files
 ```bash
 sudo cp -r ~/.step/* /var/lib/step-ca/
-sudo chown -R step-ca:step-ca /var/lib/step-ca
-sudo chmod 600 /var/lib/step-ca/secrets/*
 sudo bash -c 'echo "your-password-here" > /var/lib/step-ca/password.txt'
 ```
 
