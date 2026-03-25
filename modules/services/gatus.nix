@@ -41,6 +41,17 @@
       config,
       ...
     }: {
+      flake.gatusExtraConfig = {
+        alerting.discord = {
+          webhook-url = "$DISCORD_WEBHOOK_URL";
+          default-alert = {
+            failure-threshold = 3;
+            success-threshold = 2;
+            send-on-resolved = true;
+          };
+        };
+      };
+
       sops.secrets."gatus/discord_webhook" = {
         sopsFile = ./gatus-secrets;
         format = "binary";
@@ -67,16 +78,5 @@
       };
 
       # networking.firewall.allowedTCPPorts = [ 8888 ];
-
-      flake.gatusExtraConfig = {
-        alerting.discord = {
-          webhook-url = "$DISCORD_WEBHOOK_URL";
-          default-alert = {
-            failure-threshold = 3;
-            success-threshold = 2;
-            send-on-resolved = true;
-          };
-        };
-      };
     };
 }
