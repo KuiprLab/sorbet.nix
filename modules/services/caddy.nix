@@ -13,6 +13,12 @@
   };
 
   config.flake.nixosModules.stepCa = _: {
+    systemd.services."step-ca".serviceConfig = {
+      User = lib.mkForce "root";
+      Group = lib.mkForce "root";
+      DynamicUser = lib.mkForce false;
+    };
+
     # The intermediate key password must be in a file (not in the Nix store)
     # Create with: echo "your-password" > /var/lib/step-ca/password.txt && chmod 600 /var/lib/step-ca/password.txt
     services.step-ca = {
