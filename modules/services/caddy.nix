@@ -70,9 +70,9 @@
         443
       ];
 
-      systemd.services.caddy = {
-        After = ["step-ca.service"];
-        Wants = ["step-ca.service"];
+      systemd.services.caddy = lib.mkForce {
+        after = ["step-ca.service"];
+        wants = ["step-ca.service"];
       };
 
       services.caddy = {
