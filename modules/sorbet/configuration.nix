@@ -45,8 +45,7 @@ in {
       hostName = "sorbet";
       networkmanager.enable = true;
       useDHCP = lib.mkDefault true;
-      # TODO: Update
-      # interfaces."enp4s0".wakeOnLan.enable = true;
+      interfaces."enp0s31f6".wakeOnLan.enable = true;
     };
 
     # Nix settings

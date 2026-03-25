@@ -1,7 +1,7 @@
 _: {
   flake.nixosModules.dnsDhcp = {lib, ...}: let
     serverIp = "192.168.0.85";
-    networkInterface = "enp4s0";
+    networkInterface = "enp0s31f6";
   in {
     # -------------------------------------------------------------------------
     # dnsmasq — handles both DHCP and DNS (.lan wildcard)
