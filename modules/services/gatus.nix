@@ -21,12 +21,14 @@
     gatusConfigFile = (pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig;
   in
     _: {
-      services.gatus = {
-        enable = true;
-        configFile = gatusConfigFile;
-      };
+      flake.nixosModules.gatus = {
+        services.gatus = {
+          enable = true;
+          configFile = gatusConfigFile;
+        };
 
-      # networking.firewall.allowedTCPPorts = [ 8080 ];
+        # networking.firewall.allowedTCPPorts = [ 8080 ];
+      };
 
       flake.caddyVirtualHosts."gatus.lan" = ''
         reverse_proxy localhost:8080
