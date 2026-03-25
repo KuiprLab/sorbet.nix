@@ -1,4 +1,9 @@
 _: {
+  flake.caddyVirtualHosts."unifi.lan" = ''
+    reverse_proxy localhost:11443
+    tls internal
+  '';
+
   flake.nixosModules.unifi = _: {
     imports = [../../pkgs/unifi-os-server-image/module.nix];
 
@@ -10,10 +15,6 @@ _: {
     #   systemIp = "192.168.0.85";
     #   openFirewall = true;
     # };
-    flake.caddyVirtualHosts."unifi.lan" = ''
-      reverse_proxy localhost:11443
-      tls internal
-    '';
 
     # Important:
     # SSH into device with username/password: ubnt/ubnt
