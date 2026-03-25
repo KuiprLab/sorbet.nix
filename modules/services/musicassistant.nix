@@ -9,7 +9,10 @@ _: {
       name = "Music Assistant";
       url = "https://musicassistant.lan";
       client.insecure = true;
-      conditions = ["[STATUS] == 200"];
+      conditions = [
+        "[STATUS] == 200"
+        "[CERTIFICATE_EXPIRATION] > 48h"
+      ];
     }
   ];
 
