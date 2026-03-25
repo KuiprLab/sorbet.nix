@@ -19,8 +19,38 @@
       enable = true;
       address = "127.0.0.1";
       port = 9000;
-      intermediatePasswordFile = "/var/lib/step-ca/password.txt";
-      settings = builtins.fromJSON (builtins.readFile /var/lib/step-ca/config/ca.json);
+      intermediatePasswordFile = "/var/lib/step-ca/password.txt"; # or a sops secret path
+
+      settings = {
+        root = "/var/lib/step-ca/certs/root_ca.crt";
+        crt = "/var/lib/step-ca/certs/intermediate_ca.crt";
+        key = "/var/lib/step-ca/secrets/intermediate_ca_key";
+        dnsNames = [
+          "localhost"
+          "sorbet.lan"
+        ];
+        logger.format = "text";
+
+        authority = {
+          provisioners = [
+            {
+              type = "ACME";
+              name = "acme";
+              # 90-day cert lifetime
+              claims = {
+                minTLSCertDuration = "5m";
+                maxTLSCertDuration = "2160h";
+                defaultTLSCertDuration = "2160h";
+              };
+            }
+          ];
+        };
+
+        db = {
+          type = "badgerv2";
+          dataSource = "/var/lib/step-ca/db";
+        };
+      };
     };
   };
 
