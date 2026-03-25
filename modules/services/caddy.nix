@@ -71,8 +71,8 @@
       ];
 
       systemd.services.caddy = {
-        after = ["step-ca.service"];
-        wants = ["step-ca.service"];
+        After = ["step-ca.service"];
+        Wants = ["step-ca.service"];
       };
 
       services.caddy = {
