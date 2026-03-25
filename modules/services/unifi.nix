@@ -1,6 +1,10 @@
 _: {
   flake.caddyVirtualHosts."unifi.lan" = ''
-    reverse_proxy localhost:11443
+    reverse_proxy https://localhost:11443 {
+      transport http {
+        tls_insecure_skip_verify
+      }
+    }
     tls internal
   '';
 
