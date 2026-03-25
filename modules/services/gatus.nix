@@ -3,48 +3,52 @@
   config,
   ...
 }: {
-  options.flake.gatusEndpoints = lib.mkOption {
-    type = lib.types.listOf lib.types.attrs;
-    default = [];
-    description = ''
-      Gatus endpoint configurations contributed by service modules.
-      Each entry is an attrset matching the Gatus endpoint schema.
-    '';
+  options.flake = {
+    gatusEndpoints = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [];
+      description = ''
+        Gatus endpoint configurations contributed by service modules.
+        Each entry is an attrset matching the Gatus endpoint schema.
+      '';
+    };
+
+    gatusExtraConfig = lib.mkOption {
+      type = lib.types.attrs;
+      default = {};
+      description = ''
+        Extra top-level Gatus configuration (e.g. alerting, storage, web).
+        Gets merged with the generated endpoints config.
+      '';
+    };
   };
 
-  options.flake.gatusExtraConfig = lib.mkOption {
-    type = lib.types.attrs;
-    default = {};
-    description = ''
-      Extra top-level Gatus configuration (e.g. alerting, storage, web).
-      Gets merged with the generated endpoints config.
+  config.flake = {
+    gatusEndpoints = [
+      {
+        name = "Caddy";
+        url = "https://gatus.lan";
+        conditions = [
+          "[STATUS] == 200"
+          "[CERTIFICATE_EXPIRATION] > 2h"
+        ];
+        alerts = [{type = "discord";}];
+      }
+    ];
+
+    caddyVirtualHosts."gatus.lan" = ''
+      reverse_proxy localhost:8888
+      tls internal
     '';
-  };
 
-  config.flake.gatusEndpoints = [
-    {
-      name = "Caddy";
-      url = "https://gatus.lan";
-      conditions = [
-        "[STATUS] == 200"
-        "[CERTIFICATE_EXPIRATION] > 2h"
-      ];
-      alerts = [{type = "discord";}];
-    }
-  ];
-
-  config.flake.caddyVirtualHosts."gatus.lan" = ''
-    reverse_proxy localhost:8888
-    tls internal
-  '';
-
-  config.flake.gatusExtraConfig = {
-    alerting.discord = {
-      webhook-url = "$DISCORD_WEBHOOK_URL";
-      default-alert = {
-        failure-threshold = 3;
-        success-threshold = 2;
-        send-on-resolved = true;
+    gatusExtraConfig = {
+      alerting.discord = {
+        webhook-url = "$DISCORD_WEBHOOK_URL";
+        default-alert = {
+          failure-threshold = 3;
+          success-threshold = 2;
+          send-on-resolved = true;
+        };
       };
     };
   };
