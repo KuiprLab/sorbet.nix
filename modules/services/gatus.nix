@@ -26,6 +26,17 @@
     tls internal
   '';
 
+  config.flake.gatusExtraConfig = {
+    alerting.discord = {
+      webhook-url = "$DISCORD_WEBHOOK_URL";
+      default-alert = {
+        failure-threshold = 3;
+        success-threshold = 2;
+        send-on-resolved = true;
+      };
+    };
+  };
+
   config.flake.nixosModules.gatus = let
     endpoints = config.flake.gatusEndpoints;
     extraConfig = config.flake.gatusExtraConfig;
@@ -41,17 +52,6 @@
       config,
       ...
     }: {
-      flake.gatusExtraConfig = {
-        alerting.discord = {
-          webhook-url = "$DISCORD_WEBHOOK_URL";
-          default-alert = {
-            failure-threshold = 3;
-            success-threshold = 2;
-            send-on-resolved = true;
-          };
-        };
-      };
-
       sops.secrets."gatus/discord_webhook" = {
         sopsFile = ./gatus-secrets;
         format = "binary";
