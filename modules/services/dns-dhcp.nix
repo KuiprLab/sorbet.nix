@@ -13,7 +13,7 @@ _: {
     # -------------------------------------------------------------------------
     services.dhcpd4 = {
       enable = true;
-      interfaces = [ networkInterface ];
+      interfaces = [networkInterface];
       extraConfig = ''
         option domain-name "${domain}";
         option domain-name-servers ${serverIp};
@@ -40,9 +40,9 @@ _: {
     services.bind = {
       enable = true;
       # Only listen on LAN interface + loopback
-      listenOn = [ "${serverIp}" "127.0.0.1" ];
+      listenOn = ["${serverIp}" "127.0.0.1"];
       # Allow queries from local network only
-      cacheNetworks = [ "192.168.0.0/24" "127.0.0.0/8" ];
+      cacheNetworks = ["192.168.0.0/24" "127.0.0.0/8"];
 
       forwarders = [
         "1.1.1.1"
@@ -95,13 +95,13 @@ _: {
     # Open firewall ports
     networking.firewall = {
       allowedTCPPorts = [
-        53  # DNS
-        67  # DHCP
+        53 # DNS
+        67 # DHCP
       ];
       allowedUDPPorts = [
-        53  # DNS
-        67  # DHCP
-        68  # DHCP client
+        53 # DNS
+        67 # DHCP
+        68 # DHCP client
       ];
     };
 
