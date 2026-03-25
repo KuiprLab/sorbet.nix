@@ -24,10 +24,17 @@ _: {
 
     # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
     nixosModules.homeassistant = _: {
-      networking.firewall.allowedTCPPorts = [
-        5353
-        1900
-        51827
+      networking.firewall.allowedTCPPortRanges = [
+        {
+          from = 100;
+          to = 65535;
+        }
+      ];
+      networking.firewall.allowedUDPPortRanges = [
+        {
+          from = 100;
+          to = 65535;
+        }
       ];
 
       virtualisation.oci-containers = {
