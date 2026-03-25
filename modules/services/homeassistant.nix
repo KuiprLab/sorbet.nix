@@ -24,6 +24,12 @@ _: {
 
     # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
     nixosModules.homeassistant = _: {
+      networking.firewall.allowedTCPPorts = [
+        5353
+        1900
+        51827
+      ];
+
       virtualisation.oci-containers = {
         backend = "podman";
         containers.homeassistant = {
