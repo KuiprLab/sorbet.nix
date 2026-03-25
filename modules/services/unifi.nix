@@ -1,4 +1,13 @@
 _: {
+  flake.gatusEndpoints = [
+    {
+      name = "UniFi";
+      url = "https://unifi.lan";
+      client.insecure = true;
+      conditions = ["[STATUS] == 200"];
+    }
+  ];
+
   flake.caddyVirtualHosts."unifi.lan" = ''
     reverse_proxy https://localhost:11443 {
       transport http {

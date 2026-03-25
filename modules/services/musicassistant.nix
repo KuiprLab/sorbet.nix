@@ -4,6 +4,15 @@ _: {
     tls internal
   '';
 
+  flake.gatusEndpoints = [
+    {
+      name = "Music Assistant";
+      url = "https://musicassistant.lan";
+      client.insecure = true;
+      conditions = ["[STATUS] == 200"];
+    }
+  ];
+
   flake.nixosModules.musicassistant = _: {
     virtualisation.oci-containers = {
       containers.musicassistant = {

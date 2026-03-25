@@ -4,6 +4,15 @@ _: {
     tls internal
   '';
 
+  flake.gatusEndpoints = [
+    {
+      name = "Home Assistant";
+      url = "https://homeassistant.lan";
+      client.insecure = true; # since tls internal
+      conditions = ["[STATUS] == 200"];
+    }
+  ];
+
   # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
   flake.nixosModules.homeassistant = _: {
     virtualisation.oci-containers = {
