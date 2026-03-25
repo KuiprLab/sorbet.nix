@@ -1,8 +1,5 @@
 _: {
-  flake.nixosModules.dnsDhcp = {
-    lib,
-    ...
-  }: let
+  flake.nixosModules.dnsDhcp = {lib, ...}: let
     serverIp = "192.168.0.85";
     networkInterface = "enp4s0";
   in {
@@ -18,7 +15,7 @@ _: {
 
         # DNS: forward all *.lan queries to ourselves, everything else upstream
         address = "/.lan/${serverIp}";
-        server = [ "1.1.1.1" "8.8.8.8" ];
+        server = ["1.1.1.1" "8.8.8.8"];
 
         # DHCP: hand out IPs in range, tell clients to use us as DNS
         dhcp-range = "192.168.0.2,192.168.0.254,255.255.255.0,24h";
@@ -40,8 +37,8 @@ _: {
 
     # Open firewall ports
     networking.firewall = {
-      allowedTCPPorts = [ 53 ];
-      allowedUDPPorts = [ 53 67 68 ];
+      allowedTCPPorts = [53];
+      allowedUDPPorts = [53 67 68];
     };
 
     # Disable systemd-resolved to avoid port 53 conflict
