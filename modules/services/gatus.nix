@@ -21,25 +21,33 @@
     '';
   };
 
-  # Register gatus.lan with Caddy at the flake level, same as other services
   config.flake.caddyVirtualHosts."gatus.lan" = ''
-    reverse_proxy localhost:8080
+    reverse_proxy localhost:8888
     tls internal
   '';
 
   config.flake.nixosModules.gatus = let
-    # Pass the collected config into the NixOS module via closure
     endpoints = config.flake.gatusEndpoints;
     extraConfig = config.flake.gatusExtraConfig;
-    gatusConfig = extraConfig // {inherit endpoints;};
+    gatusConfig =
+      extraConfig
+      // {
+        inherit endpoints;
+        web.port = 8888;
+      };
   in
     {pkgs, ...}: {
-      services.gatus = {
-        enable = true;
-        # Generate the config file inside the NixOS module where pkgs is available
-        configFile = (pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig;
+      virtualisation.oci-containers.containers.gatus = {
+        image = "ghcr.io/twin/gatus:latest";
+        volumes = [
+          "${(pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig}:/config/config.yaml:ro"
+          "gatus-data:/data"
+        ];
+        ports = ["127.0.0.1:8888:8888"];
+        environment.TZ = "Europe/Berlin";
+        labels."io.containers.autoupdate" = "registry";
       };
 
-      networking.firewall.allowedTCPPorts = [8080];
+      networking.firewall.allowedTCPPorts = [8888];
     };
 }
