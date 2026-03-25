@@ -22,14 +22,16 @@
     '';
   };
 
+  # Register gatus.lan with Caddy at the flake level, same as other services
+  config.flake.caddyVirtualHosts."gatus.lan" = ''
+    reverse_proxy localhost:8080
+    tls internal
+  '';
+
   config.flake.nixosModules.gatus = let
     endpoints = config.flake.gatusEndpoints;
     extraConfig = config.flake.gatusExtraConfig;
-    gatusConfig =
-      extraConfig
-      // {
-        inherit endpoints;
-      };
+    gatusConfig = extraConfig // {inherit endpoints;};
     gatusConfigFile = (pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig;
   in
     _: {
@@ -39,21 +41,5 @@
       };
 
       networking.firewall.allowedTCPPorts = [8080];
-
-      flake.caddyVirtualHosts."gatus.lan" = ''
-        reverse_proxy localhost:8080
-        tls internal
-      '';
-
-      flake.gatusExtraConfig = {
-        storage = {
-          type = "sqlite";
-          path = "/var/lib/gatus/gatus.db";
-        };
-        alerting.ntfy = {
-          url = "https://ntfy.sh/your-topic";
-          default-alert.failure-threshold = 3;
-        };
-      };
     };
 }
