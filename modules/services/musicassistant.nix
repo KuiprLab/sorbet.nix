@@ -1,11 +1,10 @@
 _: {
-  # https://nixos.wiki/wiki/Home_Assistant#NixOS_Module
-  flake.nixosModules.musicassistant = _: {
-    flake.caddyVirtualHosts."musicassistant.lan" = ''
-      reverse_proxy localhost:8095
-      tls internal
-    '';
+  flake.caddyVirtualHosts."musicassistant.lan" = ''
+    reverse_proxy localhost:8095
+    tls internal
+  '';
 
+  flake.nixosModules.musicassistant = _: {
     virtualisation.oci-containers = {
       containers.musicassistant = {
         volumes = ["music-assistant:/data"];
