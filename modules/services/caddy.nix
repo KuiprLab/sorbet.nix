@@ -21,6 +21,7 @@
 
     # The intermediate key password must be in a file (not in the Nix store)
     # Create with: echo "your-password" > /var/lib/step-ca/password.txt && chmod 600 /var/lib/step-ca/password.txt
+    systemd.packages = lib.mkForce [];
     services.step-ca = {
       enable = true;
       address = "127.0.0.1";
@@ -70,9 +71,15 @@
         443
       ];
 
-      systemd.services.caddy = lib.mkForce {
-        after = ["step-ca.service"];
-        wants = ["step-ca.service"];
+      systemd.services.caddy = {
+        after = lib.mkForce [
+          "network-online.target"
+          "step-ca.service"
+        ];
+        wants = lib.mkForce [
+          "network-online.target"
+          "step-ca.service"
+        ];
       };
 
       services.caddy = {
