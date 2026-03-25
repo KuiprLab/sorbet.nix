@@ -15,7 +15,7 @@ _: {
 
         # DNS: forward all *.lan queries to ourselves, everything else upstream
         address = "/.lan/${serverIp}";
-        server = ["1.1.1.1" "8.8.8.8"];
+        server = ["9.9.9.9" "9.9.9.10"];
 
         # DHCP: hand out IPs in range, tell clients to use us as DNS
         dhcp-range = "192.168.0.2,192.168.0.254,255.255.255.0,24h";

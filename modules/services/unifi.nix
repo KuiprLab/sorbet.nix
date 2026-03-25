@@ -10,6 +10,10 @@ _: {
     #   systemIp = "192.168.0.85";
     #   openFirewall = true;
     # };
+    flake.caddyVirtualHosts."unifi.lan" = ''
+      reverse_proxy localhost:11443
+      tls internal
+    '';
 
     # Important:
     # SSH into device with username/password: ubnt/ubnt

@@ -101,7 +101,7 @@ in {
 
     networking.firewall = mkIf cfg.openFirewall {
       allowedTCPPorts = [
-        11443 # UniFi OS Server GUI/API
+        # 11443 # UniFi OS Server GUI/API --- disabled because its accessed by reverse proxy on localhost
         8080 # Device and application communication (inform)
         5005 # RTP control protocol
         9543 # UniFi Identity Hub
