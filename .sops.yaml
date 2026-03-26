@@ -1,5 +1,5 @@
 creation_rules:
-- path_regex: .*
+- path_regex: secrets/.*
   age: null
   key_groups:
       - age:

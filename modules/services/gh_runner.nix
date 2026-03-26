@@ -2,7 +2,7 @@ _: {
   flake.nixosModules.caddy = {config, ...}: {
     sops.secrets = {
       "gh_runner" = {
-        sopsFile = ./token;
+        sopsFile = ../../secrets/github-secrets;
         format = "binary";
         key = "";
       };

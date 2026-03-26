@@ -23,7 +23,7 @@
       networking.firewall.allowedTCPPorts = [80 443];
 
       sops.secrets."caddy/cloudflare_api_token" = {
-        sopsFile = ./caddy-secrets;
+        sopsFile = ../../secrets/caddy-secrets;
         format = "binary";
         key = "";
         owner = "caddy";
