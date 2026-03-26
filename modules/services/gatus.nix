@@ -27,7 +27,7 @@
     gatusEndpoints = [
       {
         name = "Caddy";
-        url = "https://gatus.lan";
+        url = "https://gatus.internal.kuipr.de";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 2h"
@@ -36,7 +36,7 @@
       }
     ];
 
-    caddyVirtualHosts."gatus.lan" = ''
+    caddyVirtualHosts."gatus.internal.kuipr.de" = ''
       reverse_proxy localhost:8888
     '';
 

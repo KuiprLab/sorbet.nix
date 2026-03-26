@@ -3,7 +3,7 @@ _: {
     gatusEndpoints = [
       {
         name = "UniFi";
-        url = "https://unifi.lan";
+        url = "https://unifi.internal.kuipr.de";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 2h"
@@ -12,7 +12,7 @@ _: {
       }
     ];
 
-    caddyVirtualHosts."unifi.lan" = ''
+    caddyVirtualHosts."unifi.internal.kuipr.de" = ''
       reverse_proxy https://localhost:11443 {
         transport http {
           tls_insecure_skip_verify

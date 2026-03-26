@@ -1,6 +1,6 @@
 _: {
   flake = {
-    caddyVirtualHosts."homeassistant.lan" = ''
+    caddyVirtualHosts."homeassistant.internal.kuipr.de" = ''
       reverse_proxy localhost:8123 {
         header_up Host {host}
         header_up X-Real-IP {remote_host}
@@ -12,7 +12,7 @@ _: {
     gatusEndpoints = [
       {
         name = "Home Assistant";
-        url = "https://homeassistant.lan";
+        url = "https://homeassistant.internal.kuipr.de";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 2h"

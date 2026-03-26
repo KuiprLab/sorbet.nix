@@ -1,13 +1,13 @@
 _: {
   flake = {
-    caddyVirtualHosts."musicassistant.lan" = ''
+    caddyVirtualHosts."musicassistant.internal.kuipr.de" = ''
       reverse_proxy localhost:8095
     '';
 
     gatusEndpoints = [
       {
         name = "Music Assistant";
-        url = "https://musicassistant.lan";
+        url = "https://musicassistant.internal.kuipr.de";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 2h"
