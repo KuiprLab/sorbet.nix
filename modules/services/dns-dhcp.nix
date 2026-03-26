@@ -29,8 +29,9 @@ _: {
         # DNS: forward all *.internal.kuipr.de queries to ourselves, everything else upstream
         address = "/.internal.kuipr.de/${serverIp}";
         server = [
-          "9.9.9.9"
-          "9.9.9.10"
+          "1.1.1.1"
+          # "9.9.9.9"
+          # "9.9.9.10"
         ];
 
         # DHCP: hand out IPs in range, tell clients to use us as DNS
