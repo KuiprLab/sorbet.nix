@@ -4,7 +4,7 @@ _: {
       name = "DNS";
       url = "192.168.0.85";
       dns = {
-        query-name = "homeassistant.lan";
+        query-name = "homeassistant.internal.kuipr.de";
         query-type = "A";
       };
       conditions = ["[DNS_RCODE] == NOERROR"];
@@ -26,8 +26,8 @@ _: {
         interface = networkInterface;
         bind-interfaces = true;
 
-        # DNS: forward all *.lan queries to ourselves, everything else upstream
-        address = "/.lan/${serverIp}";
+        # DNS: forward all *.internal.kuipr.de queries to ourselves, everything else upstream
+        address = "/.internal.kuipr.de/${serverIp}";
         server = [
           "9.9.9.9"
           "9.9.9.10"
