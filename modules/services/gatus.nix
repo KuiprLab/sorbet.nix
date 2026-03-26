@@ -38,7 +38,6 @@
 
     caddyVirtualHosts."gatus.lan" = ''
       reverse_proxy localhost:8888
-      tls internal
     '';
 
     gatusExtraConfig = {
@@ -80,13 +79,10 @@
         volumes = [
           "${(pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig}:/config/config.yaml:ro"
           "gatus-data:/data"
-          # Mount Caddy's local CA root so Gatus can verify tls internal certs
-          "/var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt:/etc/ssl/certs/caddy-local-ca.crt:ro"
         ];
         ports = ["127.0.0.1:8888:8888"];
         environment = {
           TZ = "Europe/Berlin";
-          SSL_CERT_DIR = "/etc/ssl/certs";
         };
         # Inject the webhook URL from the sops secret as an env var
         environmentFiles = [config.sops.secrets."gatus/discord_webhook".path];

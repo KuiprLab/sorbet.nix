@@ -2,7 +2,6 @@ _: {
   flake = {
     caddyVirtualHosts."musicassistant.lan" = ''
       reverse_proxy localhost:8095
-      tls internal
     '';
 
     gatusEndpoints = [

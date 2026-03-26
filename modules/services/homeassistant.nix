@@ -7,7 +7,6 @@ _: {
         header_up X-Forwarded-For {remote_host}
         header_up X-Forwarded-Proto {scheme}
       }
-      tls internal
     '';
 
     gatusEndpoints = [
