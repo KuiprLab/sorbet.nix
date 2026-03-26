@@ -29,31 +29,12 @@
         owner = "caddy";
       };
 
-      nixpkgs.overlays = lib.mkAfter [
-        (_: prev: {
-          caddy = prev.caddy.override (old: {
-            buildGoModule = args:
-              prev.buildGoModule (args
-                // {
-                  overrideModAttrs = _: {
-                    preBuild = ''
-                      go get github.com/caddy-dns/bunny
-                    '';
-                  };
-                  postInstall =
-                    (args.postInstall or "")
-                    + ''
-                      ${prev.xcaddy}/bin/xcaddy build \
-                        --with github.com/caddy-dns/cloudflare \
-                        --output $out/bin/caddy
-                    '';
-                });
-          });
-        })
-      ];
-
       services.caddy = {
         enable = true;
+        package = pkgs.caddy.withPlugins {
+          plugins = ["github.com/caddy-dns/bunny@v1.2.0"];
+          hash = lib.fakeHash;
+        };
         globalConfig = ''
           acme_dns bunny {env.BUNNY_API_KEY}
         '';
