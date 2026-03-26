@@ -21,11 +21,6 @@ _: {
       ];
     };
 
-    # Persist the Tailscale state across reboots
-    environment.persistence = {
-      "/persistent".directories = ["/var/lib/tailscale"];
-    };
-
     networking.firewall = {
       trustedInterfaces = ["tailscale0"];
       allowedUDPPorts = [config.services.tailscale.port];
