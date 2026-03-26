@@ -37,6 +37,7 @@
         };
         globalConfig = ''
           acme_dns bunny {env.BUNNY_API_KEY}
+          zone kuipr.de
         '';
         virtualHosts = lib.mapAttrs (_: extraConfig: {inherit extraConfig;}) virtualHosts;
       };
