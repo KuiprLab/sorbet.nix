@@ -36,8 +36,10 @@
           hash = "sha256-SbhLINpMjh9YJ5J9FC6gqa+Bz1Yh41X+53qTHgJyOOY=";
         };
         globalConfig = ''
-          acme_dns bunny {env.BUNNY_API_KEY}
-          zone kuipr.de
+          acme_dns bunny {
+              api_key {env.BUNNY_API_KEY}
+              zone kuipr.de
+          }
         '';
         virtualHosts = lib.mapAttrs (_: extraConfig: {inherit extraConfig;}) virtualHosts;
       };
