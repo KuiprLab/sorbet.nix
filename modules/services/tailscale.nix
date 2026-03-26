@@ -16,7 +16,7 @@ _: {
       openFirewall = true;
       authKeyFile = config.sops.secrets."tailscale/authkey".path;
       extraUpFlags = [
-        "--accept-dns=false"   # Don't let Tailscale override your dnsmasq
+        "--accept-dns=false" # Don't let Tailscale override your dnsmasq
         "--accept-routes=true"
       ];
     };
