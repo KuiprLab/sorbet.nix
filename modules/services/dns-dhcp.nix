@@ -23,7 +23,7 @@ _: {
       enable = true;
       settings = {
         # Network interface to listen on
-        interface = [networkInterface "tailscale0"];
+        interface = [networkInterface];
         bind-interfaces = true;
 
         # DNS: forward all *.int.kuipr.de queries to ourselves, everything else upstream
