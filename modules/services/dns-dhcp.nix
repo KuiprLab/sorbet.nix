@@ -26,7 +26,7 @@ _: {
         interface = [networkInterface "tailscale0"];
         bind-interfaces = true;
 
-        # DNS: forward all *.internal.kuipr.de queries to ourselves, everything else upstream
+        # DNS: forward all *.int.kuipr.de queries to ourselves, everything else upstream
         address = "/.int.kuipr.de/${serverIp}";
         server = [
           "1.1.1.1"
