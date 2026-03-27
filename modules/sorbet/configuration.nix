@@ -44,7 +44,7 @@ in {
       firewall.enable = true;
       hostName = "sorbet";
       networkmanager.enable = true;
-      useDHCP = lib.mkDefault false; # disable global DHCP
+      useDHCP =  false; # disable global DHCP
       interfaces."enp0s31f6" = {
         wakeOnLan.enable = true;
         ipv4.addresses = [
