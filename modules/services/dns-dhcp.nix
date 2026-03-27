@@ -29,9 +29,8 @@ _: {
         # DNS: forward all *.int.kuipr.de queries to ourselves, everything else upstream
         address = "/.int.kuipr.de/${serverIp}";
         server = [
-          "1.1.1.1"
-          # "9.9.9.9"
-          # "9.9.9.10"
+          "9.9.9.9"
+          "9.9.9.10"
         ];
 
         # DHCP: hand out IPs in range, tell clients to use us as DNS
@@ -53,15 +52,19 @@ _: {
     };
 
     # Open firewall ports
-    networking.firewall = {
-      allowedTCPPorts = [53];
-      allowedUDPPorts = [
-        53
-        67
-        68
-      ];
-      interfaces."tailscale0".allowedTCPPorts = [53];
-      interfaces."tailscale0".allowedUDPPorts = [53];
+    networking = {
+      # Set this to false so the server doesn't go boom if dnsmasq fails to start and takes down the local resolver with it
+      resolvconf.useLocalResolver = false;
+      firewall = {
+        allowedTCPPorts = [53];
+        allowedUDPPorts = [
+          53
+          67
+          68
+        ];
+        interfaces."tailscale0".allowedTCPPorts = [53];
+        interfaces."tailscale0".allowedUDPPorts = [53];
+      };
     };
 
     # Disable systemd-resolved to avoid port 53 conflict
