@@ -1,9 +1,5 @@
 _: {
-  flake.nixosModules.tailscale = {
-    pkgs,
-    config,
-    ...
-  }: {
+  flake.nixosModules.tailscale = {config, ...}: {
     sops.secrets."tailscale/authkey" = {
       sopsFile = ../../secrets/tailscale-secrets;
       format = "binary";
