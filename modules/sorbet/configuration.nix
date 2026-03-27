@@ -1,11 +1,7 @@
 _: let
   user = "daniel";
 in {
-  flake.nixosModules.sorbetConfiguration = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.sorbetConfiguration = {pkgs, ...}: {
     system.stateVersion = "24.05";
 
     environment.systemPackages = with pkgs; [
