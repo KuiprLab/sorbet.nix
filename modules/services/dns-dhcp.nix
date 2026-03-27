@@ -66,6 +66,12 @@ _: {
     };
 
     # Disable systemd-resolved to avoid port 53 conflict
-    services.resolved.enable = lib.mkForce false;
+    services.resolved = {
+      enable = lib.mkForce false;
+      fallbackDns = [
+        "9.9.9.9"
+        "9.9.10.10"
+      ];
+    };
   };
 }
