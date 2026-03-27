@@ -45,6 +45,8 @@ in {
       hostName = "sorbet";
       networkmanager.enable = true;
       useDHCP = false; # disable global DHCP
+      # Set this to false so the server doesn't go boom if dnsmasq fails to start and takes down the local resolver with it
+      resolvconf.useLocalResolver = false;
       interfaces."enp0s31f6" = {
         wakeOnLan.enable = true;
         ipv4.addresses = [
@@ -58,6 +60,10 @@ in {
       nameservers = [
         "1.1.1.1"
         "127.0.0.1"
+      ];
+      fallbackDns = [
+        "9.9.9.9"
+        "9.9.10.10"
       ];
     };
 

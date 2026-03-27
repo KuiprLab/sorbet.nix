@@ -53,8 +53,6 @@ _: {
 
     # Open firewall ports
     networking = {
-      # Set this to false so the server doesn't go boom if dnsmasq fails to start and takes down the local resolver with it
-      resolvconf.useLocalResolver = false;
       firewall = {
         allowedTCPPorts = [53];
         allowedUDPPorts = [
