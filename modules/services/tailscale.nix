@@ -14,6 +14,7 @@ _: {
       extraUpFlags = [
         "--accept-dns=false" # Don't let Tailscale override your dnsmasq
         "--accept-routes=true"
+        "--advertise-routes=192.168.0.0/24"
       ];
     };
 
