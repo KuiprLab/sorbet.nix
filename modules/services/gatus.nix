@@ -41,6 +41,10 @@
     '';
 
     gatusExtraConfig = {
+      storage = {
+        type = "sqlite";
+        path = "/data/data.db";
+      };
       alerting.discord = {
         webhook-url = "$DISCORD_WEBHOOK_URL";
         default-alert = {
