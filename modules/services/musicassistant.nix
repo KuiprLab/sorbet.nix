@@ -17,6 +17,19 @@ _: {
     ];
 
     nixosModules.musicassistant = _: {
+      # Enable chromecast ports
+      networking.firewall = {
+        allowedTCPPorts = [
+          8008
+          8009
+          8443
+        ];
+
+        allowedUDPPorts = [
+          10008
+        ];
+      };
+
       virtualisation.oci-containers = {
         containers.musicassistant = {
           volumes = ["music-assistant:/data"];
