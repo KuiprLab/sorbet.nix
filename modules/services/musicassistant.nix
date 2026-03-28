@@ -27,6 +27,7 @@ _: {
 
         allowedUDPPorts = [
           10008
+          5353
         ];
       };
 
