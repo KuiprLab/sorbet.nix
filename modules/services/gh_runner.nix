@@ -49,7 +49,7 @@ _: {
               '```')
           else
             ERRORS=$(tail -20 /tmp/deploy.log)
-            BODY=$(printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s" \
+            BODY=$(printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s" \
               "FAILED: sorbet deploy failed (exit ''${EXIT})" \
               "**Changes attempted:**" \
               '```diff' \
