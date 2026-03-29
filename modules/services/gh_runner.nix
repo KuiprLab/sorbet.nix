@@ -22,12 +22,17 @@ _: {
     environment.systemPackages = [
       (pkgs.writeShellApplication {
         name = "actions-deploy";
-        runtimeInputs = [pkgs.curl pkgs.jq pkgs.dix];
+        runtimeInputs = [
+          pkgs.curl
+          pkgs.jq
+          pkgs.dix
+          pkgs.coreutils
+        ];
         text = ''
           WEBHOOK=$(cat ${config.sops.secrets."deploy_webhook".path})
 
           # Snapshot the current generation before switching
-          OLD=$(ls -d /nix/var/nix/profiles/system-*-link | sort -t- -k2 -n | tail -1)
+          OLD=$(find /nix/var/nix/profiles -maxdepth 1 -name 'system-*-link' | sort -t- -k2 -n | tail -1)
 
           nixos-rebuild switch --flake "github:KuiprLab/sorbet.nix#sorbet" > /tmp/deploy.log 2>&1
           EXIT=$?
