@@ -16,6 +16,8 @@ _: {
         url = "https://github.com/KuiprLab/sorbet.nix";
         serviceOverrides = {
           restartIfChanged = false;
+          # Don't stop during nixos-rebuild switch
+          X-StopOnReconfiguration = false;
         };
       };
     };
