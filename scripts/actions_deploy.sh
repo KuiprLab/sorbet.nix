@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-nixos-rebuild switch --flake "github:KuiprLab/sorbet.nix#sorbet" > /tmp/deploy.log 2>&1
-EXIT=$?
 
 # Read the webhook URL from the sops secret
 WEBHOOK=$(cat /run/secrets/deploy_webhook)
+
+nixos-rebuild switch --flake "github:KuiprLab/sorbet.nix#sorbet" > /tmp/deploy.log 2>&1
+EXIT=$?
+
 
 if [ $EXIT -eq 0 ]; then
   MSG="✅ **sorbet deploy succeeded**"
