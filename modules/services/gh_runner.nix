@@ -31,7 +31,6 @@ _: {
         text = ''
           WEBHOOK=$(cat ${config.sops.secrets."deploy_webhook".path})
 
-          # Snapshot the current generation before switching
           OLD=$(find /nix/var/nix/profiles -maxdepth 1 -name 'system-*-link' | sort -t- -k2 -n | tail -1)
 
           nixos-rebuild switch --flake "github:KuiprLab/sorbet.nix#sorbet" > /tmp/deploy.log 2>&1
@@ -42,17 +41,17 @@ _: {
           DIFF=$(dix --color never "''${OLD}" "''${NEW}" 2>/dev/null || echo "Could not generate diff")
 
           if [ "''${EXIT}" -eq 0 ]; then
-            MSG="✅ **sorbet deploy succeeded**\n**Changes:**\n\`\`\`\n''${DIFF}\n\`\`\`"
+            BODY=$(printf '✅ **sorbet deploy succeeded**\n**Changes:**\n```diff\n%s\n```' "''${DIFF}")
           else
             ERRORS=$(tail -20 /tmp/deploy.log)
-            MSG="❌ **sorbet deploy FAILED** (exit ''${EXIT})\n**Changes attempted:**\n\`\`\`\n''${DIFF}\n\`\`\`\n**Error:**\n\`\`\`\n''${ERRORS}\n\`\`\`"
+            BODY=$(printf '❌ **sorbet deploy FAILED** (exit %s)\n**Changes attempted:**\n```diff\n%s\n```\n**Error:**\n```\n%s\n```' "''${EXIT}" "''${DIFF}" "''${ERRORS}")
           fi
 
-          CONTENT=$(echo "''${MSG}" | head -c 1900)
+          CONTENT=$(printf '%s' "''${BODY}" | head -c 1900)
 
           curl -s -X POST "''${WEBHOOK}" \
             -H "Content-Type: application/json" \
-            -d "{\"content\": $(echo "''${CONTENT}" | jq -Rs .)}"
+            -d "{\"content\": $(printf '%s' "''${CONTENT}" | jq -Rs .)}"
         '';
       })
     ];
