@@ -1,13 +1,13 @@
 _: {
   flake = {
-    caddyVirtualHosts."musicassistant.internal.kuipr.de" = ''
+    caddyVirtualHosts."mus.int.kuipr.de" = ''
       reverse_proxy localhost:8095
     '';
 
     gatusEndpoints = [
       {
         name = "Music Assistant";
-        url = "https://musicassistant.internal.kuipr.de";
+        url = "https://mus.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 2h"
@@ -17,6 +17,20 @@ _: {
     ];
 
     nixosModules.musicassistant = _: {
+      # Enable chromecast ports
+      networking.firewall = {
+        allowedTCPPorts = [
+          8008
+          8009
+          8443
+        ];
+
+        allowedUDPPorts = [
+          10008
+          5353
+        ];
+      };
+
       virtualisation.oci-containers = {
         containers.musicassistant = {
           volumes = ["music-assistant:/data"];

@@ -3,7 +3,7 @@ _: {
     gatusEndpoints = [
       {
         name = "UniFi";
-        url = "https://unifi.internal.kuipr.de";
+        url = "https://unifi.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 2h"
@@ -12,11 +12,16 @@ _: {
       }
     ];
 
-    caddyVirtualHosts."unifi.internal.kuipr.de" = ''
+    caddyVirtualHosts."unifi.int.kuipr.de" = ''
       reverse_proxy https://localhost:11443 {
         transport http {
           tls_insecure_skip_verify
         }
+        # Required for UniFi WebSocket connections
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
       }
     '';
 

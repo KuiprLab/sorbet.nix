@@ -1,11 +1,7 @@
 _: let
   user = "daniel";
 in {
-  flake.nixosModules.sorbetConfiguration = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.sorbetConfiguration = {pkgs, ...}: {
     system.stateVersion = "24.05";
 
     environment.systemPackages = with pkgs; [
@@ -44,7 +40,7 @@ in {
       firewall.enable = true;
       hostName = "sorbet";
       networkmanager.enable = true;
-      useDHCP = lib.mkDefault false; # disable global DHCP
+      useDHCP = false; # disable global DHCP
       interfaces."enp0s31f6" = {
         wakeOnLan.enable = true;
         ipv4.addresses = [
@@ -56,8 +52,8 @@ in {
       };
       defaultGateway = "192.168.0.1";
       nameservers = [
+        "1.1.1.1"
         "127.0.0.1"
-        "9.9.9.9"
       ];
     };
 
