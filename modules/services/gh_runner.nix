@@ -6,13 +6,6 @@ _: {
         format = "binary";
         key = "";
       };
-
-      "deploy_webhook" = {
-        sopsFile = ../../secrets/deploy_webhook;
-        format = "binary";
-        key = "";
-        owner = "root";
-      };
     };
 
     services.github-runners = {

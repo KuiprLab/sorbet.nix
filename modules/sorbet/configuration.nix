@@ -15,7 +15,14 @@ in {
     sops = {
       age.keyFile = "/var/lib/sops/age-key.txt";
       age.generateKey = false;
-      secrets = {};
+      secrets = {
+        "deploy_webhook" = {
+          sopsFile = ../../secrets/deploy_webhook;
+          format = "binary";
+          key = "";
+          owner = "root";
+        };
+      };
     };
 
     virtualisation = {
