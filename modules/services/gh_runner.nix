@@ -24,7 +24,9 @@ _: {
         name = "actions-deploy";
         runtimeInputs = [pkgs.curl pkgs.nixos-rebuild];
         text = ''
-          nixos-rebuild switch --flake "github:KuiprLab/sorbet.nix#sorbet" > /tmp/deploy.log 2>&1
+          cd /home/daniel/sorbet.nix
+          git pull
+          just deploy
           EXIT=$?
 
           WEBHOOK=$(cat ${config.sops.secrets."deploy_webhook".path})
