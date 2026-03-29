@@ -1,13 +1,13 @@
 _: {
   flake.nixosModules.caddy = {config, ...}: {
     sops.secrets = {
-      "gh_runner/gh_secret" = {
+      "gh_runner" = {
         sopsFile = ../../secrets/github-secrets;
         format = "binary";
         key = "";
       };
 
-      "gh_runner/deploy_webhook" = {
+      "deploy_webhook" = {
         sopsFile = ../../secrets/deploy_webhook;
         format = "binary";
         key = "";
@@ -19,7 +19,7 @@ _: {
       deploy = {
         enable = true;
         name = "deploy-runner";
-        tokenFile = config.sops.secrets."gh_runner/gh_secret".path;
+        tokenFile = config.sops.secrets."gh_runner".path;
         url = "https://github.com/KuiprLab/sorbet.nix";
         serviceOverrides = {
           restartIfChanged = false;

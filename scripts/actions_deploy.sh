@@ -4,7 +4,7 @@ nixos-rebuild switch --flake "github:KuiprLab/sorbet.nix#sorbet" > /tmp/deploy.l
 EXIT=$?
 
 # Read the webhook URL from the sops secret
-WEBHOOK=$(cat /run/secrets/gh_runner/deploy_webhook)
+WEBHOOK=$(cat /run/secrets/deploy_webhook)
 
 if [ $EXIT -eq 0 ]; then
   MSG="✅ **sorbet deploy succeeded**"
