@@ -29,7 +29,8 @@ jobs:
             nix-env -i openssh
             ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
               -i ./id_rsa root@192.168.0.85 \
-              "nohup nixos-rebuild switch --flake 'github:KuiprLab/sorbet.nix#sorbet' > /tmp/deploy.log 2>&1 &"
+              "rm -f /tmp/deploy.log && nohup bash -c ./scripts/actions_deploy.sh > /dev/null 2>&1 &"
+            echo "🚀 Deploy triggered"
         env:
           NIX_CONFIG: |
             experimental-features = nix-command flakes
