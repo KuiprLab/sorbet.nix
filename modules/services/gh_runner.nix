@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.caddy = {config, ...}: {
+  flake.nixosModules.gh_runner = {config, ...}: {
     sops.secrets = {
       "gh_runner" = {
         sopsFile = ../../secrets/github-secrets;
