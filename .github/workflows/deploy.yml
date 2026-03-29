@@ -29,7 +29,7 @@ jobs:
             nix-env -i openssh
             ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
               -i ./id_rsa root@192.168.0.85 \
-              "rm -f /tmp/deploy.log && nohup actions-deploy > /dev/null 2>&1 &"
+              "nohup sudo actions-deploy > /tmp/test 2>&1 &"
             echo "🚀 Deploy triggered"
         env:
           NIX_CONFIG: |
