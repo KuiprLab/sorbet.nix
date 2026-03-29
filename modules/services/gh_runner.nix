@@ -26,7 +26,7 @@ _: {
         text = ''
           cd /home/daniel/sorbet.nix
           git pull
-          just deploy
+          nixos-rebuild switch --flake .
           EXIT=$?
 
           WEBHOOK=$(cat ${config.sops.secrets."deploy_webhook".path})
