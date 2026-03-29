@@ -27,7 +27,9 @@ jobs:
       - name: Deploy
         run: |
             nix-env -i openssh
-            nix run nixpkgs#deploy-rs -- --remote-build --ssh-opts "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ./id_rsa" .#"sorbet" 
+            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+              -i ./id_rsa root@192.168.0.85 \
+              "nohup nixos-rebuild switch --flake 'github:KuiprLab/sorbet.nix#sorbet' > /tmp/deploy.log 2>&1 &"
         env:
           NIX_CONFIG: |
             experimental-features = nix-command flakes
