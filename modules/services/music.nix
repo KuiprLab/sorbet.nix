@@ -23,10 +23,6 @@ _: {
       music_folder = "/home/daniel/music";
     in {
       services = {
-        jellyfin = {
-          enable = true;
-          user = "daniel";
-        };
         navidrome = {
           enable = true;
           settings = {
@@ -36,14 +32,11 @@ _: {
         };
       };
 
-      systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
-
       systemd.tmpfiles.rules = [
         "d ${music_folder} 0755 daniel users - -"
       ];
 
       environment = {
-        systemPackages = [pkgs.jellyfin-ffmpeg];
         sessionVariables.LIBVA_DRIVER_NAME = "iHD";
       };
 
