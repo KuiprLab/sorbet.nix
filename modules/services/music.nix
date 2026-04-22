@@ -109,7 +109,7 @@ _: {
 
             paths = {
               default = "$albumartist/$album/$track $title";
-              singleton = "Non-Album/$artist/$title";
+              singleton = "$artist/$album/$title";
               comp = "Compilations/$album/$track $title";
             };
 
