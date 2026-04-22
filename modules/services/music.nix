@@ -9,10 +9,6 @@ _: {
       }
     '';
 
-    caddyVirtualHosts."files.int.kuipr.de" = ''
-      reverse_proxy localhost:8337
-    '';
-
     gatusEndpoints = [
       {
         name = "Navidrome";
@@ -28,6 +24,7 @@ _: {
     nixosModules.music = {
       lib,
       pkgs,
+      config,
       ...
     }: let
       music_folder = "/home/daniel/music";
@@ -86,11 +83,45 @@ _: {
           "d ${music_folder} 0775 daniel music - -"
           "d ${inbox_folder} 0775 daniel music - -"
           "d ${pluginDir} 0750 navidrome navidrome - -"
+          "d /home/daniel/backups 0750 daniel daniel - -"
         ]
         ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
       # Beets config lives in home-manager (see homeManagerModules.music below)
-      environment.systemPackages = [pkgs.chromaprint];
+      environment.systemPackages = [pkgs.rclone];
+
+      sops.secrets."rclone/config" = {
+        sopsFile = ../../secrets/rclone-secrets;
+        format = "binary";
+        key = "";
+        owner = "daniel";
+      };
+
+      systemd.services.navidrome-backup = {
+        description = "Backup Navidrome database to Google Drive";
+        startAt = "weekly";
+        serviceConfig = {
+          Type = "oneshot";
+          User = "daniel";
+          ExecStart = pkgs.writeShellScript "navidrome-backup" ''
+            set -euo pipefail
+            BACKUP="/home/daniel/backups/navidrome-$(${pkgs.coreutils}/bin/date +%Y%m%d).db"
+
+            # Hot backup while navidrome is running
+            ${pkgs.sqlite}/bin/sqlite3 /var/lib/navidrome/navidrome.db ".backup ''${BACKUP}"
+
+            # Upload to Google Drive
+            ${pkgs.rclone}/bin/rclone copy \
+              --config ${config.sops.secrets."rclone/config".path} \
+              "''${BACKUP}" \
+              gdrive:navidrome-backups/
+
+            # Keep only last 4 local copies
+            ls -t /home/daniel/backups/navidrome-*.db | tail -n +5 | xargs rm -f
+          '';
+        };
+      };
+
       home-manager.users.daniel = {
         programs.beets = {
           enable = true;
@@ -126,13 +157,11 @@ _: {
               "fetchart"
               "embedart"
               "musicbrainz"
-              # "discogs"
+              "mbsync"
               "lyrics"
               "bucket"
             ];
 
-            # musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
-            # discogs.data_source_mismatch_penalty = 0.8;
             embedart.auto = true;
             fetchart = {
               auto = true;
@@ -180,6 +209,24 @@ _: {
             "create mask" = "0644";
             "directory mask" = "0755";
           };
+        };
+      };
+
+      # Watcher
+      systemd.user.paths.beets-watch = {
+        Unit.Description = "Watch music inbox for new files";
+        Path = {
+          PathChanged = "/home/daniel/music-inbox";
+          MakeDirectory = true;
+        };
+        Install.WantedBy = ["default.target"];
+      };
+
+      systemd.user.services.beets-watch = {
+        Unit.Description = "Auto-import new music via beets";
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.beets}/bin/beet import -q /home/daniel/music-inbox";
         };
       };
 
