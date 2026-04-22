@@ -211,7 +211,7 @@ _: {
       systemd.user.paths.beets-watch = {
         description = "Watch music inbox for new files";
         pathConfig = {
-          PathChanged = "/home/daniel/music-inbox";
+          PathModified = "/home/daniel/music-inbox";
           MakeDirectory = true;
         };
         wantedBy = ["default.target"];
@@ -221,6 +221,7 @@ _: {
         description = "Auto-import new music via beets";
         serviceConfig = {
           Type = "oneshot";
+          ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
           ExecStart = "${pkgs.beets}/bin/beet import -q /home/daniel/music-inbox";
         };
       };
