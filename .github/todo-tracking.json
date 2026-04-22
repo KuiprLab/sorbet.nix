@@ -1,3 +1,16 @@
 {
-  "todos": {}
+  "todos": {
+    "modules/services/dns-dhcp.nix:57:TODO: Find non-US alternative that isn't Quad9": {
+      "issueNumber": 137,
+      "file": "modules/services/dns-dhcp.nix",
+      "line": 57,
+      "text": "TODO: Find non-US alternative that isn't Quad9"
+    },
+    "modules/services/music.nix:58:TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step": {
+      "issueNumber": 138,
+      "file": "modules/services/music.nix",
+      "line": 58,
+      "text": "TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step"
+    }
+  }
 }
