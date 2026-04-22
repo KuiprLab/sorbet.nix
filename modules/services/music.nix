@@ -157,6 +157,8 @@ _: {
               "bucket"
             ];
 
+            match.strong_rec_thresh = 0.2; # accept anything above 96% — default is too strict
+
             embedart.auto = true;
             fetchart = {
               auto = true;
