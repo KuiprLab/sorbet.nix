@@ -22,31 +22,24 @@ _: {
     nixosModules.music = {pkgs, ...}: let
       music_folder = "/home/daniel/music";
     in {
+      users.groups.music = {};
+      users.users = {
+        daniel.extraGroups = ["music"];
+        navidrome.extraGroups = ["music"];
+      };
+
       services = {
         navidrome = {
           enable = true;
           settings = {
             MusicFolder = music_folder;
           };
-          # user = "daniel";
         };
       };
 
       systemd.tmpfiles.rules = [
-        "d ${music_folder} 0755 daniel users - -"
+        "d ${music_folder} 0775 daniel music - -" # group music, group-readable
       ];
-
-      environment = {
-        sessionVariables.LIBVA_DRIVER_NAME = "iHD";
-      };
-
-      hardware.graphics = {
-        enable = true;
-        extraPackages = with pkgs; [
-          intel-media-driver
-          intel-ocl
-        ];
-      };
 
       #TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step
       services = {
