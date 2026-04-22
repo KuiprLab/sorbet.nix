@@ -78,6 +78,8 @@ _: {
           "Backup.Path" = "/var/lib/navidrome/backups";
           "Backup.Count" = 7;
           "Backup.Schedule" = "0 0 * * *"; # daily at midnight
+          "CoverArtPriority" = "embedded, cover.*, folder.*, external";
+          "ArtistArtPriority" = "artist.*, album/artist.*, external";
         };
       };
 
