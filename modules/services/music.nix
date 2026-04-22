@@ -128,7 +128,7 @@ _: {
               move = true;
               write = true;
               autotag = true;
-              quiet = true;
+              quiet = false; # TODO: fix
               timid = false;
               singletons = true;
             };
