@@ -136,6 +136,7 @@ _: {
             embedart.auto = true;
             fetchart = {
               auto = true;
+              workers = 4;
               sources = [
                 "coverart"
                 "itunes"
