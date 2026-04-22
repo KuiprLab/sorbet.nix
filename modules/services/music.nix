@@ -107,9 +107,18 @@ _: {
               singletons = true;
             };
 
+            bucket = {
+              bucket_alpha = [
+                "A-D"
+                "E-L"
+                "M-R"
+                "S-Z"
+              ];
+            };
+
             paths = {
-              default = "$albumartist/$album/$track $title";
-              singleton = "$artist/$album/$title";
+              default = "%bucket{$albumartist,alpha}/$albumartist/$album/$track $title";
+              singleton = "%bucket{$artist,alpha}/$artist/$album/$title";
               comp = "Compilations/$album/$track $title";
             };
 
@@ -119,6 +128,7 @@ _: {
               "musicbrainz"
               "discogs"
               "lyrics"
+              "bucket"
             ];
 
             musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
