@@ -51,7 +51,7 @@ _: {
       settings = {
         interface = [networkInterface];
         bind-interfaces = true;
-
+        dns-forward-max = 300;
         address = "/.int.kuipr.de/${serverIp}";
         server = [
           "9.9.9.9"
