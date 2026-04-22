@@ -27,8 +27,12 @@ _: {
       config,
       ...
     }: let
-      music_folder = "/home/daniel/music";
-      inbox_folder = "/home/daniel/music-inbox";
+      homeDir = "/home/daniel";
+      musicFolder = "${homeDir}/music";
+      inboxFolder = "${homeDir}/music-inbox";
+      duplicatesFolder = "${homeDir}/music-duplicates";
+      manualFolder = "${homeDir}/music-manual";
+      importLog = "${homeDir}/.beets/import.log";
       pluginDir = "/var/lib/navidrome/plugins";
 
       mkPlugin = {
@@ -39,6 +43,66 @@ _: {
         pkg = pkgs.fetchurl {inherit url hash;};
         inherit name;
       };
+
+      mkSambaShare = path: {
+        "path" = path;
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "valid users" = ["daniel"];
+        "create mask" = "0644";
+        "directory mask" = "0755";
+      };
+
+      # Reads the beets import log and moves:
+      #   skipped (no match / user skip) → music-manual/
+      #   duplicates                     → music-duplicates/
+      # Each file is placed in a flat subdirectory named after its immediate parent
+      # to avoid collisions between same-named files from different albums.
+      sortSkippedScript = pkgs.writeShellScript "beets-sort-skipped" ''
+        set -euo pipefail
+
+        LOG="${importLog}"
+        MANUAL="${manualFolder}"
+        DUPES="${duplicatesFolder}"
+
+        [ -f "$LOG" ] || exit 0
+
+        move_path() {
+          local src="$1"
+          local dest_root="$2"
+          local parent
+          parent="$(basename "$(dirname "$src")")"
+          local dest="$dest_root/$parent"
+          mkdir -p "$dest"
+          mv -- "$src" "$dest/" 2>/dev/null || true
+        }
+
+        while IFS= read -r line; do
+          # Log lines: "<status> <path>" or "<status> <path1>; <path2>; ..."
+          status="''${line%% *}"
+          rest="''${line#* }"
+
+          case "$status" in
+            skip)
+              # rest is a single path
+              [ -e "$rest" ] && move_path "$rest" "$MANUAL"
+              ;;
+            duplicate)
+              # rest may be "existing; candidate" — move the candidate (second path)
+              IFS=';' read -ra parts <<< "$rest"
+              for part in "''${parts[@]}"; do
+                part="''${part# }"
+                part="''${part% }"
+                [ -e "$part" ] && move_path "$part" "$DUPES"
+              done
+              ;;
+          esac
+        done < "$LOG"
+
+        # Truncate log after processing so we don't re-process on next run
+        : > "$LOG"
+      '';
 
       plugins = [
         (mkPlugin {
@@ -66,14 +130,14 @@ _: {
       };
 
       systemd.services.navidrome.serviceConfig = {
-        BindReadOnlyPaths = [music_folder];
+        BindReadOnlyPaths = [musicFolder];
         ProtectHome = lib.mkForce false;
       };
 
       services.navidrome = {
         enable = true;
         settings = {
-          MusicFolder = music_folder;
+          MusicFolder = musicFolder;
           "Plugins.Enabled" = true;
           "Backup.Path" = "/var/lib/navidrome/backups";
           "Backup.Count" = 7;
@@ -85,14 +149,16 @@ _: {
 
       systemd.tmpfiles.rules =
         [
-          "d ${music_folder} 0775 daniel music - -"
-          "d ${inbox_folder} 0775 daniel music - -"
+          "d ${musicFolder} 0775 daniel music - -"
+          "d ${inboxFolder} 0775 daniel music - -"
+          "d ${duplicatesFolder} 0775 daniel daniel - -"
+          "d ${manualFolder} 0775 daniel daniel - -"
           "d ${pluginDir} 0750 navidrome navidrome - -"
-          "d /home/daniel/backups 0750 daniel daniel - -"
+          "d ${homeDir}/backups 0750 daniel daniel - -"
         ]
         ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
-      # Beets config lives in home-manager (see homeManagerModules.music below)
+      # Beets config lives in home-manager (see home-manager.users.daniel below)
       environment.systemPackages = [pkgs.rclone];
 
       sops.secrets."rclone/config" = {
@@ -121,8 +187,8 @@ _: {
         programs.beets = {
           enable = true;
           settings = {
-            directory = music_folder;
-            library = "/home/daniel/.beets/library.db";
+            directory = musicFolder;
+            library = "${homeDir}/.beets/library.db";
 
             import = {
               move = true;
@@ -131,16 +197,15 @@ _: {
               quiet = false; # TODO: fix
               timid = false;
               singletons = true;
+              log = importLog;
             };
 
-            bucket = {
-              bucket_alpha = [
-                "A-D"
-                "E-L"
-                "M-R"
-                "S-Z"
-              ];
-            };
+            bucket.bucket_alpha = [
+              "A-D"
+              "E-L"
+              "M-R"
+              "S-Z"
+            ];
 
             paths = {
               default = "%bucket{$albumartist,alpha}/$albumartist/$album/$track $title";
@@ -155,9 +220,10 @@ _: {
               "mbsync"
               "lyrics"
               "bucket"
+              "hook"
             ];
 
-            match.strong_rec_thresh = 0.2; # accept anything above 96% — default is too strict
+            match.strong_rec_thresh = 0.2;
 
             embedart.auto = true;
             fetchart = {
@@ -174,11 +240,20 @@ _: {
               auto = true;
               sources = ["lrclib"];
             };
+
+            hook.hooks = [
+              {
+                # After each import session completes, sort skipped and duplicate
+                # files out of the inbox into dedicated review folders.
+                event = "cli_exit";
+                command = "${sortSkippedScript}";
+              }
+            ];
           };
         };
       };
 
-      #TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step
+      # TODO: add `sudo smbpasswd -a daniel` as a post-deploy step
       services.samba = {
         enable = true;
         settings = {
@@ -188,32 +263,18 @@ _: {
             "security" = "user";
             "invalid users" = ["root"];
           };
-          music = {
-            "path" = music_folder;
-            "browseable" = "yes";
-            "read only" = "no";
-            "guest ok" = "no";
-            "valid users" = ["daniel"];
-            "create mask" = "0644";
-            "directory mask" = "0755";
-          };
-          inbox = {
-            "path" = inbox_folder;
-            "browseable" = "yes";
-            "read only" = "no";
-            "guest ok" = "no";
-            "valid users" = ["daniel"];
-            "create mask" = "0644";
-            "directory mask" = "0755";
-          };
+          music = mkSambaShare musicFolder;
+          inbox = mkSambaShare inboxFolder;
+          duplicates = mkSambaShare duplicatesFolder;
+          manual = mkSambaShare manualFolder;
         };
       };
 
-      # Watcher
+      # Watch inbox and auto-import via beets
       systemd.user.paths.beets-watch = {
         description = "Watch music inbox for new files";
         pathConfig = {
-          PathModified = "/home/daniel/music-inbox";
+          PathModified = inboxFolder;
           MakeDirectory = true;
         };
         wantedBy = ["default.target"];
@@ -224,23 +285,15 @@ _: {
         serviceConfig = {
           Type = "oneshot";
           ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-          ExecStart = "${pkgs.beets}/bin/beet import -q /home/daniel/music-inbox";
+          ExecStart = "${pkgs.beets}/bin/beet import -q ${inboxFolder}";
         };
       };
 
       services.samba-wsdd.enable = true;
 
       networking.firewall = {
-        allowedTCPPorts = [
-          445
-          139
-        ];
-        allowedUDPPorts = [
-          137
-          138
-          5355
-          3702
-        ];
+        allowedTCPPorts = [445 139];
+        allowedUDPPorts = [137 138 5355 3702];
       };
     };
   };
