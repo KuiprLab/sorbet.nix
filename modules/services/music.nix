@@ -1,7 +1,7 @@
 _: {
   flake = {
     caddyVirtualHosts."music.int.kuipr.de" = ''
-      reverse_proxy localhost:8096 {
+      reverse_proxy localhost:4533 {
         header_up Host {host}
         header_up X-Real-IP {remote_host}
         header_up X-Forwarded-For {remote_host}
@@ -10,7 +10,7 @@ _: {
     '';
     gatusEndpoints = [
       {
-        name = "Music Assistant";
+        name = "Navidrome";
         url = "https://music.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
@@ -22,9 +22,15 @@ _: {
     nixosModules.music = {pkgs, ...}: let
       music_folder = "/home/daniel/music";
     in {
-      services.jellyfin = {
-        enable = true;
-        user = "daniel";
+      services = {
+        jellyfin = {
+          enable = true;
+          user = "daniel";
+        };
+        navidrome = {
+          enable = true;
+          settings.musicFolder = music_folder;
+        };
       };
 
       systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
@@ -46,6 +52,7 @@ _: {
         ];
       };
 
+      #TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step
       services = {
         samba = {
           enable = true;

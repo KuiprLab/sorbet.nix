@@ -54,6 +54,7 @@ _: {
         dns-forward-max = 300;
         address = "/.int.kuipr.de/${serverIp}";
         server = [
+          #TODO: Find non-US alternative that isn't Quad9
           "1.1.1.1"
           "8.8.8.8"
         ];
