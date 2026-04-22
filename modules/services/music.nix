@@ -117,10 +117,12 @@ _: {
               "fetchart"
               "embedart"
               "musicbrainz"
+              "discogs"
               "lyrics"
             ];
 
-            musicbrainz.data_source_mismatch_penalty = 0.1; # Lower penalty = preferred
+            musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
+            discogs.data_source_mismatch_penalty = 0.8;
             embedart.auto = true;
             fetchart = {
               auto = true;
