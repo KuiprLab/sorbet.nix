@@ -30,6 +30,7 @@ _: {
         navidrome = {
           enable = true;
           settings.musicFolder = music_folder;
+          user = "daniel";
         };
       };
 
