@@ -19,8 +19,35 @@ _: {
         alerts = [{type = "discord";}];
       }
     ];
-    nixosModules.music = {lib, ...}: let
+    nixosModules.music = {
+      lib,
+      pkgs,
+      ...
+    }: let
       music_folder = "/home/daniel/music";
+      pluginDir = "/var/lib/navidrome/plugins";
+
+      mkPlugin = {
+        name,
+        url,
+        hash,
+      }: {
+        pkg = pkgs.fetchurl {inherit url hash;};
+        inherit name;
+      };
+
+      plugins = [
+        (mkPlugin {
+          name = "listenbrainz-daily-playlist";
+          url = "https://github.com/kgarner7/navidrome-listenbrainz-daily-playlist/releases/download/v5.0.2/listenbrainz-daily-playlist.ndp";
+          hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        })
+        (mkPlugin {
+          name = "discord-rich-presence";
+          url = "https://github.com/navidrome/discord-rich-presence-plugin/releases/download/v1.0.0/discord-rich-presence.ndp";
+          hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        })
+      ];
     in {
       users.groups = {
         music = {};
@@ -47,13 +74,17 @@ _: {
           enable = true;
           settings = {
             MusicFolder = music_folder;
+            "Plugins.Enabled" = true;
           };
         };
       };
 
-      systemd.tmpfiles.rules = [
-        "d ${music_folder} 0775 daniel music - -" # group music, group-readable
-      ];
+      systemd.tmpfiles.rules =
+        [
+          "d ${music_folder} 0775 daniel music - -"
+          "d ${pluginDir} 0750 navidrome navidrome - -"
+        ]
+        ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
       #TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step
       services = {
