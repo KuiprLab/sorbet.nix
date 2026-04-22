@@ -28,7 +28,6 @@ _: {
         navidrome = {
           extraGroups = ["music"];
           isNormalUser = true;
-          isSystemUser = true;
         };
       };
 
