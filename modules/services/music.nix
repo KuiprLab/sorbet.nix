@@ -102,7 +102,7 @@ _: {
         startAt = "weekly";
         serviceConfig = {
           Type = "oneshot";
-          User = "daniel";
+          User = "navidrome";
           ExecStart = pkgs.writeShellScript "navidrome-backup" ''
             set -euo pipefail
             BACKUP="/home/daniel/backups/navidrome-$(${pkgs.coreutils}/bin/date +%Y%m%d).db"
