@@ -104,6 +104,7 @@ _: {
               autotag = true;
               quiet = true;
               timid = false;
+              singletons = true;
             };
 
             paths = {
@@ -119,9 +120,17 @@ _: {
               "lyrics"
             ];
 
-            musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
-            fetchart.auto = true;
+            musicbrainz.data_source_mismatch_penalty = 0.1; # Lower penalty = preferred
             embedart.auto = true;
+            fetchart = {
+              auto = true;
+              sources = [
+                "coverart"
+                "itunes"
+                "wikipedia"
+                "fanarttv"
+              ];
+            };
             lyrics = {
               auto = true;
               sources = ["lrclib"];
