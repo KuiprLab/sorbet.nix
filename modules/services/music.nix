@@ -42,11 +42,6 @@ _: {
           url = "https://github.com/kgarner7/navidrome-listenbrainz-daily-playlist/releases/download/v5.0.2/listenbrainz-daily-playlist.ndp";
           hash = "sha256-P1lB18Gjqjg6p2atn+PqQRcM0U1jSCtGWqkZDNWQ3Pk=";
         })
-        (mkPlugin {
-          name = "discord-rich-presence";
-          url = "https://github.com/navidrome/discord-rich-presence-plugin/releases/download/v1.0.0/discord-rich-presence.ndp";
-          hash = "sha256-cOp9BqPc2JNZ8K0o6btKAvEu+JpoGKqcQ/AHGUE3XEI=";
-        })
       ];
     in {
       users.groups = {
@@ -83,6 +78,7 @@ _: {
         [
           "d ${music_folder} 0775 daniel music - -"
           "d ${pluginDir} 0750 navidrome navidrome - -"
+          "d /home/daniel/music-inbox 0775 daniel music - -"
         ]
         ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
@@ -110,6 +106,54 @@ _: {
         };
 
         samba-wsdd.enable = true;
+      };
+
+      services.filebrowser = {
+        enable = true;
+        settings = {
+          port = 8338;
+          root = "/home/daniel/music-inbox";
+          # scope it to inbox only, not your whole library
+        };
+      };
+
+      programs.beets = {
+        enable = true;
+        settings = {
+          directory = music_folder;
+          library = "/home/daniel/.beets/library.db";
+
+          import = {
+            move = true; # move files (not copy) into music dir
+            write = true; # write tags to files
+            autotag = true;
+          };
+
+          # Folder structure Navidrome will love
+          paths = {
+            default = "%the{$albumartist}/%the{$album}%aunique{}/$track $title";
+            singleton = "Non-Album/%the{$artist}/$title";
+            comp = "Compilations/%the{$album}%aunique{}/$track $title";
+          };
+
+          plugins = [
+            "fetchart"
+            "embedart"
+            "chroma"
+            "web"
+          ];
+
+          fetchart.auto = true; # grab album art automatically
+          embedart.auto = true; # embed art into files
+
+          # acoustid fingerprinting — finds tracks even with bad/no tags
+          chroma.auto = true;
+
+          web = {
+            host = "127.0.0.1";
+            port = 8337;
+          };
+        };
       };
 
       networking.firewall = {
