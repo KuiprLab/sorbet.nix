@@ -75,6 +75,9 @@ _: {
         settings = {
           MusicFolder = music_folder;
           "Plugins.Enabled" = true;
+          "Backup.Path" = "/var/lib/navidrome/backups";
+          "Backup.Count" = 7;
+          "Backup.Schedule" = "0 0 * * *"; # daily at midnight
         };
       };
 
@@ -97,27 +100,17 @@ _: {
         owner = "daniel";
       };
 
-      systemd.services.navidrome-backup = {
-        description = "Backup Navidrome database to Google Drive";
-        startAt = "weekly";
+      systemd.services.navidrome-gdrive-sync = {
+        description = "Sync Navidrome backups to Google Drive";
+        startAt = "daily";
         serviceConfig = {
           Type = "oneshot";
           User = "navidrome";
-          ExecStart = pkgs.writeShellScript "navidrome-backup" ''
-            set -euo pipefail
-            BACKUP="/home/daniel/backups/navidrome-$(${pkgs.coreutils}/bin/date +%Y%m%d).db"
-
-            # Hot backup while navidrome is running
-            ${pkgs.sqlite}/bin/sqlite3 /var/lib/navidrome/navidrome.db ".backup ''${BACKUP}"
-
-            # Upload to Google Drive
-            ${pkgs.rclone}/bin/rclone copy \
+          ExecStart = pkgs.writeShellScript "navidrome-gdrive-sync" ''
+            ${pkgs.rclone}/bin/rclone sync \
               --config ${config.sops.secrets."rclone/config".path} \
-              "''${BACKUP}" \
+              /var/lib/navidrome/backups \
               gdrive:navidrome-backups/
-
-            # Keep only last 4 local copies
-            ls -t /home/daniel/backups/navidrome-*.db | tail -n +5 | xargs rm -f
           '';
         };
       };
