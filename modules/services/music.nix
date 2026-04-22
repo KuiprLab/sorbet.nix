@@ -28,7 +28,7 @@ _: {
       };
       users.users = {
         daniel.extraGroups = ["music"];
-        users.users.navidrome = {
+        navidrome = {
           extraGroups = ["music"];
           isSystemUser = true;
           group = "navidrome";
