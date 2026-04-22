@@ -218,6 +218,7 @@ _: {
               "lyrics"
               "bucket"
               "hook"
+              "missing"
             ];
 
             match.strong_rec_thresh = 0.2;
@@ -289,8 +290,16 @@ _: {
       services.samba-wsdd.enable = true;
 
       networking.firewall = {
-        allowedTCPPorts = [445 139];
-        allowedUDPPorts = [137 138 5355 3702];
+        allowedTCPPorts = [
+          445
+          139
+        ];
+        allowedUDPPorts = [
+          137
+          138
+          5355
+          3702
+        ];
       };
     };
   };
