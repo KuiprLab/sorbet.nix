@@ -29,6 +29,10 @@ _: {
 
       systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
 
+      systemd.tmpfiles.rules = [
+        "d ${music_folder} 0755 daniel users - -"
+      ];
+
       environment = {
         systemPackages = [pkgs.jellyfin-ffmpeg];
         sessionVariables.LIBVA_DRIVER_NAME = "iHD";
