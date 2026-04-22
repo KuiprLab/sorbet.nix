@@ -27,7 +27,10 @@ _: {
         navidrome = {};
       };
       users.users = {
-        daniel.extraGroups = ["music"];
+        daniel = {
+          extraGroups = ["music"];
+          homeMode = "0711";
+        };
         navidrome = {
           extraGroups = ["music"];
           isSystemUser = true;
@@ -39,7 +42,6 @@ _: {
 
       services = {
         navidrome = {
-          user = "daniel";
           enable = true;
           settings = {
             MusicFolder = music_folder;
