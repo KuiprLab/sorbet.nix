@@ -45,7 +45,7 @@ _: {
         (mkPlugin {
           name = "discord-rich-presence";
           url = "https://github.com/navidrome/discord-rich-presence-plugin/releases/download/v1.0.0/discord-rich-presence.ndp";
-          hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          hash = "sha256-cOp9BqPc2JNZ8K0o6btKAvEu+JpoGKqcQ/AHGUE3XEI=";
         })
       ];
     in {
