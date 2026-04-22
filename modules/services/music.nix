@@ -38,8 +38,6 @@ _: {
         };
       };
 
-      systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [music_folder];
-
       services = {
         navidrome = {
           enable = true;
