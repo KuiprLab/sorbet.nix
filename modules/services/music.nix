@@ -108,9 +108,9 @@ _: {
             };
 
             paths = {
-              default = "%the{$albumartist}/%the{$album}%aunique{}/$track $title";
-              singleton = "Non-Album/%the{$artist}/$title";
-              comp = "Compilations/%the{$album}%aunique{}/$track $title";
+              default = "$albumartist/$album/$track $title";
+              singleton = "Non-Album/$artist/$title";
+              comp = "Compilations/$album/$track $title";
             };
 
             plugins = [
