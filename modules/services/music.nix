@@ -19,7 +19,7 @@ _: {
         alerts = [{type = "discord";}];
       }
     ];
-    nixosModules.music = {pkgs, ...}: let
+    nixosModules.music = {lib, ...}: let
       music_folder = "/home/daniel/music";
     in {
       users.groups = {
@@ -38,6 +38,10 @@ _: {
         };
       };
 
+      systemd.services.navidrome.serviceConfig = {
+        BindReadOnlyPaths = [music_folder];
+        ProtectHome = lib.mkForce false;
+      };
       services = {
         navidrome = {
           enable = true;
