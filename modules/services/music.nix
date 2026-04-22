@@ -55,10 +55,10 @@ _: {
       };
 
       # Reads the beets import log and moves:
-      #   skipped (no match / user skip) → music-manual/
-      #   duplicates                     → music-duplicates/
-      # Each file is placed in a flat subdirectory named after its immediate parent
-      # to avoid collisions between same-named files from different albums.
+      #   skip           (no match / user skipped)  → music-manual/
+      #   duplicate-skip (already in library)        → music-duplicates/
+      # Each file lands in a subdirectory named after its parent to avoid
+      # collisions between same-named files from different albums.
       sortSkippedScript = pkgs.writeShellScript "beets-sort-skipped" ''
         set -euo pipefail
 
@@ -79,23 +79,20 @@ _: {
         }
 
         while IFS= read -r line; do
-          # Log lines: "<status> <path>" or "<status> <path1>; <path2>; ..."
+          # Log line format: "<verb> <path>" or "<verb> <existing_path>; <new_path>"
+          # Verbs: import, asis, skip, duplicate-skip, duplicate-keep, duplicate-replace
           status="''${line%% *}"
           rest="''${line#* }"
 
           case "$status" in
             skip)
-              # rest is a single path
+              # Single path — file was skipped (no match or user skipped)
               [ -e "$rest" ] && move_path "$rest" "$MANUAL"
               ;;
-            duplicate)
-              # rest may be "existing; candidate" — move the candidate (second path)
-              IFS=';' read -ra parts <<< "$rest"
-              for part in "''${parts[@]}"; do
-                part="''${part# }"
-                part="''${part% }"
-                [ -e "$part" ] && move_path "$part" "$DUPES"
-              done
+            duplicate-skip)
+              # Format: "existing_path; new_path" — new_path is still in inbox
+              new_path="''${rest##*; }"
+              [ -e "$new_path" ] && move_path "$new_path" "$DUPES"
               ;;
           esac
         done < "$LOG"
