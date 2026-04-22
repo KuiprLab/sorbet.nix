@@ -1,5 +1,8 @@
 config := "sorbet"
 
+default:
+    just --list
+
 # Build the NixOS config locally (requires a Linux builder on macOS)
 build: fmt check
     @git add .
