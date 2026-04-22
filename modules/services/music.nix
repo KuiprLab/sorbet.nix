@@ -214,17 +214,17 @@ _: {
 
       # Watcher
       systemd.user.paths.beets-watch = {
-        Unit.Description = "Watch music inbox for new files";
-        Path = {
+        description = "Watch music inbox for new files";
+        pathConfig = {
           PathChanged = "/home/daniel/music-inbox";
           MakeDirectory = true;
         };
-        Install.WantedBy = ["default.target"];
+        wantedBy = ["default.target"];
       };
 
       systemd.user.services.beets-watch = {
-        Unit.Description = "Auto-import new music via beets";
-        Service = {
+        description = "Auto-import new music via beets";
+        serviceConfig = {
           Type = "oneshot";
           ExecStart = "${pkgs.beets}/bin/beet import -q /home/daniel/music-inbox";
         };
