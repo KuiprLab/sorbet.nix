@@ -10,7 +10,7 @@ _: {
     '';
 
     caddyVirtualHosts."files.int.kuipr.de" = ''
-      reverse_proxy localhost:8338
+      reverse_proxy localhost:8337
     '';
 
     gatusEndpoints = [
@@ -81,14 +81,6 @@ _: {
         };
       };
 
-      services.filebrowser = {
-        enable = true;
-        settings = {
-          port = 8338;
-          root = inbox_folder;
-        };
-      };
-
       systemd.tmpfiles.rules =
         [
           "d ${music_folder} 0775 daniel music - -"
@@ -98,6 +90,7 @@ _: {
         ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
       # Beets config lives in home-manager (see homeManagerModules.music below)
+      environment.systemPackages = [pkgs.chromaprint];
       home-manager.users.daniel = {
         programs.beets = {
           enable = true;
@@ -109,6 +102,8 @@ _: {
               move = true;
               write = true;
               autotag = true;
+              quiet = true;
+              timid = false;
             };
 
             paths = {
@@ -120,12 +115,17 @@ _: {
             plugins = [
               "fetchart"
               "embedart"
-              "chroma"
+              "musicbrainz"
+              "lyrics"
             ];
 
+            musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
             fetchart.auto = true;
             embedart.auto = true;
-            chroma.auto = true;
+            lyrics = {
+              auto = true;
+              sources = ["lrclib"];
+            };
           };
         };
       };
@@ -164,8 +164,16 @@ _: {
       services.samba-wsdd.enable = true;
 
       networking.firewall = {
-        allowedTCPPorts = [445 139];
-        allowedUDPPorts = [137 138 5355 3702];
+        allowedTCPPorts = [
+          445
+          139
+        ];
+        allowedUDPPorts = [
+          137
+          138
+          5355
+          3702
+        ];
       };
     };
   };
