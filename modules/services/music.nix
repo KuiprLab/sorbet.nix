@@ -28,7 +28,7 @@ _: {
           settings = {
             MusicFolder = music_folder;
           };
-          user = "daniel";
+          # user = "daniel";
         };
       };
 
