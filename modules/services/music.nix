@@ -25,12 +25,14 @@ _: {
       users.groups.music = {};
       users.users = {
         daniel.extraGroups = ["music"];
-        navidrome.extraGroups = ["music"];
+        navidrome = {
+          extraGroups = ["music"];
+          isNormalUser = true;
+        };
       };
 
       services = {
         navidrome = {
-          user = "daniel";
           enable = true;
           settings = {
             MusicFolder = music_folder;
