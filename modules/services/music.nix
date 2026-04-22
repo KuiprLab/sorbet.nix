@@ -97,7 +97,7 @@ _: {
         sopsFile = ../../secrets/rclone-secrets;
         format = "binary";
         key = "";
-        owner = "daniel";
+        owner = "navidrome";
       };
 
       systemd.services.navidrome-gdrive-sync = {
