@@ -126,13 +126,13 @@ _: {
               "fetchart"
               "embedart"
               "musicbrainz"
-              "discogs"
+              # "discogs"
               "lyrics"
               "bucket"
             ];
 
-            musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
-            discogs.data_source_mismatch_penalty = 0.8;
+            # musicbrainz.data_source_mismatch_penalty = 0.3; # Lower penalty = preferred
+            # discogs.data_source_mismatch_penalty = 0.8;
             embedart.auto = true;
             fetchart = {
               auto = true;
