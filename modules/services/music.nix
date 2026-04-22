@@ -22,12 +22,16 @@ _: {
     nixosModules.music = {pkgs, ...}: let
       music_folder = "/home/daniel/music";
     in {
-      users.groups.music = {};
+      users.groups = {
+        music = {};
+        navidrome = {};
+      };
       users.users = {
         daniel.extraGroups = ["music"];
-        navidrome = {
+        users.users.navidrome = {
           extraGroups = ["music"];
-          isNormalUser = true;
+          isSystemUser = true;
+          group = "navidrome";
         };
       };
 
