@@ -30,6 +30,7 @@ _: {
 
       services = {
         navidrome = {
+          user = "daniel";
           enable = true;
           settings = {
             MusicFolder = music_folder;
