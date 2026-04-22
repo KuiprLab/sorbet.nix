@@ -6,10 +6,10 @@
       "line": 57,
       "text": "TODO: Find non-US alternative that isn't Quad9"
     },
-    "modules/services/music.nix:58:TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step": {
-      "issueNumber": 138,
+    "modules/services/music.nix:85:TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step": {
+      "issueNumber": 139,
       "file": "modules/services/music.nix",
-      "line": 58,
+      "line": 85,
       "text": "TODO: Create docs and add `sudo smbpasswd -a daniel` as a post deploy step"
     }
   }
