@@ -29,7 +29,9 @@ _: {
         };
         navidrome = {
           enable = true;
-          settings.musicFolder = music_folder;
+          settings = {
+            MusicFolder = music_folder;
+          };
           user = "daniel";
         };
       };
