@@ -226,6 +226,13 @@ _: {
             embedart.auto = true;
             fetchart = {
               auto = true;
+              sources = [
+                "filesystem"
+                "coverart"
+                "itunes"
+                "wikipedia"
+                "fanarttv"
+              ];
             };
             lyrics = {
               auto = true;
