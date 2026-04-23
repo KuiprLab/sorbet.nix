@@ -56,53 +56,6 @@ _: {
         "directory mask" = "0755";
       };
 
-      # Reads the beets import log and moves:
-      #   skip           (no match / user skipped)  → music-manual/
-      #   duplicate-skip (already in library)        → music-duplicates/
-      # Each file lands in a subdirectory named after its parent to avoid
-      # collisions between same-named files from different albums.
-      sortSkippedScript = pkgs.writeShellScript "beets-sort-skipped" ''
-        set -euo pipefail
-
-        LOG="${importLog}"
-        MANUAL="${manualFolder}"
-        DUPES="${duplicatesFolder}"
-
-        [ -f "$LOG" ] || exit 0
-
-        move_path() {
-          local src="$1"
-          local dest_root="$2"
-          local parent
-          parent="$(basename "$(dirname "$src")")"
-          local dest="$dest_root/$parent"
-          mkdir -p "$dest"
-          mv -- "$src" "$dest/" 2>/dev/null || true
-        }
-
-        while IFS= read -r line; do
-          # Log line format: "<verb> <path>" or "<verb> <existing_path>; <new_path>"
-          # Verbs: import, asis, skip, duplicate-skip, duplicate-keep, duplicate-replace
-          status="''${line%% *}"
-          rest="''${line#* }"
-
-          case "$status" in
-            skip)
-              # Single path — file was skipped (no match or user skipped)
-              [ -e "$rest" ] && move_path "$rest" "$MANUAL"
-              ;;
-            duplicate-skip)
-              # Format: "existing_path; new_path" — new_path is still in inbox
-              new_path="''${rest##*; }"
-              [ -e "$new_path" ] && move_path "$new_path" "$DUPES"
-              ;;
-          esac
-        done < "$LOG"
-
-        # Truncate log after processing so we don't re-process on next run
-        : > "$LOG"
-      '';
-
       plugins = [
         (mkPlugin {
           name = "listenbrainz-daily-playlist";
@@ -265,7 +218,6 @@ _: {
               "mbsync"
               "lyrics"
               "bucket"
-              "hook"
               "missing"
             ];
 
@@ -286,15 +238,6 @@ _: {
               auto = true;
               sources = ["lrclib"];
             };
-
-            hook.hooks = [
-              {
-                # After each import session completes, sort skipped and duplicate
-                # files out of the inbox into dedicated review folders.
-                event = "cli_exit";
-                command = "${sortSkippedScript}";
-              }
-            ];
           };
         };
       };
