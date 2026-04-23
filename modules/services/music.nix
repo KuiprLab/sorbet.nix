@@ -218,6 +218,7 @@ _: {
               move = true;
               write = true;
               autotag = true;
+              incremental = true;
               quiet = false; # TODO: fix
               timid = false;
               log = importLog;
