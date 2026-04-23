@@ -115,6 +115,9 @@
               Type = "simple";
               User = "music-tagger";
               Group = "music-tagger";
+              # StateDirectory creates /var/lib/music-tagger and makes it
+              # writable even under ProtectSystem=strict
+              StateDirectory = "music-tagger";
               WorkingDirectory = musicTaggerStateDir;
               ExecStart = "${musicTagger}/bin/music-tagger";
               EnvironmentFile = config.sops.secrets."music-tagger/env".path;
@@ -126,7 +129,6 @@
               ];
               # Hardening
               BindReadOnlyPaths = [musicFolder];
-              ReadWritePaths = [musicTaggerStateDir];
               ProtectHome = true;
               ProtectSystem = "strict";
               PrivateTmp = true;
@@ -158,7 +160,6 @@
             "d ${homeDir}/backups 0750 daniel daniel - -"
             "d ${musicFolder} 0775 daniel music - -"
             "d ${inboxFolder} 0775 daniel daniel - -"
-            "d ${musicTaggerStateDir} 0750 music-tagger music-tagger - -"
           ]
           ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
