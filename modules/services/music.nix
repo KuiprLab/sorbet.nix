@@ -119,14 +119,19 @@
               # writable even under ProtectSystem=strict
               StateDirectory = "music-tagger";
               WorkingDirectory = musicTaggerStateDir;
-              ExecStart = "${musicTagger}/bin/music-tagger";
-              EnvironmentFile = config.sops.secrets."music-tagger/env".path;
-              Environment = [
-                "DB_PATH=${musicTaggerStateDir}/library.db"
-                "MEDIA_ROOT=${musicFolder}"
-                "FLASK_ENV=production"
-                "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1"
-              ];
+              ExecStart = "${pkgs.writeShellScript "music-tagger-start" ''
+                # Load secrets (may contain DB_PATH, MEDIA_ROOT, etc.)
+                set -a
+                source ${config.sops.secrets."music-tagger/env".path}
+                set +a
+                # These always win over anything in the secrets file
+                export DB_PATH="${musicTaggerStateDir}/library.db"
+                export MEDIA_ROOT="${musicFolder}"
+                export FLASK_ENV=production
+                export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+                exec ${musicTagger}/bin/music-tagger
+              ''}";
+              Environment = ["HOME=${musicTaggerStateDir}"];
               # Hardening
               BindReadOnlyPaths = [musicFolder];
               ProtectHome = true;
