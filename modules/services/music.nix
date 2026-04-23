@@ -294,7 +294,7 @@
               timid = false;
               log = importLog;
               quiet_fallback = "asis";
-              duplicate_action = "merge";
+              duplicate_action = "remove";
             };
 
             bucket.bucket_alpha = [
