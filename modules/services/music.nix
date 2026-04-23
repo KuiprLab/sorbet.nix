@@ -194,7 +194,7 @@ _: {
               autotag = true;
               quiet = false; # TODO: fix
               timid = false;
-              # singletons = true;
+              singletons = true;
               log = importLog;
             };
 
