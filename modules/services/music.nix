@@ -155,7 +155,7 @@ _: {
                     sleep 30
                   done
 
-                  ${pkgs.beets}/bin/beet import -q ${inboxFolder}
+                  ${pkgs.beets}/bin/beet beet import -q --group-albums ${inboxFolder}
 
                   # Remove non-audio leftover files (artwork, logs, metadata junk)
                   ${pkgs.findutils}/bin/find ${inboxFolder} \
