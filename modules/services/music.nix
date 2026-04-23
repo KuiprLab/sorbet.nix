@@ -127,7 +127,7 @@ _: {
             wantedBy = ["default.target"];
           };
 
-          paths.beets-watch = {
+          paths.beets-watch-2 = {
             description = "Watch music inbox for new files";
             pathConfig = {
               PathModified = inboxFolder;
