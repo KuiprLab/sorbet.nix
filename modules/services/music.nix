@@ -183,7 +183,6 @@ _: {
                 set -euo pipefail
                 echo "Waiting for inbox to settle..."
                 while true; do
-                  # Find any file modified in the last 60 seconds
                   recent=$(${pkgs.findutils}/bin/find ${inboxFolder} -mmin -1 | wc -l)
                   if [ "$recent" -eq 0 ]; then
                     echo "Inbox settled, importing..."
@@ -192,7 +191,27 @@ _: {
                   echo "$recent file(s) still being written, waiting..."
                   sleep 30
                 done
+
                 ${pkgs.beets}/bin/beet import -q ${inboxFolder}
+
+                # Remove non-audio leftover files (artwork, logs, metadata junk)
+                ${pkgs.findutils}/bin/find ${inboxFolder} \
+                  -type f \
+                  ! -name "*.flac" \
+                  ! -name "*.mp3" \
+                  ! -name "*.ogg" \
+                  ! -name "*.opus" \
+                  ! -name "*.m4a" \
+                  ! -name "*.wav" \
+                  ! -name "*.aiff" \
+                  -delete
+
+                # Remove empty directories
+                ${pkgs.findutils}/bin/find ${inboxFolder} \
+                  -mindepth 1 \
+                  -type d \
+                  -empty \
+                  -delete
               '';
             };
           };
