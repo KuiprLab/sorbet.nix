@@ -27,13 +27,15 @@ _: {
       config,
       ...
     }: let
-      homeDir = "/home/daniel";
-      musicFolder = "${homeDir}/music";
-      inboxFolder = "${homeDir}/music-inbox";
-      duplicatesFolder = "${homeDir}/music-duplicates";
-      manualFolder = "${homeDir}/music-manual";
-      importLog = "${homeDir}/.beets/import.log";
       pluginDir = "/var/lib/navidrome/plugins";
+      importLog = "${homeDir}/.beets/import.log";
+      homeDir = "/home/daniel";
+
+      musicFolder = "${homeDir}/music";
+      beetsFolder = "${homeDir}/music-beets";
+      inboxFolder = "${beetsFolder}/inbox";
+      duplicatesFolder = "${beetsFolder}/duplicates";
+      manualFolder = "${beetsFolder}/manual";
 
       mkPlugin = {
         name,
@@ -151,12 +153,13 @@ _: {
 
         tmpfiles.rules =
           [
-            "d ${musicFolder} 0775 daniel music - -"
-            "d ${inboxFolder} 0775 daniel music - -"
-            "d ${duplicatesFolder} 0775 daniel daniel - -"
-            "d ${manualFolder} 0775 daniel daniel - -"
             "d ${pluginDir} 0750 navidrome navidrome - -"
             "d ${homeDir}/backups 0750 daniel daniel - -"
+            "d ${musicFolder} 0775 daniel music - -"
+            "d ${beetsFolder} 0775 daniel daniel - -"
+            "d ${inboxFolder} 0775 daniel daniel - -"
+            "d ${duplicatesFolder} 0775 daniel daniel - -"
+            "d ${manualFolder} 0775 daniel daniel - -"
           ]
           ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
@@ -288,9 +291,7 @@ _: {
               "invalid users" = ["root"];
             };
             music = mkSambaShare musicFolder;
-            inbox = mkSambaShare inboxFolder;
-            duplicates = mkSambaShare duplicatesFolder;
-            manual = mkSambaShare manualFolder;
+            beets = mkSambaShare beetsFolder;
           };
         };
 
