@@ -126,34 +126,59 @@ _: {
         };
       };
 
-      systemd.services.navidrome.serviceConfig = {
-        BindReadOnlyPaths = [musicFolder];
-        ProtectHome = lib.mkForce false;
-      };
+      systemd = {
+        services.navidrome.serviceConfig = {
+          BindReadOnlyPaths = [musicFolder];
+          ProtectHome = lib.mkForce false;
+        };
 
-      services.navidrome = {
-        enable = true;
-        settings = {
-          MusicFolder = musicFolder;
-          "Plugins.Enabled" = true;
-          "Backup.Path" = "/var/lib/navidrome/backups";
-          "Backup.Count" = 7;
-          "Backup.Schedule" = "0 0 * * *"; # daily at midnight
-          "CoverArtPriority" = "embedded, cover.*, folder.*, external";
-          "ArtistArtPriority" = "artist.*, album/artist.*, external";
+        tmpfiles.rules =
+          [
+            "d ${musicFolder} 0775 daniel music - -"
+            "d ${inboxFolder} 0775 daniel music - -"
+            "d ${duplicatesFolder} 0775 daniel daniel - -"
+            "d ${manualFolder} 0775 daniel daniel - -"
+            "d ${pluginDir} 0750 navidrome navidrome - -"
+            "d ${homeDir}/backups 0750 daniel daniel - -"
+          ]
+          ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
+
+        navidrome-gdrive-sync = {
+          description = "Sync Navidrome backups to Google Drive";
+          startAt = "daily";
+          serviceConfig = {
+            Type = "oneshot";
+            User = "navidrome";
+            ExecStart = pkgs.writeShellScript "navidrome-gdrive-sync" ''
+              ${pkgs.rclone}/bin/rclone sync \
+                --config ${config.sops.secrets."rclone/config".path} \
+                /var/lib/navidrome/backups \
+                gdrive:navidrome-backups/
+            '';
+          };
+        };
+
+        # Watch inbox and auto-import via beets
+        user = {
+          paths.beets-watch = {
+            description = "Watch music inbox for new files";
+            pathConfig = {
+              PathModified = inboxFolder;
+              MakeDirectory = true;
+            };
+            wantedBy = ["default.target"];
+          };
+
+          services.beets-watch = {
+            description = "Auto-import new music via beets";
+            serviceConfig = {
+              Type = "oneshot";
+              ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+              ExecStart = "${pkgs.beets}/bin/beet import -q ${inboxFolder}";
+            };
+          };
         };
       };
-
-      systemd.tmpfiles.rules =
-        [
-          "d ${musicFolder} 0775 daniel music - -"
-          "d ${inboxFolder} 0775 daniel music - -"
-          "d ${duplicatesFolder} 0775 daniel daniel - -"
-          "d ${manualFolder} 0775 daniel daniel - -"
-          "d ${pluginDir} 0750 navidrome navidrome - -"
-          "d ${homeDir}/backups 0750 daniel daniel - -"
-        ]
-        ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
       # Beets config lives in home-manager (see home-manager.users.daniel below)
       environment.systemPackages = [pkgs.rclone];
@@ -163,21 +188,6 @@ _: {
         format = "binary";
         key = "";
         owner = "navidrome";
-      };
-
-      systemd.services.navidrome-gdrive-sync = {
-        description = "Sync Navidrome backups to Google Drive";
-        startAt = "daily";
-        serviceConfig = {
-          Type = "oneshot";
-          User = "navidrome";
-          ExecStart = pkgs.writeShellScript "navidrome-gdrive-sync" ''
-            ${pkgs.rclone}/bin/rclone sync \
-              --config ${config.sops.secrets."rclone/config".path} \
-              /var/lib/navidrome/backups \
-              gdrive:navidrome-backups/
-          '';
-        };
       };
 
       home-manager.users.daniel = {
@@ -252,42 +262,38 @@ _: {
       };
 
       # TODO: add `sudo smbpasswd -a daniel` as a post-deploy step
-      services.samba = {
-        enable = true;
-        settings = {
-          global = {
-            "workgroup" = "WORKGROUP";
-            "server string" = "music-server";
-            "security" = "user";
-            "invalid users" = ["root"];
+      services = {
+        navidrome = {
+          enable = true;
+          settings = {
+            MusicFolder = musicFolder;
+            "Plugins.Enabled" = true;
+            "Backup.Path" = "/var/lib/navidrome/backups";
+            "Backup.Count" = 7;
+            "Backup.Schedule" = "0 0 * * *"; # daily at midnight
+            "CoverArtPriority" = "embedded, cover.*, folder.*, external";
+            "ArtistArtPriority" = "artist.*, album/artist.*, external";
           };
-          music = mkSambaShare musicFolder;
-          inbox = mkSambaShare inboxFolder;
-          duplicates = mkSambaShare duplicatesFolder;
-          manual = mkSambaShare manualFolder;
         };
-      };
 
-      # Watch inbox and auto-import via beets
-      systemd.user.paths.beets-watch = {
-        description = "Watch music inbox for new files";
-        pathConfig = {
-          PathModified = inboxFolder;
-          MakeDirectory = true;
+        samba = {
+          enable = true;
+          settings = {
+            global = {
+              "workgroup" = "WORKGROUP";
+              "server string" = "music-server";
+              "security" = "user";
+              "invalid users" = ["root"];
+            };
+            music = mkSambaShare musicFolder;
+            inbox = mkSambaShare inboxFolder;
+            duplicates = mkSambaShare duplicatesFolder;
+            manual = mkSambaShare manualFolder;
+          };
         };
-        wantedBy = ["default.target"];
-      };
 
-      systemd.user.services.beets-watch = {
-        description = "Auto-import new music via beets";
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-          ExecStart = "${pkgs.beets}/bin/beet import -q ${inboxFolder}";
-        };
+        samba-wsdd.enable = true;
       };
-
-      services.samba-wsdd.enable = true;
 
       networking.firewall = {
         allowedTCPPorts = [
