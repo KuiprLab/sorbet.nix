@@ -244,6 +244,7 @@ _: {
               "lyrics"
               "bucket"
               "missing"
+              "lastgenre"
             ];
 
             match.strong_rec_thresh = 0.2;
