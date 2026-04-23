@@ -279,6 +279,7 @@ _: {
             "Backup.Schedule" = "0 0 * * *"; # daily at midnight
             "CoverArtPriority" = "embedded, cover.*, folder.*, external";
             "ArtistArtPriority" = "artist.*, album/artist.*, external";
+            "Scanner.PurgeMissing" = "always";
           };
         };
 
