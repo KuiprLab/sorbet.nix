@@ -1,21 +1,15 @@
 {
   lib,
   python3,
-  fetchFromGitHub,
   playwright-driver,
+  src,
 }:
 python3.pkgs.buildPythonApplication {
   pname = "music-tagger";
   version = "0-unstable-2025-04-23";
   pyproject = false;
 
-  src = fetchFromGitHub {
-    owner = "iLazlow";
-    repo = "music-tagger";
-    # Replace with the actual commit hash
-    rev = "c9b3db3";
-    hash = lib.fakeHash;
-  };
+  inherit src;
 
   dependencies = with python3.pkgs; [
     flask

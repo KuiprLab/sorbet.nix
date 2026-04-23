@@ -1,4 +1,4 @@
-_: {
+{inputs, ...}: {
   flake = {
     caddyVirtualHosts."music.int.kuipr.de" = ''
       reverse_proxy localhost:4533 {
@@ -42,6 +42,7 @@ _: {
 
       musicTagger = pkgs.callPackage ../../pkgs/music-tagger {
         playwright-driver = pkgs.playwright-driver;
+        src = inputs.music-tagger;
       };
       musicTaggerStateDir = "/var/lib/music-tagger";
 
