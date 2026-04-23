@@ -274,6 +274,7 @@ _: {
             lyrics = {
               auto = true;
               sources = ["lrclib"];
+              synced = true;
             };
           };
         };
