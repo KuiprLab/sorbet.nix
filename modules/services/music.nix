@@ -92,7 +92,7 @@
           group = "navidrome";
         };
         music-tagger = {
-          extraGroups = ["music"];
+          extraGroups = ["music" "users"];
           isSystemUser = true;
           group = "music-tagger";
         };
