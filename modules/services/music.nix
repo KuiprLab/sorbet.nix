@@ -218,9 +218,10 @@ _: {
               move = true;
               write = true;
               autotag = true;
-              quiet = false; # TODO: fix
+              quiet = false;
               timid = false;
               log = importLog;
+              quiet_fallback = "asis";
             };
 
             bucket.bucket_alpha = [
