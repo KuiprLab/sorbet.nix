@@ -132,9 +132,9 @@
                 exec ${musicTagger}/bin/music-tagger
               ''}";
               Environment = ["HOME=${musicTaggerStateDir}"];
-              # Hardening
-              BindReadOnlyPaths = [musicFolder];
-              ProtectHome = true;
+              # Hardening — music-tagger needs write access to tag files in place
+              ReadWritePaths = [musicFolder musicTaggerStateDir];
+              ProtectHome = lib.mkForce false;
               ProtectSystem = "strict";
               PrivateTmp = true;
               NoNewPrivileges = true;
