@@ -41,7 +41,7 @@
       homeDir = "/home/daniel";
 
       musicTagger = pkgs.callPackage ../../pkgs/music-tagger {
-        playwright-driver = pkgs.playwright-driver;
+        inherit (pkgs) playwright-driver;
         src = inputs.music-tagger;
       };
       musicTaggerStateDir = "/var/lib/music-tagger";
@@ -76,29 +76,29 @@
         })
       ];
     in {
-      users.groups = {
-        music = {};
-        navidrome = {};
+      users = {
+        groups = {
+          music = {};
+          navidrome = {};
+          music-tagger = {};
+        };
+        users = {
+          daniel = {
+            extraGroups = ["music"];
+            homeMode = "0711";
+          };
+          navidrome = {
+            extraGroups = ["music"];
+            isSystemUser = true;
+            group = "navidrome";
+          };
+          music-tagger = {
+            extraGroups = ["music" "users"];
+            isSystemUser = true;
+            group = "music-tagger";
+          };
+        };
       };
-
-      users.users = {
-        daniel = {
-          extraGroups = ["music"];
-          homeMode = "0711";
-        };
-        navidrome = {
-          extraGroups = ["music"];
-          isSystemUser = true;
-          group = "navidrome";
-        };
-        music-tagger = {
-          extraGroups = ["music" "users"];
-          isSystemUser = true;
-          group = "music-tagger";
-        };
-      };
-
-      users.groups.music-tagger = {};
 
       systemd = {
         services = {
