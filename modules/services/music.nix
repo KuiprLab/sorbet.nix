@@ -178,8 +178,22 @@ _: {
             description = "Auto-import new music via beets";
             serviceConfig = {
               Type = "oneshot";
-              ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-              ExecStart = "${pkgs.beets}/bin/beet import -q ${inboxFolder}";
+              TimeoutStartSec = "3h"; # don't kill the service during a long copy
+              ExecStart = pkgs.writeShellScript "beets-import" ''
+                set -euo pipefail
+                echo "Waiting for inbox to settle..."
+                while true; do
+                  # Find any file modified in the last 60 seconds
+                  recent=$(${pkgs.findutils}/bin/find ${inboxFolder} -mmin -1 | wc -l)
+                  if [ "$recent" -eq 0 ]; then
+                    echo "Inbox settled, importing..."
+                    break
+                  fi
+                  echo "$recent file(s) still being written, waiting..."
+                  sleep 30
+                done
+                ${pkgs.beets}/bin/beet import -q ${inboxFolder}
+              '';
             };
           };
         };
