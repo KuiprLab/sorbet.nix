@@ -32,7 +32,7 @@ _: {
       homeDir = "/home/daniel";
 
       musicFolder = "${homeDir}/music";
-      inboxFolder = "${homeDir}/mus-cinbox";
+      inboxFolder = "${homeDir}/music-inbox";
 
       mkPlugin = {
         name,
