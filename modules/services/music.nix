@@ -9,6 +9,15 @@ _: {
       }
     '';
 
+    caddyVirtualHosts."tagger.int.kuipr.de" = ''
+      reverse_proxy localhost:8099 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+      }
+    '';
+
     gatusEndpoints = [
       {
         name = "Navidrome";
@@ -30,6 +39,11 @@ _: {
       pluginDir = "/var/lib/navidrome/plugins";
       importLog = "${homeDir}/.beets/import.log";
       homeDir = "/home/daniel";
+
+      musicTagger = pkgs.callPackage ../../pkgs/music-tagger {
+        playwright-driver = pkgs.playwright-driver;
+      };
+      musicTaggerStateDir = "/var/lib/music-tagger";
 
       musicFolder = "${homeDir}/music";
       inboxFolder = "${homeDir}/music-inbox";
@@ -76,13 +90,49 @@ _: {
           isSystemUser = true;
           group = "navidrome";
         };
+        music-tagger = {
+          extraGroups = ["music"];
+          isSystemUser = true;
+          group = "music-tagger";
+        };
       };
+
+      users.groups.music-tagger = {};
 
       systemd = {
         services = {
           navidrome.serviceConfig = {
             BindReadOnlyPaths = [musicFolder];
             ProtectHome = lib.mkForce false;
+          };
+
+          music-tagger = {
+            description = "NaviCura music tagger web UI";
+            after = ["network.target"];
+            wantedBy = ["multi-user.target"];
+            serviceConfig = {
+              Type = "simple";
+              User = "music-tagger";
+              Group = "music-tagger";
+              WorkingDirectory = musicTaggerStateDir;
+              ExecStart = "${musicTagger}/bin/music-tagger";
+              EnvironmentFile = config.sops.secrets."music-tagger/env".path;
+              Environment = [
+                "DB_PATH=${musicTaggerStateDir}/library.db"
+                "MEDIA_ROOT=${musicFolder}"
+                "FLASK_ENV=production"
+                "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1"
+              ];
+              # Hardening
+              BindReadOnlyPaths = [musicFolder];
+              ReadWritePaths = [musicTaggerStateDir];
+              ProtectHome = true;
+              ProtectSystem = "strict";
+              PrivateTmp = true;
+              NoNewPrivileges = true;
+              Restart = "on-failure";
+              RestartSec = "5s";
+            };
           };
 
           navidrome-gdrive-sync = {
@@ -107,6 +157,7 @@ _: {
             "d ${homeDir}/backups 0750 daniel daniel - -"
             "d ${musicFolder} 0775 daniel music - -"
             "d ${inboxFolder} 0775 daniel daniel - -"
+            "d ${musicTaggerStateDir} 0750 music-tagger music-tagger - -"
           ]
           ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
@@ -211,6 +262,13 @@ _: {
           format = "binary";
           key = "";
           owner = "daniel";
+        };
+
+        "music-tagger/env" = {
+          sopsFile = ../../secrets/music-tagger-secrets;
+          format = "binary";
+          key = "";
+          owner = "music-tagger";
         };
       };
 
