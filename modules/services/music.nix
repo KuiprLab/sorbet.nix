@@ -205,7 +205,7 @@
                       break
                     fi
                     echo "$recent file(s) still being written, waiting..."
-                    sleep 30
+                    sleep 5
                   done
 
                   ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder}
