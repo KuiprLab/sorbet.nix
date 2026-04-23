@@ -32,10 +32,7 @@ _: {
       homeDir = "/home/daniel";
 
       musicFolder = "${homeDir}/music";
-      beetsFolder = "${homeDir}/music-beets";
-      inboxFolder = "${beetsFolder}/inbox";
-      duplicatesFolder = "${beetsFolder}/duplicates";
-      manualFolder = "${beetsFolder}/manual";
+      inboxFolder = "${homeDir}/mus-cinbox";
 
       mkPlugin = {
         name,
@@ -109,10 +106,7 @@ _: {
             "d ${pluginDir} 0750 navidrome navidrome - -"
             "d ${homeDir}/backups 0750 daniel daniel - -"
             "d ${musicFolder} 0775 daniel music - -"
-            "d ${beetsFolder} 0775 daniel daniel - -"
             "d ${inboxFolder} 0775 daniel daniel - -"
-            "d ${duplicatesFolder} 0775 daniel daniel - -"
-            "d ${manualFolder} 0775 daniel daniel - -"
           ]
           ++ map (p: "L+ ${pluginDir}/${p.name}.ndp - - - - ${p.pkg}") plugins;
 
@@ -127,7 +121,7 @@ _: {
             wantedBy = ["default.target"];
           };
 
-          paths.beets-watch-2 = {
+          paths.beets-watch = {
             description = "Watch music inbox for new files";
             pathConfig = {
               PathModified = inboxFolder;
@@ -311,7 +305,7 @@ _: {
               "invalid users" = ["root"];
             };
             music = mkSambaShare musicFolder;
-            beets = mkSambaShare beetsFolder;
+            inbox = mkSambaShare inboxFolder;
           };
         };
 
