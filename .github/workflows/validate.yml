@@ -53,7 +53,7 @@ jobs:
         id: set-matrix
         shell: bash
         env:
-          NIX_CONFIG: "access-tokens = github.com=${{ secrets.MUSIC_TAGGER_PAT }}"
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
         run: |
           # Use nix eval to get configurations directly from the flake
           echo "Detecting NixOS configurations..."
@@ -126,6 +126,7 @@ jobs:
             trusted-substituters = https://cache.nixos.org https://frostplexx.cachix.org https://nvf.cachix.org https://nix-community.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= frostplexx.cachix.org-1:kjkhnGNSkUvf5Mx8OEfhzaR830CUkDRglaKduAcr3UQ= nvf.cachix.org-1:GMQWiUhZ6ux9D5CvFFMwnc2nFrUHTeGaXRlVBXo+naI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= sorbet.cachix.org-1:p1+jtoj8v75vhRut7fGY5jL7k4BNMFvMBcQSDKbF3Aw=
             extra-trusted-public-keys = cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM=
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN  }}"
 
       - name: Setup Cachix Auth
         uses: cachix/cachix-action@v17
@@ -136,13 +137,13 @@ jobs:
       - uses: DeterminateSystems/flake-checker-action@main
       - name: Check flake
         env:
-          NIX_CONFIG: "access-tokens = github.com=${{ secrets.MUSIC_TAGGER_PAT }}"
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
         run: nix flake check
 
       - name: Build Configuration
         env:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
-          NIX_CONFIG: "access-tokens = github.com=${{ secrets.MUSIC_TAGGER_PAT }}"
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
         run: |
           echo "Building configuration for ${{ matrix.name }} (${{ matrix.type }}) with command ${{matrix.cmd}}"
           # nix build .#${{ matrix.config }} --accept-flake-config --impure --extra-experimental-features flakes --extra-experimental-features nix-command --dry-run
