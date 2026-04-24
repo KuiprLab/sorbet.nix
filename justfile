@@ -41,3 +41,7 @@ check: fmt
 
 upload-secrets host:
     @./scripts/upload-secrets.sh {{host}}
+
+# Run a beet command on sorbet as daniel (e.g. `just beet import ~/Downloads/album`)
+beet *args:
+    ssh daniel@192.168.0.85 beet {{args}}
