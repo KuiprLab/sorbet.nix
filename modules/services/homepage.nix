@@ -42,7 +42,7 @@ _: {
           layout = {
             Infrastructure = {
               style = "row";
-              columns = 2;
+              columns = 3;
             };
             Home = {
               style = "row";
@@ -58,6 +58,17 @@ _: {
         services = [
           {
             Infrastructure = [
+              {
+                Caddy = {
+                  description = "Reverse proxy";
+                  href = "https://home.int.kuipr.de";
+                  icon = "caddy";
+                  widget = {
+                    type = "caddy";
+                    url = "http://localhost:2019";
+                  };
+                };
+              }
               {
                 UniFi = {
                   description = "Network controller";
