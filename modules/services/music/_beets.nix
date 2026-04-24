@@ -140,7 +140,15 @@
           "bucket"
           "missing"
           "lastgenre"
+          "badfiles"
         ];
+
+        badfiles = {
+          check_on_import = true;
+          commands = {
+            flac = "${pkgs.flac}/bin/flac --test --warnings-as-errors --silent";
+          };
+        };
 
         chroma.auto = true;
         acoustid.apikey = "\${ACOUSTID_APIKEY}";
