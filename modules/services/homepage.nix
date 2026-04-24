@@ -153,6 +153,13 @@ _: {
                   icon = "mdi-tag-music";
                 };
               }
+              {
+                "AM Downloader" = {
+                  description = "Apple Music downloader";
+                  href = "https://am-dl.pages.dev/";
+                  icon = "mdi-apple";
+                };
+              }
             ];
           }
         ];
