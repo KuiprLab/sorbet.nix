@@ -174,7 +174,6 @@
           sources = [
             "filesystem"
             "coverart"
-            "itunes"
             "fanarttv"
             "lastfm"
           ];
