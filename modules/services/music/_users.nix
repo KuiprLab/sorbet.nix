@@ -1,5 +1,5 @@
 # Users and groups for music services
-{...}: {
+_: {
   users = {
     groups = {
       music = {};
