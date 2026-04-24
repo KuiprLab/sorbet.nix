@@ -147,6 +147,12 @@
           check_on_import = true;
           commands = {
             flac = "${pkgs.flac}/bin/flac --test --warnings-as-errors --silent";
+            m4a = "${pkgs.ffmpeg}/bin/ffprobe -v error";
+            mp3 = "${pkgs.mp3val}/bin/mp3val -si";
+            ogg = "${pkgs.vorbis-tools}/bin/ogginfo";
+            opus = "${pkgs.opusTools}/bin/opusinfo";
+            wav = "${pkgs.ffmpeg}/bin/ffprobe -v error";
+            aiff = "${pkgs.ffmpeg}/bin/ffprobe -v error";
           };
         };
 
