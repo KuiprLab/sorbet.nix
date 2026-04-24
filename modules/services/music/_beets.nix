@@ -141,6 +141,7 @@
           "missing"
           "lastgenre"
           "badfiles"
+          "duplicates"
         ];
 
         badfiles = {
