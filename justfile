@@ -45,3 +45,7 @@ upload-secrets host:
 # Run a beet command on sorbet as daniel (e.g. `just beet import ~/Downloads/album`)
 beet *args:
     ssh daniel@192.168.0.85 beet {{args}}
+
+
+update-inputs:
+    @nix flake update --option access-tokens github.com=$(op read op://Personal/GitHub/token)

@@ -27,7 +27,7 @@
     };
 
     music-tagger = {
-      url = "github:iLazlow/music-tagger";
+      url = "github:iLazlow/music-tagger?ref=main";
       flake = false;
     };
   };
