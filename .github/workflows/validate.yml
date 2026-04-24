@@ -47,13 +47,13 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
-      - name: Rewrite SSH flake inputs to HTTPS with PAT
-        run: git config --global url."https://oauth2:${{ secrets.MUSIC_TAGGER_PAT }}@github.com/".insteadOf "ssh://git@github.com/"
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v22
       - name: Generate Configuration Matrix
         id: set-matrix
         shell: bash
+        env:
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.MUSIC_TAGGER_PAT }}"
         run: |
           # Use nix eval to get configurations directly from the flake
           echo "Detecting NixOS configurations..."
@@ -116,9 +116,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Rewrite SSH flake inputs to HTTPS with PAT
-        run: git config --global url."https://oauth2:${{ secrets.MUSIC_TAGGER_PAT }}@github.com/".insteadOf "ssh://git@github.com/"
-
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v22
         with:
@@ -137,11 +134,15 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - uses: DeterminateSystems/flake-checker-action@main
-      - run: nix flake check
+      - name: Check flake
+        env:
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.MUSIC_TAGGER_PAT }}"
+        run: nix flake check
 
       - name: Build Configuration
         env:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.MUSIC_TAGGER_PAT }}"
         run: |
           echo "Building configuration for ${{ matrix.name }} (${{ matrix.type }}) with command ${{matrix.cmd}}"
           # nix build .#${{ matrix.config }} --accept-flake-config --impure --extra-experimental-features flakes --extra-experimental-features nix-command --dry-run
