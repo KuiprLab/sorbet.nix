@@ -170,12 +170,13 @@
         embedart.auto = true;
         fetchart = {
           auto = true;
+          lastfm_key = "\${LASTFM_APIKEY}";
           sources = [
             "filesystem"
             "coverart"
             "itunes"
-            "wikipedia"
             "fanarttv"
+            "lastfm"
           ];
         };
         lyrics = {
