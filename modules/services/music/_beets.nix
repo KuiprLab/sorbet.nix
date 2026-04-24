@@ -156,6 +156,12 @@
           };
         };
 
+        lastgenre = {
+          auto = true;
+          force = true;
+          keep_existing = false;
+        };
+
         chroma.auto = true;
         acoustid.apikey = "\${ACOUSTID_APIKEY}";
         match.strong_rec_thresh = 0.2;
