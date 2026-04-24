@@ -48,4 +48,4 @@ beet *args:
 
 
 update-inputs:
-    @nix flake update --option access-tokens github.com=$(op read op://Personal/GitHub/token)
+    @NIX_CONFIG="access-tokens = github.com=$(gh auth token)" nix flake update
