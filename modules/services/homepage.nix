@@ -16,19 +16,35 @@ _: {
       }
     ];
 
-    nixosModules.homepage = {config, ...}: {
+    nixosModules.homepage = {
+      config,
+      lib,
+      ...
+    }: {
       sops.secrets."homepage/env" = {
         sopsFile = ../../secrets/homepage-secrets;
         format = "binary";
         key = "";
-        owner = "homepage";
+        owner = "root";
+        mode = "0400";
         restartUnits = ["homepage-dashboard.service"];
+      };
+
+      # homepage-dashboard uses DynamicUser=true, so sops secrets are not
+      # directly readable by it. Use LoadCredential to hand the secret file
+      # to the service under /run/credentials/ with correct ACLs.
+      systemd.services.homepage-dashboard = {
+        serviceConfig = {
+          LoadCredential = "homepage-env:${config.sops.secrets."homepage/env".path}";
+          EnvironmentFile = lib.mkForce ["/run/credentials/homepage-dashboard.service/homepage-env"];
+        };
       };
 
       services.homepage-dashboard = {
         enable = true;
         listenPort = 8082;
         openFirewall = false;
+        allowedHosts = "home.int.kuipr.de";
 
         settings = {
           title = "Sorbet";
@@ -152,7 +168,7 @@ _: {
           }
         ];
 
-        environmentFiles = [config.sops.secrets."homepage/env".path];
+        # env file injected via systemd LoadCredential (DynamicUser compat)
       };
     };
   };
