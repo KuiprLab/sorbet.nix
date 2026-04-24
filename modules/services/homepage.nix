@@ -68,7 +68,6 @@ _: {
                     url = "https://unifi.int.kuipr.de";
                     username = "{{HOMEPAGE_VAR_UNIFI_USERNAME}}";
                     password = "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}";
-                    site = "default";
                   };
                 };
               }
