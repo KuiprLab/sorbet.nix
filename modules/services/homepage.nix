@@ -42,7 +42,7 @@ _: {
           layout = {
             Infrastructure = {
               style = "row";
-              columns = 3;
+              columns = 4;
             };
             Home = {
               style = "row";
@@ -90,6 +90,18 @@ _: {
                   widget = {
                     type = "gatus";
                     url = "http://localhost:8888";
+                  };
+                };
+              }
+              {
+                NextDNS = {
+                  description = "DNS filtering";
+                  href = "https://my.nextdns.io";
+                  icon = "nextdns";
+                  widget = {
+                    type = "nextdns";
+                    profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE}}";
+                    key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}";
                   };
                 };
               }
