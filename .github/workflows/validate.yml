@@ -53,7 +53,7 @@ jobs:
         id: set-matrix
         shell: bash
         env:
-          NIX_CONFIG: "access-tokens = github.com=$GITHUB_TOKEN"
+          NIX_CONFIG: "access-tokens = github.com=${{ GITHUB_TOKEN }}"
         run: |
           # Use nix eval to get configurations directly from the flake
           echo "Detecting NixOS configurations..."
