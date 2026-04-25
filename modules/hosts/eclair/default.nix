@@ -31,10 +31,9 @@ in {
             allowUnfree = true;
             allowBroken = false;
           };
-          # Pass sorbet's tailscale IP into haproxy module
+          # Pass flake-level values into nixos modules via _module.args
           _module.args.sorbetTailscaleIp = sorbetTailscaleIp;
-          # Make caddyVirtualHosts available inside nixos modules
-          flake.caddyVirtualHosts = config.flake.caddyVirtualHosts;
+          _module.args.caddyVirtualHosts = config.flake.caddyVirtualHosts;
         }
       ]
       ++ collectModules self.eclairNixosModules;

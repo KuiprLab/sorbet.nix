@@ -7,16 +7,16 @@
 # Set it to the output of: tailscale ip -4   (run on sorbet)
 {lib, ...}: {
   flake.eclairNixosModules.haproxy = {
-    config,
     lib,
     sorbetTailscaleIp,
+    caddyVirtualHosts,
     ...
   }: let
     # Collect all *.ext.kuipr.de hostnames contributed by service modules.
     extHostNames =
       lib.filter
       (lib.hasSuffix ".ext.kuipr.de")
-      (lib.attrNames config.flake.caddyVirtualHosts);
+      (lib.attrNames caddyVirtualHosts);
 
     # One ACL + use-backend line per ext host.
     aclBlock =
