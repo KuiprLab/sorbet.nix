@@ -66,6 +66,9 @@
       owner = "root";
     };
 
+    # Allow crowdsec to read systemd journal for acquisitions
+    users.users.crowdsec.extraGroups = ["systemd-journal"];
+
     # nftables required for the firewall bouncer
     networking.nftables.enable = true;
   };
