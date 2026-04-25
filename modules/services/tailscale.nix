@@ -1,10 +1,5 @@
 _: {
-  flake.nixosModules.tailscale = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.tailscale = {config, ...}: {
     sops.secrets."tailscale/authkey" = {
       sopsFile = ../../secrets/tailscale/sorbet;
       format = "binary";

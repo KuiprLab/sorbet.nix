@@ -5,7 +5,7 @@
 #
 # sorbetTailscaleIp is passed via _module.args from eclair/default.nix.
 # Set it to the output of: tailscale ip -4   (run on sorbet)
-{lib, ...}: {
+_: {
   flake.eclairNixosModules.haproxy = {
     lib,
     sorbetTailscaleIp,

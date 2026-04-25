@@ -1,8 +1,6 @@
 # Navidrome service configuration, plugins, and tmpfiles
 {
   lib,
-  pkgs,
-  config,
   musicFolder,
   pluginDir,
   homeDir,
