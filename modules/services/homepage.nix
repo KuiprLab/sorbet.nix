@@ -16,7 +16,11 @@ _: {
       }
     ];
 
-    nixosModules.homepage = {config, ...}: {
+    nixosModules.homepage = {
+      config,
+      pkgs,
+      ...
+    }: {
       sops.secrets."homepage/env" = {
         sopsFile = ../../secrets/homepage-secrets;
         format = "binary";
@@ -25,6 +29,10 @@ _: {
         mode = "0444";
         restartUnits = ["homepage-dashboard.service"];
       };
+
+      environment.systemPackages = [
+        pkgs.cloudflared
+      ];
 
       services.homepage-dashboard = {
         enable = true;
