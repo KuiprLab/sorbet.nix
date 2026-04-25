@@ -22,8 +22,8 @@
     }: {
       networking.firewall.allowedTCPPorts = [80 443];
 
-      sops.secrets."caddy/cloudflare_api_token" = {
-        sopsFile = ../../secrets/caddy-secrets;
+      sops.secrets."caddy/bunny_api_key" = {
+        sopsFile = ../../secrets/caddy/sorbet;
         format = "binary";
         key = "";
         owner = "caddy";
@@ -42,6 +42,6 @@
       };
 
       systemd.services.caddy.serviceConfig.EnvironmentFile =
-        config.sops.secrets."caddy/cloudflare_api_token".path;
+        config.sops.secrets."caddy/bunny_api_key".path;
     };
 }

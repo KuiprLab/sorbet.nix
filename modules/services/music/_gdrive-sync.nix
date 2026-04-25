@@ -20,7 +20,7 @@
   };
 
   sops.secrets."rclone/config" = {
-    sopsFile = ../../../secrets/rclone-secrets;
+    sopsFile = ../../../secrets/rclone/sorbet;
     format = "binary";
     key = "";
     owner = "navidrome";

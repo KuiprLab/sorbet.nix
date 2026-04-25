@@ -26,11 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    music-tagger = {
-      url = "github:iLazlow/music-tagger";
-      flake = false;
-    };
-
     # music-manager.url = "github:KuiprLab/music-manager";
   };
 

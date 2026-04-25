@@ -72,7 +72,7 @@
       ...
     }: {
       sops.secrets."gatus/discord_webhook" = {
-        sopsFile = ../../secrets/gatus-secrets;
+        sopsFile = ../../secrets/gatus/sorbet;
         format = "binary";
         key = "";
         owner = "root";

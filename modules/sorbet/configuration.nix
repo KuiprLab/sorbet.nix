@@ -2,10 +2,6 @@ _: let
   user = "daniel";
 in {
   flake.nixosModules.sorbetConfiguration = {pkgs, ...}: {
-    # Cloudflare Tunnel UUID — not a secret, safe to commit.
-    # Created with: cloudflared tunnel create ext-kuipr-de
-    services.cloudflared.tunnelId = "a88bee17-c400-4099-b800-6b2486cbaa4f";
-
     system.stateVersion = "24.05";
 
     environment.systemPackages = with pkgs; [
@@ -21,7 +17,7 @@ in {
       age.generateKey = false;
       secrets = {
         "deploy_webhook" = {
-          sopsFile = ../../secrets/deploy_webhook;
+          sopsFile = ../../secrets/deploy-webhook/shared;
           format = "binary";
           key = "";
           owner = "root";
@@ -78,11 +74,17 @@ in {
       settings = {
         substituters = [
           "https://cache.nixos.org/"
+          "https://sorbet.cachix.org"
           "https://nix-community.cachix.org"
+          "https://frostplexx.cachix.org"
+          "https://nvf.cachix.org"
         ];
         trusted-public-keys = [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "sorbet.cachix.org-1:p1+jtoj8v75vhRut7fGY5jL7k4BNMFvMBcQSDKbF3Aw="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "frostplexx.cachix.org-1:kjkhnGNSkUvf5Mx8OEfhzaR830CUkDRglaKduAcr3UQ="
+          "nvf.cachix.org-1:GMQWiUhZ6ux9D5CvFFMwnc2nFrUHTeGaXRlVBXo+naI="
         ];
       };
     };

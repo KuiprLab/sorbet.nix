@@ -183,11 +183,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777004352,
-        "narHash": "sha256-SV+9PgNwZ8jHVCjK6YaCBzaheLSW7cDnm5DpOYrD8Vw=",
+        "lastModified": 1777086106,
+        "narHash": "sha256-hlNpIN18pw3xo34Lsrp6vAMUPn0aB/zFBqL0QXI1Pmk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "6012cf1fed3eba66115f3fd117b9be6bd2a15b2f",
+        "rev": "5826802354a74af18540aef0b01bc1320f82cc17",
         "type": "github"
       },
       "original": {
@@ -209,22 +209,6 @@
       "original": {
         "owner": "vic",
         "repo": "import-tree",
-        "type": "github"
-      }
-    },
-    "music-tagger": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1776963100,
-        "narHash": "sha256-DYDXWSaLX3rTFnSX9HmBW3rMPvJwTeqJSxi5+A0LPYA=",
-        "owner": "iLazlow",
-        "repo": "music-tagger",
-        "rev": "c9b3db38a3c94059d02b6c35bedf21d3f46bdbd2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "iLazlow",
-        "repo": "music-tagger",
         "type": "github"
       }
     },
@@ -363,7 +347,6 @@
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
-        "music-tagger": "music-tagger",
         "nixpkgs": "nixpkgs_3",
         "sops-nix": "sops-nix",
         "wrapper-modules": "wrapper-modules"
@@ -427,11 +410,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1776990543,
-        "narHash": "sha256-zogbmdEsXoavIPJyd7+2F6rfPlvtmnJEjN5ZKWW1IK4=",
+        "lastModified": 1777021790,
+        "narHash": "sha256-LWFEnxRnI6ajb1i5NfycvTi9/EY2CM/IYIEAXEazqRI=",
         "owner": "BirdeeHub",
         "repo": "nix-wrapper-modules",
-        "rev": "1b25ebb5c9e18c40a18f285e3aa81e3392579974",
+        "rev": "787ec64506c39faea133ea185491715e5128d35d",
         "type": "github"
       },
       "original": {

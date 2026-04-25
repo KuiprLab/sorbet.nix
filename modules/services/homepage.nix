@@ -22,7 +22,7 @@ _: {
       ...
     }: {
       sops.secrets."homepage/env" = {
-        sopsFile = ../../secrets/homepage-secrets;
+        sopsFile = ../../secrets/homepage/sorbet;
         format = "binary";
         key = "";
         owner = "root";
@@ -30,9 +30,7 @@ _: {
         restartUnits = ["homepage-dashboard.service"];
       };
 
-      environment.systemPackages = [
-        pkgs.cloudflared
-      ];
+      environment.systemPackages = [];
 
       services.homepage-dashboard = {
         enable = true;
@@ -188,13 +186,6 @@ _: {
                 dateStyle = "short";
                 hourCycle = "h23";
               };
-            };
-          }
-          {
-            cloudflared = {
-              accountid = "{{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}";
-              tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}";
-              key = "{{HOMEPAGE_VAR_CLOUDFLARE_API_TOKEN}}";
             };
           }
         ];

@@ -6,7 +6,7 @@ _: {
     ...
   }: {
     sops.secrets."tailscale/authkey" = {
-      sopsFile = ../../secrets/tailscale-secrets;
+      sopsFile = ../../secrets/tailscale/sorbet;
       format = "binary";
       key = "";
       owner = "root";

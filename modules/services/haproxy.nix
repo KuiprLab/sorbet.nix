@@ -1,0 +1,89 @@
+# haproxy TCP SNI reverse proxy for eclair VPS
+# Auto-routes any *.ext.kuipr.de domain (collected from flake.caddyVirtualHosts)
+# to sorbet via tailnet — TCP passthrough, caddy on sorbet terminates TLS.
+# IP banning is handled upstream by crowdsec-firewall-bouncer (nftables).
+#
+# sorbetTailscaleIp is passed via _module.args from eclair/default.nix.
+# Set it to the output of: tailscale ip -4   (run on sorbet)
+{lib, ...}: {
+  flake.eclairNixosModules.haproxy = {
+    config,
+    lib,
+    sorbetTailscaleIp,
+    ...
+  }: let
+    # Collect all *.ext.kuipr.de hostnames contributed by service modules.
+    extHostNames =
+      lib.filter
+      (lib.hasSuffix ".ext.kuipr.de")
+      (lib.attrNames config.flake.caddyVirtualHosts);
+
+    # One ACL + use-backend line per ext host.
+    aclBlock =
+      lib.concatMapStrings (host: let
+        aclName = "sni_" + lib.replaceStrings ["."] ["_"] host;
+      in ''
+        acl ${aclName} req.ssl_sni -i ${host}
+        use_backend be_sorbet if ${aclName}
+      '')
+      extHostNames;
+  in {
+    networking.firewall.allowedTCPPorts = [80 443];
+
+    services.haproxy = {
+      enable = true;
+      config = ''
+        global
+          log /dev/log local0
+          log /dev/log local1 notice
+          maxconn 50000
+          user haproxy
+          group haproxy
+          daemon
+
+        defaults
+          log     global
+          option  tcplog
+          option  dontlognull
+          timeout connect 5s
+          timeout client  30s
+          timeout server  30s
+
+        #--------------------------------------------------------------------
+        # HTTP — redirect to HTTPS
+        #--------------------------------------------------------------------
+        frontend fe_http
+          mode http
+          bind *:80
+          http-request redirect scheme https code 301
+
+        #--------------------------------------------------------------------
+        # HTTPS — TCP SNI passthrough
+        #--------------------------------------------------------------------
+        frontend fe_https
+          mode tcp
+          bind *:443
+          tcp-request inspect-delay 5s
+          tcp-request content accept if { req.ssl_hello_type 1 }
+
+        ${aclBlock}
+          default_backend be_reject
+
+        #--------------------------------------------------------------------
+        # Backend: sorbet via tailnet (TCP passthrough, caddy handles TLS)
+        #--------------------------------------------------------------------
+        backend be_sorbet
+          mode tcp
+          option ssl-hello-chk
+          server sorbet ${sorbetTailscaleIp}:443 check inter 10s rise 2 fall 3
+
+        #--------------------------------------------------------------------
+        # Backend: reject unknown SNI
+        #--------------------------------------------------------------------
+        backend be_reject
+          mode tcp
+          tcp-request content reject
+      '';
+    };
+  };
+}
