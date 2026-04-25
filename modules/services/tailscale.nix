@@ -23,19 +23,6 @@ _: {
       ];
     };
 
-    systemd.services.tailscale-funnel = {
-      description = "Tailscale funnel port 443 to Caddy";
-      after = ["tailscaled.service" "tailscale-autoconnect.service" "network-online.target"];
-      wants = ["tailscaled.service"];
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${pkgs.tailscale}/bin/tailscale funnel --bg 443";
-        ExecStop = "${pkgs.tailscale}/bin/tailscale funnel off";
-      };
-    };
-
     networking.firewall = {
       trustedInterfaces = ["tailscale0"];
       allowedUDPPorts = [config.services.tailscale.port];
