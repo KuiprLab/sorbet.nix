@@ -37,6 +37,7 @@
       "CoverArtPriority" = "embedded, cover.*, folder.*, external";
       "ArtistArtPriority" = "artist.*, album/artist.*, external";
       "Scanner.PurgeMissing" = "always";
+      "EnableSharing" = true;
     };
   };
 }
