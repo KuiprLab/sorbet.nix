@@ -29,7 +29,7 @@
           ${config.services.cloudflared.tunnelId} = {
             credentialsFile = config.sops.secrets."cloudflare-tunnel/credentials".path;
             ingress = {
-              "music.ext.kuipr.de" = "http://localhost:4533";
+              "music.kuipr.de" = "http://localhost:4533";
             };
             default = "http_status:404";
           };
