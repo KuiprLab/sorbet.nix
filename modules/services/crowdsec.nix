@@ -7,39 +7,25 @@
 #   cscli hub update
 #   cscli collections install crowdsecurity/linux
 #   cscli collections install crowdsecurity/haproxy
-#   cscli bouncers add firewall-bouncer   # copy the key out
-#   echo "<key>" > /run/secrets/crowdsec-bouncer-key
-#   (or manage via sops — see secrets.apiKeyPath below)
+#   cscli bouncers add firewall-bouncer   # copy the key out, store in sops secret
 {...}: {
-  flake.eclairNixosModules.crowdsec = {
-    config,
-    lib,
-    ...
-  }: {
+  flake.eclairNixosModules.crowdsec = {config, ...}: {
     services.crowdsec = {
       enable = true;
       allowLocalJournalAccess = true;
 
-      settings.config = {
-        common.log_level = "info";
-
+      settings.general = {
+        log_level = "info";
         api.server = {
           listen_uri = "127.0.0.1:8080";
           # Register with CrowdSec Central API for community blocklists.
           # Run: cscli capi register   after first boot.
           online_client.credentials_path = "/var/lib/crowdsec/online_api_credentials.yaml";
         };
-
-        prometheus = {
-          enabled = true;
-          level = "full";
-          listen_addr = "127.0.0.1";
-          listen_port = 6060;
-        };
       };
 
-      # Acquisitions: watch haproxy logs for attack signals.
-      acquisitions = [
+      # Acquisitions: watch haproxy and sshd journals for attack signals.
+      localConfig.acquisitions = [
         {
           source = "journalctl";
           journalctl_filter = ["-u" "haproxy.service"];
