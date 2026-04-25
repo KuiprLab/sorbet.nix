@@ -28,15 +28,8 @@
         tunnels = {
           ${config.services.cloudflared.tunnelId} = {
             credentialsFile = config.sops.secrets."cloudflare-tunnel/credentials".path;
-            # Route all *.ext.kuipr.de to Caddy.
-            # Caddy owns TLS (BunnyCDN DNS-01 ACME) and all vhost routing.
             ingress = {
-              "*.ext.kuipr.de" = {
-                service = "https://localhost:443";
-                originRequest = {
-                  noTLSVerify = true;
-                };
-              };
+              "music.ext.kuipr.de" = "http://localhost:4533";
             };
             default = "http_status:404";
           };
