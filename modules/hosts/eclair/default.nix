@@ -22,8 +22,6 @@ in {
     system = "x86_64-linux";
     modules =
       [
-        self.nixosModules.eclairConfiguration
-        self.nixosModules.eclairHardwareConfiguration
         inputs.sops-nix.nixosModules.sops
         inputs.determinate.nixosModules.default
         {

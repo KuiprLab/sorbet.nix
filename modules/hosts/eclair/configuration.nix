@@ -1,7 +1,7 @@
 # eclair base configuration
 # Minimal VPS: SSH, tailscale, sops age key, system packages.
 _: {
-  flake.nixosModules.eclairConfiguration = {pkgs, ...}: {
+  flake.eclairNixosModules.eclairConfiguration = {pkgs, ...}: {
     system.stateVersion = "25.05";
 
     environment.systemPackages = with pkgs; [

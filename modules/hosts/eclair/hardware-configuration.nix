@@ -5,7 +5,7 @@
   modulesPath,
   ...
 }: {
-  flake.nixosModules.eclairHardwareConfiguration = {
+  flake.eclairNixosModules.eclairHardwareConfiguration = {
     lib,
     modulesPath,
     ...
