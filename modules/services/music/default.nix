@@ -3,32 +3,32 @@
 # The NixOS module is split across _*.nix files (ignored by import-tree)
 {inputs, ...}: {
   flake = {
-    caddyVirtualHosts."music.int.kuipr.de" = ''
-      reverse_proxy localhost:4533 {
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-      }
-    '';
-
-    caddyVirtualHosts."music.ext.kuipr.de" = ''
-      reverse_proxy localhost:4533 {
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-      }
-    '';
-
-    caddyVirtualHosts."tagger.int.kuipr.de" = ''
-      reverse_proxy localhost:8099 {
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-      }
-    '';
+    caddyVirtualHosts = {
+      "music.int.kuipr.de" = ''
+        reverse_proxy localhost:4533 {
+          header_up Host {host}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+        }
+      '';
+      "music.ext.kuipr.de" = ''
+        reverse_proxy localhost:4533 {
+          header_up Host {host}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+        }
+      '';
+      "tagger.int.kuipr.de" = ''
+        reverse_proxy localhost:8099 {
+          header_up Host {host}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+        }
+      '';
+    };
 
     gatusEndpoints = [
       {

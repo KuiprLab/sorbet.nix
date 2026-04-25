@@ -8,7 +8,7 @@
 #   cscli collections install crowdsecurity/linux
 #   cscli collections install crowdsecurity/haproxy
 #   cscli bouncers add firewall-bouncer   # copy the key out, store in sops secret
-{...}: {
+_: {
   flake.eclairNixosModules.crowdsec = {config, ...}: {
     services.crowdsec = {
       enable = true;

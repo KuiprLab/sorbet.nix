@@ -14,14 +14,17 @@
       (modulesPath + "/profiles/qemu-guest.nix")
     ];
 
-    boot.initrd.availableKernelModules = ["ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk"];
-    boot.initrd.kernelModules = [];
-    boot.kernelModules = [];
-    boot.extraModulePackages = [];
-
-    boot.loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+    boot = {
+      initrd = {
+        availableKernelModules = ["ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk"];
+        kernelModules = [];
+      };
+      kernelModules = [];
+      extraModulePackages = [];
+      loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+      };
     };
 
     fileSystems."/" = {
