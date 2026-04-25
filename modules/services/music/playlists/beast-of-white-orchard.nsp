@@ -1,0 +1,34 @@
+{
+  "name": "The Beast of White Orchard",
+  "comment": "All Death Metal, its subgenres, and Deathcore",
+  "all": [
+    {
+      "any": [
+        { "is": { "genre": "Death Metal" } },
+        { "is": { "genre": "Melodic Death Metal" } },
+        { "is": { "genre": "Technical Death Metal" } },
+        { "is": { "genre": "Brutal Death Metal" } },
+        { "is": { "genre": "Death-Doom Metal" } },
+        { "is": { "genre": "Death Doom Metal" } },
+        { "is": { "genre": "Blackened Death Metal" } },
+        { "is": { "genre": "Slamming Death Metal" } },
+        { "is": { "genre": "Slam Death Metal" } },
+        { "is": { "genre": "Death/Thrash Metal" } },
+        { "is": { "genre": "Death Thrash Metal" } },
+        { "is": { "genre": "Deathcore" } },
+        { "is": { "genre": "Melodic Deathcore" } },
+        { "is": { "genre": "Blackened Deathcore" } },
+        { "is": { "genre": "Slam Deathcore" } },
+        { "is": { "genre": "Progressive Death Metal" } },
+        { "is": { "genre": "Atmospheric Death Metal" } },
+        { "is": { "genre": "Symphonic Death Metal" } },
+        { "is": { "genre": "Industrial Death Metal" } },
+        { "is": { "genre": "Death 'n' Roll" } },
+        { "is": { "genre": "Death n Roll" } },
+        { "contains": { "genre": "Death Metal" } },
+        { "contains": { "genre": "Deathcore" } }
+      ]
+    }
+  ],
+  "sort": "random"
+}
