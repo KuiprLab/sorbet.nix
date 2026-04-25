@@ -1,10 +1,11 @@
 _: let
   user = "daniel";
 in {
-  # Set to the UUID from: cloudflared tunnel create ext-kuipr-de
-  flake.cloudflareTunnelId = "a88bee17-c400-4099-b800-6b2486cbaa4f";
-
   flake.nixosModules.sorbetConfiguration = {pkgs, ...}: {
+    # Cloudflare Tunnel UUID — not a secret, safe to commit.
+    # Created with: cloudflared tunnel create ext-kuipr-de
+    services.cloudflared.tunnelId = "a88bee17-c400-4099-b800-6b2486cbaa4f";
+
     system.stateVersion = "24.05";
 
     environment.systemPackages = with pkgs; [
