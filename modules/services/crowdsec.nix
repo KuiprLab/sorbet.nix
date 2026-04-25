@@ -12,7 +12,6 @@
   flake.eclairNixosModules.crowdsec = {config, ...}: {
     services.crowdsec = {
       enable = true;
-      allowLocalJournalAccess = true;
 
       settings.general = {
         log_level = "info";
