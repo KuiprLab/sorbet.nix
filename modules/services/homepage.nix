@@ -128,7 +128,7 @@ _: {
               {
                 Navidrome = {
                   description = "Music streaming";
-                  href = "https://music.int.kuipr.de";
+                  href = "https://music.kuipr.de";
                   icon = "navidrome";
                   widget = {
                     type = "navidrome";
@@ -180,6 +180,13 @@ _: {
                 dateStyle = "short";
                 hourCycle = "h23";
               };
+            };
+          }
+          {
+            cloudflared = {
+              accountid = "{{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}";
+              tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}";
+              key = "{{HOMEPAGE_VAR_CLOUDFLARE_API_TOKEN}}";
             };
           }
         ];
