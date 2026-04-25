@@ -23,6 +23,7 @@ in {
     modules =
       [
         self.nixosModules.eclairConfiguration
+        self.nixosModules.eclairHardwareConfiguration
         inputs.sops-nix.nixosModules.sops
         inputs.determinate.nixosModules.default
         {
