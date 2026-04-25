@@ -3,7 +3,7 @@
 # The NixOS module is split across _*.nix files (ignored by import-tree)
 {inputs, ...}: {
   flake = {
-    caddyVirtualHosts."music.int.kuipr.de" = ''
+    caddyVirtualHosts."music.ext.kuipr.de" = ''
       reverse_proxy localhost:4533 {
         header_up Host {host}
         header_up X-Real-IP {remote_host}
@@ -45,6 +45,12 @@
         inherit (pkgs) playwright-driver;
         src = inputs.music-tagger;
       };
+
+      # services.music-manager = {
+      #   enable = true;
+      #   environmentFile = "/run/secrets/music-manager.env";
+      #   downloadDir = "/mnt/music/downloads"; # optional
+      # };
 
       mkPlugin = {
         name,

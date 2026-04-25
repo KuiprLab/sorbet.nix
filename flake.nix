@@ -30,6 +30,8 @@
       url = "github:iLazlow/music-tagger";
       flake = false;
     };
+
+    # music-manager.url = "github:KuiprLab/music-manager";
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
