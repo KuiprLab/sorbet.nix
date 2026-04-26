@@ -12,6 +12,7 @@ _: {
       crowdsec = {
         enable = true;
 
+        user = "root";
         autoUpdateService = true;
         openFirewall = true;
 
@@ -36,7 +37,10 @@ _: {
         ];
       };
 
-      crowdsec-firewall-bouncer.enable = true;
+      # crowdsec-firewall-bouncer = {
+      #   enable = true;
+      #   secrets.apiKeyPath = "";
+      # };
     };
     networking.nftables.enable = true;
   };
