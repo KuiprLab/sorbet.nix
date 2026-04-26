@@ -57,6 +57,7 @@ _: {
         log_level = "info";
         deny_action = "DROP";
         deny_log = true;
+        api_url = "http://localhost:8080";
       };
     };
 
