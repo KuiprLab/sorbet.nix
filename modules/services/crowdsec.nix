@@ -49,7 +49,7 @@ _: {
     # runs after crowdsec, calls cscli bouncers add, and saves the key.
     services.crowdsec-firewall-bouncer = {
       enable = true;
-      secrets.apiKeyPath = config.sops.secrets."crowdsec/bouncer".path;
+      registerBouncer.enable = true;
 
       settings = {
         mode = "nftables";
