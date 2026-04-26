@@ -55,12 +55,6 @@
         src = inputs.music-tagger;
       };
 
-      # services.music-manager = {
-      #   enable = true;
-      #   environmentFile = "/run/secrets/music-manager.env";
-      #   downloadDir = "/mnt/music/downloads"; # optional
-      # };
-
       mkPlugin = {
         name,
         url,
@@ -98,6 +92,7 @@
         ./_gdrive-sync.nix
         ./_beets.nix
         ./_samba.nix
+        ./_audiomuseai.nix
       ];
     };
   };
