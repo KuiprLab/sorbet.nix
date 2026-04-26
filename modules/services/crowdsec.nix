@@ -12,7 +12,6 @@ _: {
       crowdsec = {
         enable = true;
 
-        user = "root";
         autoUpdateService = true;
         openFirewall = true;
 
