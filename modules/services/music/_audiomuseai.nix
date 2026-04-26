@@ -3,7 +3,7 @@
   config,
   ...
 }: {
-  caddyVirtualHosts."musai.int.kuipr.de" = ''
+  flake.caddyVirtualHosts."musai.int.kuipr.de" = ''
     reverse_proxy localhost:8000 {
       header_up Host {host}
       header_up X-Real-IP {remote_host}
