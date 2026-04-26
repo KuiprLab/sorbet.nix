@@ -58,23 +58,20 @@ Secrets are encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a
 | `secrets/rclone/sorbet`         | rclone Google Drive config                     |
 | `secrets/beets/sorbet`          | beets config                                   |
 
-Both host age keys are listed in `.sops.yaml` so every secret can be decrypted by either host.
+Both hosts share a single age key listed in `.sops.yaml`.
 
-### Age keys
+### Age key
 
-Each host decrypts secrets using an age private key at `/var/lib/sops/age-key.txt`. This file must exist before NixOS activation — sops-nix will fail to decrypt secrets without it.
+Both hosts use the same age private key stored at `/var/lib/sops/age-key.txt`. This file must exist before NixOS activation — sops-nix will fail to decrypt secrets without it.
 
-**sorbet** — key is stored in 1Password. Upload it with:
+The key is stored in 1Password. Upload it to either host with:
 
 ```bash
 op read "op://Personal/sorbet.nix/Private Key" \
   | ssh root@sorbet "mkdir -p /var/lib/sops && cat > /var/lib/sops/age-key.txt && chmod 400 /var/lib/sops/age-key.txt"
-```
 
-**eclair** — generate a fresh key directly on the host:
-
-```bash
-ssh root@eclair "mkdir -p /var/lib/sops && age-keygen -o /var/lib/sops/age-key.txt && chmod 400 /var/lib/sops/age-key.txt"
+op read "op://Personal/sorbet.nix/Private Key" \
+  | ssh root@eclair "mkdir -p /var/lib/sops && cat > /var/lib/sops/age-key.txt && chmod 400 /var/lib/sops/age-key.txt"
 ```
 
 ## Deployment

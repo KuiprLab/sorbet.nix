@@ -5,6 +5,4 @@ creation_rules:
       - age:
           # sorbet age key (from op://Personal/sorbet.nix/Private Key)
           - age1pdgfrwphxlpr87qrxd3qqkdrzqufh0tqnzkpak8szkkflh09uf2sjm8llt
-          # eclair age key
-          - age17ve6cq0n5znlc3qsznmqh2gavd8p262h3mz5x28cslgk6r8cyapqg8fcfx
 onepassworditem: op://Personal/sorbet.nix/Private Key
