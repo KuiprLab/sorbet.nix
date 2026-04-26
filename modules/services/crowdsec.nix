@@ -30,21 +30,6 @@ _: {
       ];
     };
 
-    # Firewall bouncer: bans IPs via nftables before they reach haproxy.
-    # registerBouncer.enable = true uses the built-in register service.
-    services.crowdsec-firewall-bouncer = {
-      enable = true;
-      registerBouncer.enable = true;
-
-      settings = {
-        mode = "nftables";
-        update_frequency = "10s";
-        log_level = "info";
-        deny_action = "DROP";
-        deny_log = true;
-      };
-    };
-
     # nftables required for the firewall bouncer
     networking.nftables.enable = true;
   };
