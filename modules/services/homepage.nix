@@ -130,7 +130,7 @@ _: {
               {
                 Navidrome = {
                   description = "Music streaming";
-                  href = "https://music.kuipr.de";
+                  href = "https://music.ext.kuipr.de";
                   icon = "navidrome";
                   widget = {
                     type = "navidrome";
