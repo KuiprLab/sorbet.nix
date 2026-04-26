@@ -14,7 +14,7 @@ _: {
       enable = true;
 
       settings.general = {
-        log_level = "info";
+        common.log_level = "info";
         api.server = {
           listen_uri = "127.0.0.1:8080";
           # Register with CrowdSec Central API for community blocklists.
