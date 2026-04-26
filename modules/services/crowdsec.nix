@@ -2,8 +2,12 @@
 # Agent detects attacks; firewall bouncer enforces bans via nftables.
 # TCP-mode haproxy can't use lua/SPOE bouncer, so IP banning happens
 # at the nftables layer — blocks before haproxy ever sees the connection.
-{lib, ...}: {
-  flake.eclairNixosModules.crowdsec = {lib, ...}: {
+#
+# After first successful deploy, install collections manually:
+#   cscli hub update
+#   cscli collections install crowdsecurity/linux crowdsecurity/haproxy
+_: {
+  flake.eclairNixosModules.crowdsec = _: {
     services.crowdsec = {
       enable = true;
 
@@ -12,12 +16,6 @@
       settings.lapi.credentialsFile = "/var/lib/crowdsec/lapi-credentials.yaml";
 
       settings.general.api.server.enable = true;
-
-      # Install hub collections declaratively.
-      hub.collections = [
-        "crowdsecurity/linux"
-        "crowdsecurity/haproxy"
-      ];
 
       # Acquisitions: watch haproxy and sshd journals for attack signals.
       localConfig.acquisitions = [
@@ -35,6 +33,8 @@
     };
 
     # Firewall bouncer: bans IPs via nftables before they reach haproxy.
+    # registerBouncer.enable = true uses the built-in register service which
+    # runs after crowdsec, calls cscli bouncers add, and saves the key.
     services.crowdsec-firewall-bouncer = {
       enable = true;
       registerBouncer.enable = true;
@@ -47,33 +47,6 @@
         deny_log = true;
       };
     };
-
-    # Prevent bouncer and register service from blocking activation.
-    # They will start after crowdsec is up but failures won't roll back the deploy.
-    systemd.services.crowdsec-firewall-bouncer-register = {
-      unitConfig.StartLimitBurst = 3;
-      serviceConfig = {
-        # DynamicUser conflicts with pre-existing /var/lib/crowdsec owned by crowdsec user.
-        DynamicUser = lib.mkForce false;
-        User = "crowdsec";
-        Group = "crowdsec";
-        Restart = "on-failure";
-        RestartSec = "10s";
-      };
-    };
-
-    systemd.services.crowdsec-firewall-bouncer = {
-      # Remove from multi-user.target so it doesn't block activation.
-      # crowdsec.service pulls it in via wants= below once crowdsec is up.
-      wantedBy = lib.mkForce [];
-      serviceConfig = {
-        Restart = "on-failure";
-        RestartSec = "10s";
-      };
-    };
-
-    # Have crowdsec bring up the bouncer after it is fully started.
-    systemd.services.crowdsec.wants = ["crowdsec-firewall-bouncer.service"];
 
     # nftables required for the firewall bouncer
     networking.nftables.enable = true;
