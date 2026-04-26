@@ -6,7 +6,7 @@
 # After first successful deploy, install collections manually:
 #   cscli hub update
 #   cscli collections install crowdsecurity/linux crowdsecurity/haproxy
-{lib, ...}: {
+_: {
   flake.eclairNixosModules.crowdsec = {lib, ...}: {
     services.crowdsec = {
       enable = true;
