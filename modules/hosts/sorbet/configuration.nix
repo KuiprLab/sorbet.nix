@@ -17,7 +17,7 @@ in {
       age.generateKey = false;
       secrets = {
         "deploy_webhook" = {
-          sopsFile = ../../../secrets/deploy-webhook/shared;
+          sopsFile = ../../../secrets/shared/deploy-webhook;
           format = "binary";
           key = "";
           owner = "root";

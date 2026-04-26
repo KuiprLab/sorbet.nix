@@ -18,7 +18,7 @@ _: {
 
     nixosModules.homepage = {config, ...}: {
       sops.secrets."homepage/env" = {
-        sopsFile = ../../secrets/homepage/sorbet;
+        sopsFile = ../../secrets/sorbet/homepage;
         format = "binary";
         key = "";
         owner = "root";

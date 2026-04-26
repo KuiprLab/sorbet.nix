@@ -6,13 +6,13 @@ _: {
   }: {
     sops.secrets = {
       "gh_runner" = {
-        sopsFile = ../../secrets/github-runner/sorbet;
+        sopsFile = ../../secrets/sorbet/github-runner;
         format = "binary";
         key = "";
       };
 
       "deploy_webhook" = {
-        sopsFile = ../../secrets/deploy-webhook/shared;
+        sopsFile = ../../secrets/shared/deploy-webhook;
         format = "binary";
         key = "";
         owner = "root";

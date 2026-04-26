@@ -60,7 +60,7 @@ _: {
     };
 
     sops.secrets."crowdsec/bouncer-api-key" = {
-      sopsFile = ../../secrets/crowdsec/eclair;
+      sopsFile = ../../secrets/eclair/crowdsec;
       format = "binary";
       key = "";
       owner = "root";

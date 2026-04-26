@@ -93,7 +93,7 @@
   ];
 
   sops.secrets."beets/acoustid_key" = {
-    sopsFile = ../../../secrets/beets/sorbet;
+    sopsFile = ../../../secrets/sorbet/beets;
     format = "binary";
     key = "";
     owner = "daniel";

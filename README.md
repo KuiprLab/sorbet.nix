@@ -43,20 +43,20 @@ Adding a new public service: declare `flake.caddyVirtualHosts."myservice.ext.kui
 
 ## Secrets
 
-Secrets are encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using age keys. Files live under `secrets/<service>/<host>`.
+Secrets are encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using age keys. Files live under `secrets/<host>/<service>`.
 
 | Secret file                     | Used by                                        |
 | ------------------------------- | ---------------------------------------------- |
-| `secrets/caddy/sorbet`          | Caddy — `BUNNY_API_KEY` for ACME DNS challenge |
-| `secrets/tailscale/sorbet`      | sorbet tailscale auth key                      |
-| `secrets/tailscale/eclair`      | eclair tailscale auth key                      |
-| `secrets/crowdsec/eclair`       | CrowdSec firewall bouncer API key              |
-| `secrets/homepage/sorbet`       | Homepage dashboard env vars                    |
-| `secrets/gatus/sorbet`          | Gatus — Discord webhook                        |
-| `secrets/github-runner/sorbet`  | GitHub Actions runner token                    |
-| `secrets/deploy-webhook/shared` | Discord deploy notifications                   |
-| `secrets/rclone/sorbet`         | rclone Google Drive config                     |
-| `secrets/beets/sorbet`          | beets config                                   |
+| `secrets/sorbet/caddy`          | Caddy — `BUNNY_API_KEY` for ACME DNS challenge |
+| `secrets/sorbet/tailscale`      | sorbet tailscale auth key                      |
+| `secrets/sorbet/homepage`       | Homepage dashboard env vars                    |
+| `secrets/sorbet/gatus`          | Gatus — Discord webhook                        |
+| `secrets/sorbet/github-runner`  | GitHub Actions runner token                    |
+| `secrets/sorbet/rclone`         | rclone Google Drive config                     |
+| `secrets/sorbet/beets`          | beets config                                   |
+| `secrets/eclair/tailscale`      | eclair tailscale auth key                      |
+| `secrets/eclair/crowdsec`       | CrowdSec firewall bouncer API key              |
+| `secrets/shared/deploy-webhook` | Discord deploy notifications                   |
 
 Both hosts share a single age key listed in `.sops.yaml`.
 
