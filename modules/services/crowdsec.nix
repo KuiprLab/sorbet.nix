@@ -3,23 +3,18 @@
 # TCP-mode haproxy can't use lua/SPOE bouncer, so IP banning happens
 # at the nftables layer — blocks before haproxy ever sees the connection.
 #
-# First-boot manual steps:
-#   cscli hub update
-#   cscli collections install crowdsecurity/linux
-#   cscli collections install crowdsecurity/haproxy
-#   cscli bouncers add firewall-bouncer   # copy the key out, store in sops secret
+# The bouncer API key is auto-generated on first boot via an ExecStartPre
+# script on the crowdsec service — no manual steps required.
 _: {
-  flake.eclairNixosModules.crowdsec = {config, ...}: {
+  flake.eclairNixosModules.crowdsec = {pkgs, ...}: {
     services.crowdsec = {
       enable = true;
 
       settings.general = {
         common.log_level = "info";
         api.server = {
+          enable = true;
           listen_uri = "127.0.0.1:8080";
-          # Register with CrowdSec Central API for community blocklists.
-          # Run: cscli capi register   after first boot.
-          online_client.credentials_path = "/var/lib/crowdsec/online_api_credentials.yaml";
         };
       };
 
@@ -38,16 +33,29 @@ _: {
       ];
     };
 
+    # Auto-register the bouncer with a stable key on first boot.
+    # Generates a random key, writes it to /var/lib/crowdsec/bouncer-key,
+    # and registers it with the LAPI before crowdsec starts.
+    systemd.services.crowdsec.serviceConfig.ExecStartPre = [
+      (toString (pkgs.writeShellScript "register-bouncer" ''
+        set -euo pipefail
+        KEY_FILE=/var/lib/crowdsec/bouncer-key
+        if [ ! -f "$KEY_FILE" ]; then
+          ${pkgs.openssl}/bin/openssl rand -hex 32 > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+        fi
+        if ! cscli bouncers list | grep -q "firewall-bouncer"; then
+          cscli bouncers add firewall-bouncer --key "$(cat $KEY_FILE)"
+        fi
+      ''))
+    ];
+
     # Firewall bouncer: bans IPs via nftables before they reach haproxy.
+    # Reads the auto-generated key from /var/lib/crowdsec/bouncer-key.
     services.crowdsec-firewall-bouncer = {
       enable = true;
-
-      # Disable auto-registration (DynamicUser conflict with crowdsec service).
-      # Manually run: cscli bouncers add firewall-bouncer
-      # then store the key in the sops secret below.
       registerBouncer.enable = false;
-
-      secrets.apiKeyPath = config.sops.secrets."crowdsec/bouncer-api-key".path;
+      secrets.apiKeyPath = "/var/lib/crowdsec/bouncer-key";
 
       settings = {
         mode = "nftables";
@@ -57,13 +65,6 @@ _: {
         deny_action = "DROP";
         deny_log = true;
       };
-    };
-
-    sops.secrets."crowdsec/bouncer-api-key" = {
-      sopsFile = ../../secrets/eclair/crowdsec;
-      format = "binary";
-      key = "";
-      owner = "root";
     };
 
     # Allow crowdsec to read systemd journal for acquisitions

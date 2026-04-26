@@ -55,7 +55,6 @@ Secrets are encrypted with [sops-nix](https://github.com/Mic92/sops-nix) using a
 | `secrets/sorbet/rclone`         | rclone Google Drive config                     |
 | `secrets/sorbet/beets`          | beets config                                   |
 | `secrets/eclair/tailscale`      | eclair tailscale auth key                      |
-| `secrets/eclair/crowdsec`       | CrowdSec firewall bouncer API key              |
 | `secrets/shared/deploy-webhook` | Discord deploy notifications                   |
 
 Both hosts share a single age key listed in `.sops.yaml`.
