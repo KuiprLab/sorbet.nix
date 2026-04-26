@@ -4,8 +4,6 @@
   ...
 }: {
   virtualisation.oci-containers = {
-    backend = "podman";
-
     containers = {
       # -------------------------
       # Redis
@@ -113,13 +111,6 @@
         ];
       };
     };
-  };
-
-  # -------------------------
-  # Docker volumes
-  # -------------------------
-  virtualisation.docker = {
-    enable = true;
   };
 
   systemd.services."docker-volume-redis-data" = {
