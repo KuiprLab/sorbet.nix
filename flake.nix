@@ -26,6 +26,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nixpkgs PR #446307 — crowdsec module refactor
+    # Overrides the upstream crowdsec NixOS modules on eclair.
+    nixpkgs-crowdsec.url = "github:TornaxO7/nixpkgs/crowdsec";
+
+    music-tagger = {
+      url = "github:iLazlow/music-tagger";
+      flake = false;
+    };
+
     # music-manager.url = "github:KuiprLab/music-manager";
   };
 

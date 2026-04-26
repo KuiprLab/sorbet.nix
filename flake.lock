@@ -212,6 +212,22 @@
         "type": "github"
       }
     },
+    "music-tagger": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776963100,
+        "narHash": "sha256-DYDXWSaLX3rTFnSX9HmBW3rMPvJwTeqJSxi5+A0LPYA=",
+        "owner": "iLazlow",
+        "repo": "music-tagger",
+        "rev": "c9b3db38a3c94059d02b6c35bedf21d3f46bdbd2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "iLazlow",
+        "repo": "music-tagger",
+        "type": "github"
+      }
+    },
     "nix": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -260,6 +276,22 @@
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "a62e6edd6d5e1fa0329b8653c801147986f8d446",
+        "type": "github"
+      }
+    },
+    "nixpkgs-crowdsec": {
+      "locked": {
+        "lastModified": 1776068142,
+        "narHash": "sha256-Pm3yNm9wxYRqNGkBp7SewwwGjcZuCXApbhGTDU4NWAQ=",
+        "owner": "TornaxO7",
+        "repo": "nixpkgs",
+        "rev": "a4ea880815fc7e8a434854e092de1fb874bf980b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TornaxO7",
+        "ref": "crowdsec",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -347,7 +379,9 @@
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
+        "music-tagger": "music-tagger",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-crowdsec": "nixpkgs-crowdsec",
         "sops-nix": "sops-nix",
         "wrapper-modules": "wrapper-modules"
       }

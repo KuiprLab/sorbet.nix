@@ -32,7 +32,16 @@ in {
           # Pass flake-level values into nixos modules via _module.args
           _module.args.sorbetTailscaleIp = sorbetTailscaleIp;
           _module.args.caddyVirtualHosts = config.flake.caddyVirtualHosts;
+
+          # Replace upstream crowdsec modules with PR #446307
+          disabledModules = [
+            "services/security/crowdsec.nix"
+            "services/security/crowdsec-firewall-bouncer.nix"
+          ];
         }
+        # Import crowdsec modules from the PR branch
+        "${inputs.nixpkgs-crowdsec}/nixos/modules/services/security/crowdsec.nix"
+        "${inputs.nixpkgs-crowdsec}/nixos/modules/services/security/crowdsec-firewall-bouncer.nix"
       ]
       ++ collectModules self.eclairNixosModules;
   };
