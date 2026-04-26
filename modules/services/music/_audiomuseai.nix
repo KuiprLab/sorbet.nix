@@ -37,10 +37,6 @@ in {
           volumes = [
             "audiomuse-redis-data:/data"
           ];
-
-          extraOptions = [
-            "--restart=unless-stopped"
-          ];
         };
 
         # -------------------------
@@ -61,10 +57,6 @@ in {
 
           volumes = [
             "audiomuse-postgres-data:/var/lib/postgresql/data"
-          ];
-
-          extraOptions = [
-            "--restart=unless-stopped"
           ];
         };
 
@@ -95,10 +87,6 @@ in {
           volumes = [
             "audiomuse-temp-audio-flask:/app/temp_audio"
           ];
-
-          extraOptions = [
-            "--restart=unless-stopped"
-          ];
         };
 
         # -------------------------
@@ -123,10 +111,6 @@ in {
 
           volumes = [
             "audiomuse-temp-audio-worker:/app/temp_audio"
-          ];
-
-          extraOptions = [
-            "--restart=unless-stopped"
           ];
         };
       };
