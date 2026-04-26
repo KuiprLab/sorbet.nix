@@ -51,6 +51,15 @@
       };
     };
 
+    # The register service uses DynamicUser=true which conflicts with the
+    # pre-existing /var/lib/crowdsec directory owned by the crowdsec user.
+    # Override to run as the crowdsec user directly instead.
+    systemd.services.crowdsec-firewall-bouncer-register.serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = "crowdsec";
+      Group = "crowdsec";
+    };
+
     # nftables required for the firewall bouncer
     networking.nftables.enable = true;
   };
