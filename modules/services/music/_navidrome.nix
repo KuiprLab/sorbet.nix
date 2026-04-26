@@ -42,6 +42,7 @@ in {
       "ArtistArtPriority" = "artist.*, album/artist.*, external";
       "Scanner.PurgeMissing" = "always";
       "EnableSharing" = true;
+      "AutoImportPlaylists" = true;
     };
   };
 }
