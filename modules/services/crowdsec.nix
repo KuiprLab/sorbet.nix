@@ -7,7 +7,11 @@
 #   cscli hub update
 #   cscli collections install crowdsecurity/linux crowdsecurity/haproxy
 _: {
-  flake.eclairNixosModules.crowdsec = {lib, ...}: {
+  flake.eclairNixosModules.crowdsec = {
+    lib,
+    config,
+    ...
+  }: {
     services.crowdsec = {
       enable = true;
 
@@ -33,12 +37,20 @@ _: {
       ];
     };
 
+    sops.secrets."crowdsec/bouncer" = {
+      sopsFile = ../../secrets/eclair/crowdsec-firewall-bouncer;
+      format = "binary";
+      key = "";
+      owner = "crowdsec";
+    };
+
     # Firewall bouncer: bans IPs via nftables before they reach haproxy.
     # registerBouncer.enable = true uses the built-in register service which
     # runs after crowdsec, calls cscli bouncers add, and saves the key.
     services.crowdsec-firewall-bouncer = {
       enable = true;
       registerBouncer.enable = true;
+      secrets.apiKeyPath = config.sops.secrets."crowdsec/bouncer".path;
 
       settings = {
         mode = "nftables";
