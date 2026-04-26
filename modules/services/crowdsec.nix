@@ -62,10 +62,18 @@
       };
     };
 
-    systemd.services.crowdsec-firewall-bouncer.serviceConfig = {
-      Restart = "on-failure";
-      RestartSec = "10s";
+    systemd.services.crowdsec-firewall-bouncer = {
+      # Remove from multi-user.target so it doesn't block activation.
+      # crowdsec.service pulls it in via wants= below once crowdsec is up.
+      wantedBy = lib.mkForce [];
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
+
+    # Have crowdsec bring up the bouncer after it is fully started.
+    systemd.services.crowdsec.wants = ["crowdsec-firewall-bouncer.service"];
 
     # nftables required for the firewall bouncer
     networking.nftables.enable = true;
