@@ -5,18 +5,22 @@
 #
 # The bouncer API key is auto-generated on first boot via an ExecStartPre
 # script on the crowdsec service — no manual steps required.
-_: {
+{lib, ...}: {
   flake.eclairNixosModules.crowdsec = {pkgs, ...}: {
     services.crowdsec = {
       enable = true;
 
-      settings.general = {
-        common.log_level = "info";
-        api.server = {
-          enable = true;
-          listen_uri = "127.0.0.1:8080";
-        };
-      };
+      # Required: tells the module where to write the LAPI credentials file.
+      # Without this, api.client.credentials_path is null and the unit fails to evaluate.
+      settings.lapi.credentialsFile = "/var/lib/crowdsec/lapi-credentials.yaml";
+
+      settings.general.api.server.enable = true;
+
+      # Install collections via the hub option so the module handles it.
+      hub.collections = [
+        "crowdsecurity/linux"
+        "crowdsecurity/haproxy"
+      ];
 
       # Acquisitions: watch haproxy and sshd journals for attack signals.
       localConfig.acquisitions = [
@@ -34,9 +38,8 @@ _: {
     };
 
     # Auto-register the bouncer with a stable key on first boot.
-    # Generates a random key, writes it to /var/lib/crowdsec/bouncer-key,
-    # and registers it with the LAPI before crowdsec starts.
-    systemd.services.crowdsec.serviceConfig.ExecStartPre = [
+    # Appended after the module's own ExecStartPre entries.
+    systemd.services.crowdsec.serviceConfig.ExecStartPre = lib.mkAfter [
       (toString (pkgs.writeShellScript "register-bouncer" ''
         set -euo pipefail
         KEY_FILE=/var/lib/crowdsec/bouncer-key
@@ -66,9 +69,6 @@ _: {
         deny_log = true;
       };
     };
-
-    # Allow crowdsec to read systemd journal for acquisitions
-    users.users.crowdsec.extraGroups = ["systemd-journal"];
 
     # nftables required for the firewall bouncer
     networking.nftables.enable = true;
