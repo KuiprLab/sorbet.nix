@@ -28,6 +28,15 @@
           header_up X-Forwarded-Proto {scheme}
         }
       '';
+
+      "musai.int.kuipr.de" = ''
+        reverse_proxy localhost:8000 {
+          header_up Host {host}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+        }
+      '';
     };
 
     gatusEndpoints = [
