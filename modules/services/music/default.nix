@@ -49,6 +49,15 @@
         ];
         alerts = [{type = "discord";}];
       }
+      {
+        name = "Audiomuse AI";
+        url = "https://musai.int.kuipr.de";
+        conditions = [
+          "[STATUS] == 200"
+          "[CERTIFICATE_EXPIRATION] > 2h"
+        ];
+        alerts = [{type = "discord";}];
+      }
     ];
 
     nixosModules.music = {pkgs, ...}: let
@@ -103,6 +112,8 @@
         ./_samba.nix
         ./_audiomuseai.nix
       ];
+
+      services.audiomuse.enable = true;
     };
   };
 }
