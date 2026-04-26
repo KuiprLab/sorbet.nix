@@ -35,9 +35,6 @@
     };
 
     # Firewall bouncer: bans IPs via nftables before they reach haproxy.
-    # registerBouncer.enable = true uses the built-in crowdsec-firewall-bouncer-register
-    # oneshot service which runs after crowdsec, calls cscli bouncers add, and saves
-    # the key to its own state directory — fully automatic, no manual steps.
     services.crowdsec-firewall-bouncer = {
       enable = true;
       registerBouncer.enable = true;
@@ -51,13 +48,23 @@
       };
     };
 
-    # The register service uses DynamicUser=true which conflicts with the
-    # pre-existing /var/lib/crowdsec directory owned by the crowdsec user.
-    # Override to run as the crowdsec user directly instead.
-    systemd.services.crowdsec-firewall-bouncer-register.serviceConfig = {
-      DynamicUser = lib.mkForce false;
-      User = "crowdsec";
-      Group = "crowdsec";
+    # Prevent bouncer and register service from blocking activation.
+    # They will start after crowdsec is up but failures won't roll back the deploy.
+    systemd.services.crowdsec-firewall-bouncer-register = {
+      unitConfig.StartLimitBurst = 3;
+      serviceConfig = {
+        # DynamicUser conflicts with pre-existing /var/lib/crowdsec owned by crowdsec user.
+        DynamicUser = lib.mkForce false;
+        User = "crowdsec";
+        Group = "crowdsec";
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
+    };
+
+    systemd.services.crowdsec-firewall-bouncer.serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "10s";
     };
 
     # nftables required for the firewall bouncer
