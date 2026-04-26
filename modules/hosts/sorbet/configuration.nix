@@ -25,6 +25,8 @@ in {
       };
     };
 
+    services.hardware.openrgb.enable = true;
+
     virtualisation = {
       podman = {
         enable = true;
