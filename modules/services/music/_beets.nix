@@ -163,6 +163,12 @@
           keep_existing = false;
         };
 
+        musicbrainz = {
+          user = "Frostplexx";
+          pass = "\${MUSICBRAINZ_PASSWORD}";
+          collection = "Frostplexx's Music";
+        };
+
         chroma.auto = true;
         acoustid.apikey = "\${ACOUSTID_APIKEY}";
         match.strong_rec_thresh = 0.2;
