@@ -166,7 +166,12 @@
         musicbrainz = {
           user = "Frostplexx";
           pass = "\${MUSICBRAINZ_PASSWORD}";
+        };
+
+        mbcollection = {
+          auto = true;
           collection = "Frostplexx's Music";
+          remove = true;
         };
 
         chroma.auto = true;
