@@ -142,6 +142,7 @@
           "lastgenre"
           "badfiles"
           "duplicates"
+          "mbcollection"
         ];
 
         badfiles = {
