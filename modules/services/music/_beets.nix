@@ -171,7 +171,7 @@
 
         mbcollection = {
           auto = true;
-          collection = "Frostplexx's Music";
+          collection = "Library";
           remove = true;
         };
 
