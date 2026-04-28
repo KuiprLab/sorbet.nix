@@ -2,11 +2,11 @@ _: {
   flake = {
     caddyVirtualHosts = {
       "soulbeet.int.kuipr.de" = ''
-        reverse_proxy localhost:4534
+        reverse_proxy 127.0.0.1:4534
       '';
 
       "slskd.int.kuipr.de" = ''
-        reverse_proxy localhost:5030
+        reverse_proxy 127.0.0.1:5030
       '';
     };
 
