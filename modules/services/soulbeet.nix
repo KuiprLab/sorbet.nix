@@ -2,7 +2,7 @@ _: {
   flake = {
     caddyVirtualHosts = {
       "soulbeet.int.kuipr.de" = ''
-        reverse_proxy 127.0.0.1:4534
+        reverse_proxy 127.0.0.1:6969
       '';
 
       "slskd.int.kuipr.de" = ''
@@ -40,7 +40,7 @@ _: {
             environment.TZ = "Europe/Berlin";
             image = "docker.io/docccccc/soulbeet:latest";
             ports = [
-              "4534:4533"
+              "6969:4533"
             ];
             labels = {
               "io.containers.autoupdate" = "registry";
