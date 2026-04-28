@@ -1,16 +1,7 @@
 _: {
   flake = {
-    nixosModules.musicmanager = {
-      config,
-      lib,
-      ...
-    }: {
+    nixosModules.gluetun = {lib, ...}: {
       sops.secrets = {
-        "musicmanager/bot_secrets" = {
-          sopsFile = ../../secrets/sorbet/musicmanager;
-          format = "binary";
-          key = "";
-        };
         "gluetun.env" = {
           sopsFile = ../../secrets/sorbet/gluetun.env;
           format = "dotenv";
@@ -22,7 +13,7 @@ _: {
       systemd.services.podman-create-network-proxy = {
         description = "Create podman proxy network";
         before = ["podman-gluetun.service"];
-        wantedBy = ["podman-compose-musicmanager-root.target"];
+        wantedBy = ["podman-compose-gluetun-root.target"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
@@ -37,41 +28,18 @@ _: {
         };
         requires = ["podman-create-network-proxy.service"];
         after = ["podman-create-network-proxy.service"];
-        partOf = ["podman-compose-musicmanager-root.target"];
-        wantedBy = ["podman-compose-musicmanager-root.target"];
+        partOf = ["podman-compose-gluetun-root.target"];
+        wantedBy = ["podman-compose-gluetun-root.target"];
       };
 
-      systemd.services.podman-musicmanager = {
-        requires = ["podman-gluetun.service"];
-        after = ["podman-gluetun.service"];
-        partOf = ["podman-compose-musicmanager-root.target"];
-        wantedBy = ["podman-compose-musicmanager-root.target"];
-      };
-
-      systemd.targets.podman-compose-musicmanager-root = {
-        unitConfig.Description = "musicmanager + gluetun pod";
+      systemd.targets.podman-compose-gluetun-root = {
+        unitConfig.Description = "gluetun VPN pod";
         wantedBy = ["multi-user.target"];
       };
 
       virtualisation.oci-containers = {
         backend = "podman";
         containers = {
-          musicmanager = {
-            volumes = [
-              "music-manager:/app"
-              "/home/daniel/music-inbox:/downloads"
-            ];
-            environment.TZ = "Europe/Berlin";
-            image = "ghcr.io/kuiprlab/music-manager:main";
-            labels = {
-              "io.containers.autoupdate" = "registry";
-            };
-            environmentFiles = [config.sops.secrets."musicmanager/bot_secrets".path];
-            extraOptions = [
-              "--network=container:gluetun"
-            ];
-          };
-
           "gluetun" = {
             image = "qmcgaw/gluetun";
             log-driver = "journald";
