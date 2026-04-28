@@ -100,6 +100,14 @@ _: {
           };
         };
       };
+
+      systemd.services = {
+        "podman-volume-soulbeet-data" = {
+          serviceConfig.Type = "oneshot";
+          script = "${pkgs.podman}/bin/podman volume create soulbeet-data || true";
+          wantedBy = ["multi-user.target"];
+        };
+      };
     };
   };
 }
