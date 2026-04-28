@@ -1,6 +1,6 @@
 _: {
   flake = {
-    nixosModules.musicmanager = {
+    nixosModules.soulbeet = {
       config,
       lib,
       ...
