@@ -1,5 +1,15 @@
 _: {
   flake = {
+    caddyVirtualHosts = {
+      "soulbeet.int.kuipr.de" = ''
+        reverse_proxy localhost:4553
+      '';
+
+      "slskd.int.kuipr.de" = ''
+        reverse_proxy localhost:5030
+      '';
+    };
+
     nixosModules.soulbeet = {
       config,
       lib,
@@ -11,16 +21,6 @@ _: {
           format = "binary";
           key = "";
         };
-      };
-
-      caddyVirtualHosts = {
-        "soulbeet.int.kuipr.de" = ''
-          reverse_proxy localhost:4553
-        '';
-
-        "slskd.int.kuipr.de" = ''
-          reverse_proxy localhost:5030
-        '';
       };
 
       virtualisation.oci-containers = {
