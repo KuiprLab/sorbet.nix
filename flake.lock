@@ -215,11 +215,11 @@
     "music-tagger": {
       "flake": false,
       "locked": {
-        "lastModified": 1776963100,
-        "narHash": "sha256-DYDXWSaLX3rTFnSX9HmBW3rMPvJwTeqJSxi5+A0LPYA=",
+        "lastModified": 1777068138,
+        "narHash": "sha256-565/2pD6AFBexe+q33cLhaSVJrxhHk1dUMQtintZf5c=",
         "owner": "iLazlow",
         "repo": "music-tagger",
-        "rev": "c9b3db38a3c94059d02b6c35bedf21d3f46bdbd2",
+        "rev": "f3484d779579a276842f9245a004761b80055801",
         "type": "github"
       },
       "original": {
