@@ -27,7 +27,7 @@ _: {
           write: false
           autotag: false
           quiet: true
-          duplicate_action: skip
+          duplicate_action: remove
 
         # Flat layout — all files land directly in /inbox with no subdirectories
         paths:
