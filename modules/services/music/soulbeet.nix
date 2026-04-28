@@ -37,6 +37,12 @@ _: {
           format = "binary";
           key = "";
         };
+
+        "slskd" = {
+          sopsFile = ../../../secrets/sorbet/slskd.yml;
+          format = "yaml";
+          key = "";
+        };
       };
 
       systemd.services.podman-slskd = {
@@ -69,7 +75,7 @@ _: {
           slskd = {
             volumes = [
               "/home/daniel/downloads:/app/downloads"
-              "slskd-config:/app/slskd.conf.d"
+              "${config.sops.secrets."soulbeet".path}:/app/slskd.yml"
             ];
             environment = {
               TZ = "Europe/Berlin";
