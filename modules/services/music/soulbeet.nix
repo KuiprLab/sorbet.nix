@@ -40,7 +40,7 @@ _: {
 
         "slskd" = {
           sopsFile = ../../../secrets/sorbet/slskd.yml;
-          format = "yaml";
+          format = "binary";
           key = "";
         };
       };
@@ -75,7 +75,7 @@ _: {
           slskd = {
             volumes = [
               "/home/daniel/downloads:/app/downloads"
-              "${config.sops.secrets."soulbeet".path}:/app/slskd.yml"
+              "${config.sops.secrets."slskd".path}:/app/slskd.yml:ro"
             ];
             environment = {
               TZ = "Europe/Berlin";
