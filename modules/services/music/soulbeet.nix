@@ -33,7 +33,7 @@ _: {
     in {
       sops.secrets = {
         "soulbeet" = {
-          sopsFile = ../../secrets/sorbet/soulbeet;
+          sopsFile = ../../../secrets/sorbet/soulbeet;
           format = "binary";
           key = "";
         };
