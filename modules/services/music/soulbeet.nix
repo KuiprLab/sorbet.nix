@@ -40,7 +40,7 @@ _: {
 
         "slskd" = {
           sopsFile = ../../../secrets/sorbet/slskd.yml;
-          format = "binary";
+          format = "yaml";
           key = "";
         };
       };
