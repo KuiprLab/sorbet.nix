@@ -49,7 +49,7 @@ _: {
           sopsFile = ../../../secrets/sorbet/slskd.yml;
           format = "yaml";
           key = "";
-          uid = "1000";
+          uid = 1000;
         };
       };
 
