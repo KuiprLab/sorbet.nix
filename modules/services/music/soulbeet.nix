@@ -85,7 +85,7 @@ _: {
               "/home/daniel/downloads:/app/downloads"
               "${config.sops.secrets."slskd".path}:/app/slskd.yml:ro"
             ];
-            # user = "1000:1000";
+            user = "1000:1000";
             environment = {
               TZ = "Europe/Berlin";
               SLSKD_REMOTE_CONFIGURATION = "true";
