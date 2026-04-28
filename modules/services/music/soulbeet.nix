@@ -15,18 +15,25 @@ _: {
       pkgs,
       ...
     }: let
-      # Soulbeet beets config: just move files into the inbox as-is.
-      # No tagging, organizing, or plugins — host beets-watch handles all of that.
+      # Soulbeet beets config: register files in the library without moving them.
+      # Files stay wherever slskd downloaded them; host beets-watch handles tagging and organizing.
       soulbeetBeetsConfig = pkgs.writeText "soulbeet-beets-config.yaml" ''
         directory: /inbox
         library: /data/.beets_library.db
 
         import:
           move: true
+          copy: false
           write: false
           autotag: false
           quiet: true
-          duplicate_action: remove
+          duplicate_action: skip
+
+        # Flat layout — all files land directly in /inbox with no subdirectories
+        paths:
+          default: $filename
+          singleton: $filename
+          comp: $filename
 
         plugins: []
       '';
@@ -63,6 +70,7 @@ _: {
             ];
             environment.TZ = "Europe/Berlin";
             image = "docker.io/docccccc/soulbeet:latest";
+            user = "1000:1000";
             ports = [
               "9765:9765"
             ];
@@ -77,6 +85,7 @@ _: {
               "/home/daniel/downloads:/app/downloads"
               "${config.sops.secrets."slskd".path}:/app/slskd.yml:ro"
             ];
+            user = "1000:1000";
             environment = {
               TZ = "Europe/Berlin";
               SLSKD_REMOTE_CONFIGURATION = "true";
