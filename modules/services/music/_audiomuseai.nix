@@ -116,28 +116,27 @@ in {
       };
     };
 
-    systemd.services."podman-volume-audiomuse-redis-data" = {
-      serviceConfig.Type = "oneshot";
-      script = "${pkgs.podman}/bin/podman volume create audiomuse-redis-data || true";
-      wantedBy = ["multi-user.target"];
-    };
-
-    systemd.services."podman-volume-audiomuse-postgres-data" = {
-      serviceConfig.Type = "oneshot";
-      script = "${pkgs.podman}/bin/podman volume create audiomuse-postgres-data || true";
-      wantedBy = ["multi-user.target"];
-    };
-
-    systemd.services."podman-volume-audiomuse-temp-audio-flask" = {
-      serviceConfig.Type = "oneshot";
-      script = "${pkgs.podman}/bin/podman volume create audiomuse-temp-audio-flask || true";
-      wantedBy = ["multi-user.target"];
-    };
-
-    systemd.services."podman-volume-audiomuse-temp-audio-worker" = {
-      serviceConfig.Type = "oneshot";
-      script = "${pkgs.podman}/bin/podman volume create audiomuse-temp-audio-worker || true";
-      wantedBy = ["multi-user.target"];
+    systemd.services = {
+      "podman-volume-audiomuse-redis-data" = {
+        serviceConfig.Type = "oneshot";
+        script = "${pkgs.podman}/bin/podman volume create audiomuse-redis-data || true";
+        wantedBy = ["multi-user.target"];
+      };
+      "podman-volume-audiomuse-postgres-data" = {
+        serviceConfig.Type = "oneshot";
+        script = "${pkgs.podman}/bin/podman volume create audiomuse-postgres-data || true";
+        wantedBy = ["multi-user.target"];
+      };
+      "podman-volume-audiomuse-temp-audio-flask" = {
+        serviceConfig.Type = "oneshot";
+        script = "${pkgs.podman}/bin/podman volume create audiomuse-temp-audio-flask || true";
+        wantedBy = ["multi-user.target"];
+      };
+      "podman-volume-audiomuse-temp-audio-worker" = {
+        serviceConfig.Type = "oneshot";
+        script = "${pkgs.podman}/bin/podman volume create audiomuse-temp-audio-worker || true";
+        wantedBy = ["multi-user.target"];
+      };
     };
   };
 }
