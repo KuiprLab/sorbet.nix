@@ -27,7 +27,7 @@ _: {
         containers = {
           soulbeet = {
             volumes = [
-              "./data:/data"
+              "data:/data"
               "/home/daniel/downloads:/downloads"
               "/home/daniel/music:/music"
               "/home/daniel/.config/beets/config.yaml:/config/config.yaml:ro"
@@ -46,10 +46,10 @@ _: {
           slskd = {
             volumes = [
               "/home/daniel/downloads:/app/downloads"
-              "./slskd-config:/app/slskd.conf.d"
+              "slskd-config:/app/slskd.conf.d"
             ];
             environment.TZ = "Europe/Berlin";
-            image = "slskd/slskd";
+            image = "slskd/slskd:latest";
             ports = [
               "5030:5030"
             ];
