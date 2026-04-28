@@ -57,7 +57,7 @@ _: {
               "io.containers.autoupdate" = "registry";
             };
             environment = {
-              SLSKD_REMOTE_CONFIGURATION = true;
+              "SLSKD_REMOTE_CONFIGURATION" = true;
             };
             extraOptions = [
               "--network=container:gluetun"
