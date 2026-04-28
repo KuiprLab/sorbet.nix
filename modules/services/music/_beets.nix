@@ -175,7 +175,14 @@
 
         chroma.auto = true;
         acoustid.apikey = "\${ACOUSTID_APIKEY}";
-        match.strong_rec_thresh = 0.2;
+        match = {
+          strong_rec_thresh = 0.10;
+          max_rec = {
+            missing_tracks = "strong";
+            unmatched_tracks = "strong";
+          };
+          distance_weights.missing_tracks = 0.1;
+        };
 
         embedart.auto = true;
         fetchart = {
