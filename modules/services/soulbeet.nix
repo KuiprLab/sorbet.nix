@@ -2,7 +2,7 @@ _: {
   flake = {
     caddyVirtualHosts = {
       "soulbeet.int.kuipr.de" = ''
-        reverse_proxy localhost:4553
+        reverse_proxy localhost:4533
       '';
 
       "slskd.int.kuipr.de" = ''
@@ -21,6 +21,11 @@ _: {
           format = "binary";
           key = "";
         };
+      };
+
+      systemd.services.podman-slskd = {
+        requires = ["podman-gluetun.service"];
+        after = ["podman-gluetun.service"];
       };
 
       virtualisation.oci-containers = {
@@ -48,16 +53,13 @@ _: {
               "/home/daniel/downloads:/app/downloads"
               "slskd-config:/app/slskd.conf.d"
             ];
-            environment.TZ = "Europe/Berlin";
-            image = "slskd/slskd:latest";
-            ports = [
-              "5030:5030"
-            ];
+            environment = {
+              TZ = "Europe/Berlin";
+              SLSKD_REMOTE_CONFIGURATION = "true";
+            };
+            image = "docker.io/slskd/slskd:latest";
             labels = {
               "io.containers.autoupdate" = "registry";
-            };
-            environment = {
-              "SLSKD_REMOTE_CONFIGURATION" = "true";
             };
             extraOptions = [
               "--network=container:gluetun"
