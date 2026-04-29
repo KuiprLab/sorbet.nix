@@ -95,6 +95,30 @@ _: {
                   };
                 };
               }
+
+              {
+                Sorbet = {
+                  description = "Tailscale status";
+                  icon = "tailscale";
+                  widget = {
+                    type = "tailscale";
+                    deviceid = "{{HOMEPAGE_VAR_TAILSCALE_ID}}";
+                    key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
+                  };
+                };
+              }
+
+              {
+                Eclair = {
+                  description = "Tailscale status";
+                  icon = "tailscale";
+                  widget = {
+                    type = "tailscale";
+                    deviceid = "{{HOMEPAGE_VAR_TAILSCALE_ID}}";
+                    key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
+                  };
+                };
+              }
               {
                 NextDNS = {
                   description = "DNS filtering";
