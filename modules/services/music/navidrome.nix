@@ -66,6 +66,7 @@
         "Scanner.PurgeMissing" = "always";
         "EnableSharing" = true;
         "AutoImportPlaylists" = true;
+        "Subsonic.DefaultReportRealPath" = true;
       };
     };
   };
