@@ -43,6 +43,7 @@ _: {
           sopsFile = ../../../secrets/sorbet/soulbeet;
           format = "binary";
           key = "";
+          uid = 1000;
         };
 
         "slskd" = {
@@ -64,7 +65,7 @@ _: {
         containers = {
           soulbeet = {
             volumes = [
-              "soulbeet-data:/data"
+              "/home/daniel/soulbeet:/data"
               "/home/daniel/downloads:/downloads"
               "/home/daniel/music-inbox:/inbox"
               "${soulbeetBeetsConfig}:/config/config.yaml:ro"
