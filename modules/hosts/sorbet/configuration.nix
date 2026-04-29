@@ -114,6 +114,12 @@ in {
 
     # Services
     services = {
+      cron = {
+        enable = true;
+        systemCronJobs = [
+          "0 0 * * *       root    podman auto-update"
+        ];
+      };
       openssh.enable = true;
       pipewire = {
         enable = true;
