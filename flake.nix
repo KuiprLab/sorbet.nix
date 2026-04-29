@@ -30,12 +30,6 @@
     # Overrides the upstream crowdsec NixOS modules on eclair.
     nixpkgs-crowdsec.url = "github:TornaxO7/nixpkgs/crowdsec";
 
-    music-tagger = {
-      url = "github:iLazlow/music-tagger";
-      flake = false;
-    };
-
-    # music-manager.url = "github:KuiprLab/music-manager";
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);

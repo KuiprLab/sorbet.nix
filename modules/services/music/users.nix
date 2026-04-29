@@ -17,11 +17,6 @@ _: {
           isSystemUser = true;
           group = "navidrome";
         };
-        music-tagger = {
-          extraGroups = ["music" "users"];
-          isSystemUser = true;
-          group = "music-tagger";
-        };
       };
     };
   };
