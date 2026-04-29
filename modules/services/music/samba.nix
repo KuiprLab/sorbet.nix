@@ -1,6 +1,6 @@
 # Samba shares and firewall rules for music folders
 _: {
-  flake.nixosModules.musicSamba = {...}: let
+  flake.nixosModules.musicSamba = _: let
     homeDir = "/home/daniel";
     musicFolder = "${homeDir}/music";
     inboxFolder = "${homeDir}/music-inbox";
