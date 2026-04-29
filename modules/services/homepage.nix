@@ -173,17 +173,20 @@ _: {
                 };
               }
               {
-                "Music Tagger" = {
-                  description = "NaviCura tagger";
-                  href = "https://tagger.int.kuipr.de";
-                  icon = "mdi-tag-music";
+                "SLSKD" = {
+                  description = "Soulseek";
+                  href = "https://slskd.int.kuipr.de/";
+                  widget = {
+                    type = "slskd";
+                    url = "https://slskd.int.kuipr.de/";
+                    key = "{{HOMEPAGE_VAR_SLSKD_KEY}}";
+                  };
                 };
               }
               {
-                "AM Downloader" = {
-                  description = "Apple Music downloader";
-                  href = "https://am-dl.pages.dev/";
-                  icon = "mdi-apple";
+                "Soulbeet" = {
+                  description = "Music Downloader";
+                  href = "https://soulbeet.int.kuipr.de/";
                 };
               }
             ];
