@@ -176,6 +176,7 @@ _: {
                 "SLSKD" = {
                   description = "Soulseek";
                   href = "https://slskd.int.kuipr.de/";
+                  icon = "slskd";
                   widget = {
                     type = "slskd";
                     url = "https://slskd.int.kuipr.de/";
