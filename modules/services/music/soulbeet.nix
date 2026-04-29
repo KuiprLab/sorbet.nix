@@ -66,7 +66,6 @@ _: {
           soulbeet = {
             volumes = [
               "/home/daniel/soulbeet:/data"
-              "/home/daniel/downloads:/downloads"
               "/home/daniel/music-inbox:/inbox"
               "${soulbeetBeetsConfig}:/config/config.yaml:ro"
             ];
@@ -84,7 +83,7 @@ _: {
 
           slskd = {
             volumes = [
-              "/home/daniel/downloads:/app/downloads"
+              "/home/daniel/music-inbox:/app/downloads"
               "${config.sops.secrets."slskd".path}:/app/slskd.yml:ro"
             ];
             user = "1000:1000";
