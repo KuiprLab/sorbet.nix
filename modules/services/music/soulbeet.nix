@@ -71,7 +71,7 @@ _: {
             ];
             environment.TZ = "Europe/Berlin";
             image = "docker.io/docccccc/soulbeet:latest";
-            user = "1000:1000";
+            user = "1000:100";
             ports = [
               "9765:9765"
             ];
@@ -86,7 +86,7 @@ _: {
               "/home/daniel/music-inbox:/app/downloads"
               "${config.sops.secrets."slskd".path}:/app/slskd.yml:ro"
             ];
-            user = "1000:1000";
+            user = "1000:100";
             environment = {
               TZ = "Europe/Berlin";
               SLSKD_REMOTE_CONFIGURATION = "true";
