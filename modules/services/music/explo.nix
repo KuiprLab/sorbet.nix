@@ -28,7 +28,6 @@ _: {
             image = "ghcr.io/lumepart/explo:latest";
             user = "1000:100";
             ports = [
-              "9765:9765"
             ];
             environment = {
               "WEEKLY_EXPLORATION_SCHEDULE" = "15 00 * * 2"; # Runs weekly, every Tuesday 15 minutes past midnight
