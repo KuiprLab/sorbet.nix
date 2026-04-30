@@ -29,13 +29,10 @@ _: {
           quiet: true
           duplicate_action: remove
 
-        # Flat layout — all files land directly in /inbox with no subdirectories
         paths:
           default: $filename
           singleton: $filename
           comp: $filename
-
-        plugins: []
       '';
     in {
       sops.secrets = {
@@ -67,6 +64,7 @@ _: {
             volumes = [
               "/home/daniel/soulbeet:/data"
               "/home/daniel/music-inbox:/inbox"
+              "/home/daniel/slskd-downloads:/app/downloads"
               "${soulbeetBeetsConfig}:/config/config.yaml:ro"
             ];
             environment.TZ = "Europe/Berlin";
