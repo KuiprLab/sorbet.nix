@@ -12,7 +12,6 @@ _: {
           sopsFile = ../../../secrets/sorbet/explo.env;
           format = "dotenv";
           key = "";
-          uid = 1000;
         };
       };
 
@@ -26,7 +25,6 @@ _: {
             ];
             environment.TZ = "Europe/Berlin";
             image = "ghcr.io/lumepart/explo:latest";
-            user = "1000:100";
             ports = [
             ];
             environment = {
