@@ -1,11 +1,5 @@
 _: {
   flake = {
-    caddyVirtualHosts = {
-      "explo.int.kuipr.de" = ''
-        reverse_proxy 127.0.0.1:9765
-      '';
-    };
-
     nixosModules.soulbeet = {config, ...}: {
       sops.secrets = {
         "explo" = {
