@@ -83,7 +83,7 @@ _: {
 
           slskd = {
             volumes = [
-              "/home/daniel/music-inbox:/app/downloads"
+              "/home/daniel/slskd-downloads:/app/downloads"
               "${config.sops.secrets."slskd".path}:/app/slskd.yml:ro"
             ];
             user = "1000:100";
