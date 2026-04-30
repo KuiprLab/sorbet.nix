@@ -27,7 +27,7 @@ _: {
 
       virtualisation.oci-containers = {
         containers = {
-          explo = {
+          lidarr = {
             user = "1000:100";
             volumes = [
               "/home/daniel/lidarr:/config"
