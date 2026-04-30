@@ -33,7 +33,7 @@ _: {
         # dotenv with HARVEST_USERNAME, HARVEST_PASSWORD, HARVEST_SESSION_SECRET
         "harvest" = {
           sopsFile = ../../../secrets/sorbet/harvest;
-          format = "dotenv";
+          format = "binary";
           key = "";
           uid = 1000;
           restartUnits = ["podman-harvest.service"];
