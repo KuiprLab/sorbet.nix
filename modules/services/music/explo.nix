@@ -23,7 +23,7 @@ _: {
               "/home/daniel/music/explo:/data/"
               "/home/daniel/slskd-downloads:/slskd/"
             ];
-            environment.TZ = "Europe/Berlin";
+            environment.TZ = "UTC";
             image = "ghcr.io/lumepart/explo:latest";
             ports = [
             ];
