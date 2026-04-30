@@ -22,7 +22,7 @@
 
     # Run `npm install` inside ./frontend once to generate package-lock.json,
     # then update this hash with the value Nix prints on first build.
-    npmDepsHash = lib.fakeHash;
+    npmDepsHash = "sha256-gH35kRSz1Rvu5cmnBWDffUa4ppMf61emU89kzrZyb3g=";
 
     # SvelteKit's adapter-static writes to `build/`.
     installPhase = ''
