@@ -1,6 +1,6 @@
 _: {
   flake = {
-    nixosModules.soulbeet = {config, ...}: {
+    nixosModules.explo = {config, ...}: {
       sops.secrets = {
         "explo" = {
           sopsFile = ../../../secrets/sorbet/explo.env;
