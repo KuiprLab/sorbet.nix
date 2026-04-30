@@ -185,9 +185,9 @@ _: {
                 };
               }
               {
-                "Soulbeet" = {
+                "Harvest" = {
                   description = "Music Downloader";
-                  href = "https://soulbeet.int.kuipr.de/";
+                  href = "https://harvest.int.kuipr.de/";
                 };
               }
             ];
