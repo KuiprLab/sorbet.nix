@@ -6,22 +6,7 @@ _: {
       '';
     };
 
-    nixosModules.lidarr = {pkgs, ...}: let
-      scriptsInit = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/RandomNinjaAtk/arr-scripts/main/lidarr/scripts_init.bash";
-        hash = "sha256-jGmtzdr0NZWMEy7m2CRx0+AaR9SxYdywsEAVi0iTJTA=";
-      };
-
-      customContInitDir = pkgs.runCommand "lidarr-custom-cont-init" {} ''
-        mkdir -p $out
-        cp ${scriptsInit} $out/scripts_init.bash
-        chmod +x $out/scripts_init.bash
-      '';
-
-      customServicesDir = pkgs.runCommand "lidarr-custom-services" {} ''
-        mkdir -p $out
-      '';
-    in {
+    nixosModules.lidarr = {pkgs, ...}: {
       sops.secrets = {
       };
 
@@ -31,14 +16,11 @@ _: {
             user = "1000:100";
             volumes = [
               "/home/daniel/lidarr:/config"
-
-              "/home/daniel/music:/music" # optional
+              "/home/daniel/tmp:/music" # optional
               "/home/daniel/slskd-downloads:/downloads" # optional
-              "${customContInitDir}:/custom-cont-init.d:ro"
-              "${customServicesDir}:/custom-services.d:ro"
             ];
             environment.TZ = "Europe/Berlin";
-            image = "lscr.io/linuxserver/lidarr:latest";
+            image = "lscr.io/linuxserver/lidarr:nightly";
             ports = [
               "8686:8686"
             ];
