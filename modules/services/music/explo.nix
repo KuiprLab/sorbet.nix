@@ -35,6 +35,7 @@ _: {
 
               "DAILY_JAMS_SCHEDULE" = "15 01 * * *"; # Runs daily, every day 15 minutes past 1PM
               "DAILY_JAMS_FLAGS" = "--playlist=daily-jams --download-mode=skip"; # Get tracks from daily-jams, and only add tracks that are found locally to playlist
+              "EXECUTE_ON_START" = "true";
             };
             labels = {
               "io.containers.autoupdate" = "registry";
