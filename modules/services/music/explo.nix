@@ -10,7 +10,7 @@ _: {
       sops.secrets = {
         "explo" = {
           sopsFile = ../../../secrets/sorbet/explo.env;
-          format = "env";
+          format = "dotenv";
           key = "";
           uid = 1000;
         };
