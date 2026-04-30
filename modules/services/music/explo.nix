@@ -28,7 +28,7 @@ _: {
             ports = [
             ];
             environment = {
-              "WEEKLY_EXPLORATION_SCHEDULE" = "15 00 * * 2"; # Runs weekly, every Tuesday 15 minutes past midnight
+              # "WEEKLY_EXPLORATION_SCHEDULE" = "15 00 * * 2"; # Runs weekly, every Tuesday 15 minutes past midnight
 
               "WEEKLY_JAMS_SCHEDULE" = "30 00 * * 1"; # Runs weekly, every Monday 30 minutes past midnight
               "WEEKLY_JAMS_FLAGS" = "--playlist=weekly-jams --download-mode=skip"; # Get tracks from weekly-jams, and only add tracks that are found locally to playlist
