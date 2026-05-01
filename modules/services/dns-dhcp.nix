@@ -28,8 +28,8 @@ _: {
       bind-interfaces
 
       # Pure upstream forwarding — no custom address overrides
-      server=9.9.9.9
       server=1.1.1.1
+      server=8.8.8.8
 
       # Hand out IPs and tell clients to use 9.9.9.9 directly
       dhcp-range=192.168.0.2,192.168.0.254,255.255.255.0,24h
@@ -56,7 +56,9 @@ _: {
         server = [
           #TODO: Find non-US alternative that isn't Quad9
           "1.1.1.1"
+          "1.1.2.2"
           "8.8.8.8"
+          "8.8.4.4"
         ];
 
         dhcp-range = "192.168.0.2,192.168.0.254,255.255.255.0,24h";

@@ -25,8 +25,10 @@ _: {
               "WEEKLY_EXPLORATION_SCHEDULE" = "15 00 * * 2"; # Runs weekly, every Tuesday 15 minutes past midnight
 
               "WEEKLY_JAMS_SCHEDULE" = "30 00 * * 1"; # Runs weekly, every Monday 30 minutes past midnight
+              "WEEKLY_JAMS_FLAGS" = "--playlist=weekly-jams";
 
               "DAILY_JAMS_SCHEDULE" = "15 01 * * *"; # Runs daily, every day 15 minutes past 1PM
+              "DAILY_JAMS_FLAGS" = "--playlist=daily-jams";
               "EXECUTE_ON_START" = "true";
             };
             labels = {
