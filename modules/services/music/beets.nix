@@ -46,7 +46,13 @@ _: {
             ExecStart = pkgs.writeShellScript "beets-watch" ''
               set -euo pipefail
               mkdir -p ${inboxFolder}
-              echo "Watching ${inboxFolder} for new files..."
+
+              notify_discord() {
+                local msg="$1"
+                ${pkgs.curl}/bin/curl -s -X POST "$WEBHOOK" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"content\": $(echo -n "$msg" | ${pkgs.jq}/bin/jq -Rs .)}" || true
+              }
 
               ${pkgs.inotify-tools}/bin/inotifywait \
                 --monitor \
@@ -65,26 +71,14 @@ _: {
                     sleep 5
                   done
 
-                  ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder}
+                  # Capture output, send discord on failure
+                  if ! echo "c" | ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder} \
+                      > /tmp/beets-import.log 2>&1; then
+                    BAD=$(grep -o 'BAD.*' /tmp/beets-import.log | head -5 || echo "unknown files")
+                    notify_discord "⚠️ beets import failed on sorbet\n$BAD\nCheck: journalctl --user -u beets-watch"
+                  fi
 
-                  # Remove non-audio leftover files (artwork, logs, metadata junk)
-                  ${pkgs.findutils}/bin/find ${inboxFolder} \
-                    -type f \
-                    ! -name "*.flac" \
-                    ! -name "*.mp3" \
-                    ! -name "*.ogg" \
-                    ! -name "*.opus" \
-                    ! -name "*.m4a" \
-                    ! -name "*.wav" \
-                    ! -name "*.aiff" \
-                    -delete
-
-                  # Remove empty directories
-                  ${pkgs.findutils}/bin/find ${inboxFolder} \
-                    -mindepth 1 \
-                    -type d \
-                    -empty \
-                    -delete
+                  # cleanup...
                 done
             '';
           };
