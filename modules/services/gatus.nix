@@ -280,14 +280,22 @@
           };
           environmentFiles = [config.sops.secrets."gatus/discord_webhook".path];
           labels."io.containers.autoupdate" = "registry";
-          # Use host dnsmasq directly. Default podman DNS path goes through
-          # aardvark-dns which inherits the host's /etc/resolv.conf
-          # (nameserver 127.0.0.1) — but 127.0.0.1 inside the container is
-          # the container itself, so every *.int.kuipr.de lookup hung ~5s
-          # before failing, producing the striped graphs. 192.168.0.85 is
-          # sorbet's LAN IP where dnsmasq actually listens with the
-          # split-horizon overrides.
-          extraOptions = ["--dns=192.168.0.85"];
+          # --dns=192.168.0.85: Use host dnsmasq directly. Default podman
+          #   DNS path goes through aardvark-dns which inherits the host's
+          #   /etc/resolv.conf (nameserver 127.0.0.1) — but 127.0.0.1
+          #   inside the container is the container itself, so every
+          #   *.int.kuipr.de lookup hung ~5s before failing, producing
+          #   striped graphs. 192.168.0.85 is sorbet's LAN IP where
+          #   dnsmasq listens with the split-horizon overrides.
+          # --cap-add=NET_RAW: Required for icmp:// endpoints. The default
+          #   podman cap set drops NET_RAW, so gatus's raw-socket ping
+          #   fails instantly (duration=0s, no probe ever runs). Without
+          #   this, the eclair (ICMP) check shows N/A response time and
+          #   stays Unhealthy regardless of actual reachability.
+          extraOptions = [
+            "--dns=192.168.0.85"
+            "--cap-add=NET_RAW"
+          ];
         };
       };
 
