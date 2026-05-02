@@ -69,6 +69,23 @@
       (lib.hasSuffix ".ext.kuipr.de")
       (lib.attrNames config.flake.caddyVirtualHosts);
 
+    # Inject a [RESPONSE_TIME] < 2000 condition into any HTTPS endpoint that
+    # doesn't already have one. Without this, a stripe pattern of 5s
+    # timeouts can pass the [STATUS] check on alternating probes and never
+    # trip the failure-threshold streak. The response-time bound makes
+    # every slow probe count as a failure regardless of HTTP outcome.
+    #
+    # Endpoints that already specify [RESPONSE_TIME] (ext, eclair probes,
+    # ICMP/TCP) keep their custom value — only the bare https:// int
+    # endpoints get the default.
+    hasResponseTimeCond = ep:
+      lib.any (c: lib.hasInfix "[RESPONSE_TIME]" c) (ep.conditions or []);
+
+    addDefaultResponseTime = ep:
+      if (lib.hasPrefix "https://" (ep.url or "")) && !(hasResponseTimeCond ep)
+      then ep // {conditions = ep.conditions ++ ["[RESPONSE_TIME] < 2000"];}
+      else ep;
+
     # Auto-generated external-access endpoints (sorbet POV): one per
     # *.ext.kuipr.de vhost. Exercises the full public path:
     # public DNS → eclair haproxy SNI → tailnet → caddy on sorbet → service.
@@ -216,7 +233,10 @@
       alerting.discord = {
         webhook-url = "$DISCORD_WEBHOOK_URL";
         default-alert = {
-          failure-threshold = 3;
+          # 2 consecutive failures (~2min at 60s interval) trips the alert.
+          # Was 3 — too lenient: a 50/50 stripe pattern of timeouts never
+          # produced 3 fails in a row, so flapping went unnoticed.
+          failure-threshold = 2;
           success-threshold = 2;
           send-on-resolved = true;
         };
@@ -225,7 +245,7 @@
 
     # ----- sorbet gatus NixOS module -----
     nixosModules.gatus = let
-      endpoints = config.flake.gatusEndpoints;
+      endpoints = map addDefaultResponseTime config.flake.gatusEndpoints;
       extraConfig = config.flake.gatusExtraConfig;
       gatusConfig =
         extraConfig
@@ -273,7 +293,7 @@
 
     # ----- eclair gatus NixOS module -----
     eclairNixosModules.gatus = let
-      endpoints = config.flake.gatusEclairEndpoints;
+      endpoints = map addDefaultResponseTime config.flake.gatusEclairEndpoints;
       extraConfig = config.flake.gatusExtraConfig;
       gatusConfig =
         extraConfig
