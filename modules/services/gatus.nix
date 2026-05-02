@@ -260,6 +260,14 @@
           };
           environmentFiles = [config.sops.secrets."gatus/discord_webhook".path];
           labels."io.containers.autoupdate" = "registry";
+          # Use host dnsmasq directly. Default podman DNS path goes through
+          # aardvark-dns which inherits the host's /etc/resolv.conf
+          # (nameserver 127.0.0.1) — but 127.0.0.1 inside the container is
+          # the container itself, so every *.int.kuipr.de lookup hung ~5s
+          # before failing, producing the striped graphs. 192.168.0.85 is
+          # sorbet's LAN IP where dnsmasq actually listens with the
+          # split-horizon overrides.
+          extraOptions = ["--dns=192.168.0.85"];
         };
       };
 
