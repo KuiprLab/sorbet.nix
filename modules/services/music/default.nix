@@ -44,7 +44,7 @@ _: {
         url = "https://music.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
-          "[CERTIFICATE_EXPIRATION] > 2h"
+          "[CERTIFICATE_EXPIRATION] > 168h"
         ];
         alerts = [{type = "discord";}];
       }
@@ -53,7 +53,7 @@ _: {
         url = "https://musai.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
-          "[CERTIFICATE_EXPIRATION] > 2h"
+          "[CERTIFICATE_EXPIRATION] > 168h"
         ];
         alerts = [{type = "discord";}];
       }

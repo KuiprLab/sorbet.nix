@@ -15,7 +15,7 @@ _: {
         url = "https://has.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
-          "[CERTIFICATE_EXPIRATION] > 2h"
+          "[CERTIFICATE_EXPIRATION] > 168h"
         ];
         alerts = [{type = "discord";}];
       }

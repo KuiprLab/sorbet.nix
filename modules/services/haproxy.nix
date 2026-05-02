@@ -50,6 +50,23 @@ _: {
           timeout server  30s
 
         #--------------------------------------------------------------------
+        # Stats — loopback only, scraped by local gatus
+        #--------------------------------------------------------------------
+        # CSV at /stats;csv exposes backend up/down so gatus can alert on
+        # be_sorbet flipping to DOWN before users see 503s. Bound to
+        # 127.0.0.1 only — no auth needed since it's loopback-local and
+        # eclair firewall blocks 8404 from outside.
+        frontend fe_stats
+          mode http
+          bind 127.0.0.1:8404
+          stats enable
+          stats uri /stats
+          stats refresh 10s
+          stats show-node
+          # Health check endpoint for monitoring tools
+          monitor-uri /haproxy_health
+
+        #--------------------------------------------------------------------
         # HTTP — redirect to HTTPS
         #--------------------------------------------------------------------
         frontend fe_http
