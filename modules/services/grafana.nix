@@ -51,6 +51,7 @@ _: {
             http_port = 3000;
             domain = "grafana.int.kuipr.de";
             root_url = "https://grafana.int.kuipr.de/";
+            stats = "read";
           };
 
           security = {
