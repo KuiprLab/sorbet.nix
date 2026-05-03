@@ -346,10 +346,12 @@
           owner = "root";
         };
 
-        virtualisation.oci-containers.backend = lib.mkDefault "podman";
-        virtualisation.podman.enable = lib.mkDefault true;
+        virtualisation = {
+        podman.enable = lib.mkDefault true;
 
-        virtualisation.oci-containers.containers.gatus = {
+                oci-containers = {
+                    backend = lib.mkDefault "podman";
+        containers.gatus = {
           image = "ghcr.io/twin/gatus:latest";
           volumes = [
             "${(pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig}:/config/config.yaml:ro"
@@ -369,6 +371,8 @@
             extraHostsArgs
             ++ ["--network=host"];
         };
+                    };
+            };
       };
   };
 }
