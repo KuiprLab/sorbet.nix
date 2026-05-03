@@ -5,12 +5,7 @@
 # itself is not directly exposed via caddy.
 _: {
   flake = {
-    nixosModules.loki = {
-      config,
-      pkgs,
-      lib,
-      ...
-    }: {
+    nixosModules.loki = {pkgs, ...}: {
       services.loki = {
         enable = true;
         configuration = {

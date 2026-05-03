@@ -1,5 +1,5 @@
 # Navidrome service, plugins, tmpfiles, and music-tagger
-{inputs, ...}: {
+_: {
   flake.nixosModules.navidrome = {
     pkgs,
     lib,

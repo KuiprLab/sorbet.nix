@@ -347,32 +347,32 @@
         };
 
         virtualisation = {
-        podman.enable = lib.mkDefault true;
+          podman.enable = lib.mkDefault true;
 
-                oci-containers = {
-                    backend = lib.mkDefault "podman";
-        containers.gatus = {
-          image = "ghcr.io/twin/gatus:latest";
-          volumes = [
-            "${(pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig}:/config/config.yaml:ro"
-            "gatus-data:/data"
-          ];
-          # Host network: container reaches haproxy stats on 127.0.0.1:8404
-          # and haproxy https on 127.0.0.1:443 directly. Gatus binds to
-          # 127.0.0.1:8888 via web.address (see config above) so the
-          # dashboard isn't exposed publicly. eclair firewall doesn't open
-          # 8888 anyway. SSH-tunnel to view:
-          #   ssh -L 8889:127.0.0.1:8888 root@eclair
-          # `ports` is intentionally omitted — host network ignores it.
-          environment.TZ = "Europe/Berlin";
-          environmentFiles = [config.sops.secrets."gatus/discord_webhook".path];
-          labels."io.containers.autoupdate" = "registry";
-          extraOptions =
-            extraHostsArgs
-            ++ ["--network=host"];
-        };
-                    };
+          oci-containers = {
+            backend = lib.mkDefault "podman";
+            containers.gatus = {
+              image = "ghcr.io/twin/gatus:latest";
+              volumes = [
+                "${(pkgs.formats.yaml {}).generate "gatus.yaml" gatusConfig}:/config/config.yaml:ro"
+                "gatus-data:/data"
+              ];
+              # Host network: container reaches haproxy stats on 127.0.0.1:8404
+              # and haproxy https on 127.0.0.1:443 directly. Gatus binds to
+              # 127.0.0.1:8888 via web.address (see config above) so the
+              # dashboard isn't exposed publicly. eclair firewall doesn't open
+              # 8888 anyway. SSH-tunnel to view:
+              #   ssh -L 8889:127.0.0.1:8888 root@eclair
+              # `ports` is intentionally omitted — host network ignores it.
+              environment.TZ = "Europe/Berlin";
+              environmentFiles = [config.sops.secrets."gatus/discord_webhook".path];
+              labels."io.containers.autoupdate" = "registry";
+              extraOptions =
+                extraHostsArgs
+                ++ ["--network=host"];
             };
+          };
+        };
       };
   };
 }

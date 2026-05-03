@@ -1,5 +1,4 @@
 {
-  lib,
   buildNpmPackage,
   python3,
   python3Packages,

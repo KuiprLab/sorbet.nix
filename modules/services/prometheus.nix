@@ -6,11 +6,7 @@ _: let
   eclairTailscaleIp = "100.99.168.34";
 in {
   flake = {
-    nixosModules.prometheus = {
-      config,
-      lib,
-      ...
-    }: {
+    nixosModules.prometheus = _: {
       services.prometheus = {
         enable = true;
         port = 9090;
