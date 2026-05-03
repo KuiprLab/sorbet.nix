@@ -62,6 +62,19 @@ _: {
           {
             Infrastructure = [
               {
+                Grafana = {
+                  description = "Logs Dashboard";
+                  href = "https://grafana.int.kuipr.de";
+                  icon = "grafana";
+                  widget = {
+                    type = "grafana";
+                    version = "2";
+                    url = "https://grafana.int.kuipr.de";
+                  };
+                };
+              }
+
+              {
                 Caddy = {
                   description = "Reverse proxy";
                   href = "https://home.int.kuipr.de";
