@@ -8,6 +8,7 @@ _: {
       {
         name = "Homepage";
         url = "https://home.int.kuipr.de";
+        group = "Misc";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 168h"

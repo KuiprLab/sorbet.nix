@@ -7,6 +7,7 @@ _: {
     gatusEndpoints = [
       {
         name = "Music Assistant";
+        group = "Home";
         url = "https://mus.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"

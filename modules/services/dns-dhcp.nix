@@ -2,6 +2,7 @@ _: {
   flake.gatusEndpoints = [
     {
       name = "DNS";
+      group = "Network";
       url = "192.168.0.85";
       dns = {
         query-name = "has.int.kuipr.de";

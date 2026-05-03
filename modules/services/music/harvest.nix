@@ -13,6 +13,7 @@ _: {
     gatusEndpoints = [
       {
         name = "Harvest";
+        group = "Music";
         url = "https://harvest.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"

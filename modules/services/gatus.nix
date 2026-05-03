@@ -135,6 +135,7 @@
         {
           name = "Caddy";
           url = "https://gatus.int.kuipr.de";
+          group = "Network";
           conditions = [
             "[STATUS] == 200"
             "[CERTIFICATE_EXPIRATION] > ${certWarnHours}"
@@ -146,7 +147,7 @@
         # being down/unreachable independently of haproxy or any backend.
         {
           name = "eclair (ICMP)";
-          group = "external";
+          group = "External";
           url = "icmp://${eclairPublicIp}";
           interval = "60s";
           conditions = [
@@ -161,7 +162,7 @@
         # (tailnet, caddy, or the service itself).
         {
           name = "eclair haproxy (TCP/443)";
-          group = "external";
+          group = "External";
           url = "tcp://${eclairPublicIp}:443";
           interval = "60s";
           conditions = [
@@ -206,7 +207,7 @@
         # easiest is host network on the container itself.
         {
           name = "haproxy backend (be_sorbet)";
-          group = "haproxy";
+          group = "Network";
           url = "http://127.0.0.1:8404/stats;csv;norefresh";
           interval = "60s";
           conditions = [

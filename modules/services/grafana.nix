@@ -10,6 +10,7 @@ _: {
     gatusEndpoints = [
       {
         name = "Grafana";
+        group = "Monitoring";
         url = "https://grafana.int.kuipr.de/api/health";
         interval = "60s";
         conditions = [

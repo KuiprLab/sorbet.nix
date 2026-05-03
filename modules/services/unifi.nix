@@ -4,6 +4,7 @@ _: {
       {
         name = "UniFi";
         url = "https://unifi.int.kuipr.de";
+        group = "Home";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 168h"

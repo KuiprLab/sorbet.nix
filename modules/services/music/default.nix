@@ -41,6 +41,7 @@ _: {
     gatusEndpoints = [
       {
         name = "Navidrome";
+        group = "Music";
         url = "https://music.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"
@@ -51,6 +52,7 @@ _: {
       {
         name = "Audiomuse AI";
         url = "https://musai.int.kuipr.de";
+        group = "Music";
         conditions = [
           "[STATUS] == 200"
           "[CERTIFICATE_EXPIRATION] > 168h"

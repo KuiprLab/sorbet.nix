@@ -12,6 +12,7 @@ _: {
     gatusEndpoints = [
       {
         name = "Home Assistant";
+        group = "Home";
         url = "https://has.int.kuipr.de";
         conditions = [
           "[STATUS] == 200"

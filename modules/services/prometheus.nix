@@ -6,19 +6,6 @@ _: let
   eclairTailscaleIp = "100.99.168.34";
 in {
   flake = {
-    gatusEndpoints = [
-      {
-        name = "Prometheus";
-        url = "http://localhost:9090/-/healthy";
-        interval = "60s";
-        conditions = [
-          "[STATUS] == 200"
-          "[RESPONSE_TIME] < 500"
-        ];
-        alerts = [{type = "discord";}];
-      }
-    ];
-
     nixosModules.prometheus = {
       config,
       lib,

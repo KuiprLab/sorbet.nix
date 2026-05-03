@@ -5,21 +5,6 @@
 # itself is not directly exposed via caddy.
 _: {
   flake = {
-    # Gatus check — confirms loki is up and accepting queries.
-    gatusEndpoints = [
-      {
-        name = "Loki";
-        url = "http://localhost:3100/ready";
-        interval = "60s";
-        conditions = [
-          "[STATUS] == 200"
-          "[BODY] == ready"
-          "[RESPONSE_TIME] < 500"
-        ];
-        alerts = [{type = "discord";}];
-      }
-    ];
-
     nixosModules.loki = {
       config,
       pkgs,
