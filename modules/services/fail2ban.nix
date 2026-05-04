@@ -1,7 +1,8 @@
 # fail2ban intrusion prevention for eclair
 # Monitors SSH logs and bans IPs with repeated failed authentication attempts.
+# The sshd jail is automatically enabled since services.openssh.enable = true.
 _: {
-  flake.eclairNixosModules.fail2ban = {pkgs, ...}: {
+  flake.eclairNixosModules.fail2ban = _: {
     services.fail2ban = {
       enable = true;
 
@@ -13,20 +14,6 @@ _: {
         factor = "2";
         multipliers = "1 2 4 8 16 32 64";
       };
-
-      jails = {
-        sshd = {
-          enabled = true;
-          filter = "sshd";
-          port = "ssh";
-          backend = "systemd";
-        };
-      };
-    };
-
-    # Ensure fail2ban has access to journal
-    systemd.services.fail2ban.serviceConfig = {
-      SupplementaryGroups = ["systemd-journal"];
     };
   };
 }
