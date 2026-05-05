@@ -18,7 +18,7 @@ _: {
               "/home/daniel/slskd-downloads:/slskd/"
             ];
             environment.TZ = "Europe/Berlin";
-            image = "ghcr.io/lumepart/explo:latest";
+            image = "ghcr.io/lumepart/explo:dev";
             ports = [
             ];
             environment = {
