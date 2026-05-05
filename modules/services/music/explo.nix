@@ -1,5 +1,11 @@
 _: {
   flake = {
+    caddyVirtualHosts = {
+      "exploy.int.kuipr.de" = ''
+        reverse_proxy localhost:7288
+      '';
+    };
+
     nixosModules.explo = {config, ...}: {
       sops.secrets = {
         "explo" = {
@@ -20,6 +26,7 @@ _: {
             environment.TZ = "Europe/Berlin";
             image = "ghcr.io/lumepart/explo:dev";
             ports = [
+              "7288:7288"
             ];
             environment = {
               "WEEKLY_EXPLORATION_SCHEDULE" = "15 00 * * 2"; # Runs weekly, every Tuesday 15 minutes past midnight
