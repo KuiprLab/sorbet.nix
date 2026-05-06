@@ -1,7 +1,7 @@
 _: {
   flake = {
     caddyVirtualHosts = {
-      "auth.ext.kuipr.de" = ''
+      "auth.int.kuipr.de" = ''
         reverse_proxy localhost:9091
       '';
     };
