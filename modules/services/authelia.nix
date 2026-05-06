@@ -39,7 +39,7 @@ _: {
           image = "docker.io/authelia/authelia:latest";
           volumes = [
             "${config.sops.secrets."authelia/configuration.yml".path}:/config/configuration.yml:ro"
-            "/home/ubuntu/authelia/data:/data:rw"
+            "authelia_data:/data:rw"
             "${config.sops.secrets."authelia/authelia-users.yaml".path}:/config/users_database.yaml:rw"
           ];
           ports = [
@@ -62,7 +62,7 @@ _: {
         "redis" = {
           image = "redis:alpine";
           volumes = [
-            "/home/ubuntu/authelia/data/redis:/data:rw"
+            "authelia_redis:/data:rw"
           ];
           labels = {};
           log-driver = "journald";
@@ -108,6 +108,18 @@ _: {
           wantedBy = [
             "podman-compose-authelia-root.target"
           ];
+        };
+
+        "podman-authelia-data" = {
+          serviceConfig.Type = "oneshot";
+          script = "${pkgs.podman}/bin/podman volume create authelia_data || true";
+          wantedBy = ["multi-user.target"];
+        };
+
+        "podman-authelia-redis-data" = {
+          serviceConfig.Type = "oneshot";
+          script = "${pkgs.podman}/bin/podman volume create authelia_redis || true";
+          wantedBy = ["multi-user.target"];
         };
 
         # Networks
