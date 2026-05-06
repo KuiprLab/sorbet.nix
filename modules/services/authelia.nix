@@ -13,21 +13,21 @@ _: {
     }: {
       sops.secrets = {
         "authelia/authelia.env" = {
-          sopsFile = ../../secrets/sorbet/authelia.env;
+          sopsFile = ../../secrets/sorbet/authelia/authelia.env;
           format = "dotenv";
           key = "";
           restartUnits = ["podman-authelia.service"];
         };
 
         "authelia/configuration.yml" = {
-          sopsFile = ../../secrets/sorbet/configuration.yml;
+          sopsFile = ../../secrets/sorbet/authelia/configuration.yml;
           format = "yaml";
           key = "";
           restartUnits = ["podman-authelia.service"];
         };
 
         "authelia/authelia-users.yaml" = {
-          sopsFile = ../../secrets/sorbet/users.yaml;
+          sopsFile = ../../secrets/sorbet/authelia/users.yaml;
           key = "";
           restartUnits = ["podman-authelia.service"];
         };
