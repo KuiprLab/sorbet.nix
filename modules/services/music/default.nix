@@ -5,6 +5,20 @@ _: {
   flake = {
     caddyVirtualHosts = {
       "music.int.kuipr.de" = ''
+        request_header -Remote-User
+
+        @protected {
+          not path /share/*
+          not {
+            path /rest/*
+            not query c=NavidromeUI
+          }
+        }
+        forward_auth @protected localhost:9091 {
+          uri /api/verify?rd=https://auth.ext.kuipr.de/
+          copy_headers Remote-User
+        }
+
         reverse_proxy localhost:4533 {
           header_up Host {host}
           header_up X-Real-IP {remote_host}
@@ -13,6 +27,20 @@ _: {
         }
       '';
       "music.ext.kuipr.de" = ''
+        request_header -Remote-User
+
+        @protected {
+          not path /share/*
+          not {
+            path /rest/*
+            not query c=NavidromeUI
+          }
+        }
+        forward_auth @protected localhost:9091 {
+          uri /api/verify?rd=https://auth.ext.kuipr.de/
+          copy_headers Remote-User
+        }
+
         reverse_proxy localhost:4533 {
           header_up Host {host}
           header_up X-Real-IP {remote_host}

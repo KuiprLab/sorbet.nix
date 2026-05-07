@@ -4,6 +4,9 @@ _: {
       "auth.int.kuipr.de" = ''
         reverse_proxy localhost:9091
       '';
+      "auth.ext.kuipr.de" = ''
+        reverse_proxy localhost:9091
+      '';
     };
     nixosModules.authelia = {
       pkgs,
