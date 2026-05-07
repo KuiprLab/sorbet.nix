@@ -15,7 +15,7 @@ _: {
           }
         }
         forward_auth @protected localhost:9091 {
-          uri /api/verify?rd=https://auth.ext.kuipr.de/
+          uri /api/authz/forward-auth?rd=https://auth.ext.kuipr.de/
           copy_headers Remote-User
         }
 

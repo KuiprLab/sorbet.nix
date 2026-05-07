@@ -36,7 +36,7 @@ _: {
       # Containers
       virtualisation.oci-containers.containers = {
         "authelia" = {
-          image = "docker.io/authelia/authelia:latest";
+          image = "docker.io/authelia/authelia:4.38.8";
           volumes = [
             "${config.sops.secrets."authelia/configuration.yml".path}:/config/configuration.yml:ro"
             "authelia_data:/data:rw"
@@ -58,19 +58,6 @@ _: {
             "--network=proxy"
           ];
         };
-
-        "redis" = {
-          image = "redis:alpine";
-          volumes = [
-            "authelia_redis:/data:rw"
-          ];
-          labels = {};
-          log-driver = "journald";
-          extraOptions = [
-            "--network-alias=redis"
-            "--network=authelia_default"
-          ];
-        };
       };
 
       systemd.services = {
@@ -80,27 +67,11 @@ _: {
           };
           after = [
             "podman-network-authelia_default.service"
+            "podman-create-network-proxy.service"
           ];
           requires = [
             "podman-network-authelia_default.service"
-          ];
-          partOf = [
-            "podman-compose-authelia-root.target"
-          ];
-          wantedBy = [
-            "podman-compose-authelia-root.target"
-          ];
-        };
-
-        "podman-authelia-redis" = {
-          serviceConfig = {
-            Restart = lib.mkOverride 90 "always";
-          };
-          after = [
-            "podman-network-authelia_default.service"
-          ];
-          requires = [
-            "podman-network-authelia_default.service"
+            "podman-create-network-proxy.service"
           ];
           partOf = [
             "podman-compose-authelia-root.target"
@@ -113,12 +84,6 @@ _: {
         "podman-authelia-data" = {
           serviceConfig.Type = "oneshot";
           script = "${pkgs.podman}/bin/podman volume create authelia_data || true";
-          wantedBy = ["multi-user.target"];
-        };
-
-        "podman-authelia-redis-data" = {
-          serviceConfig.Type = "oneshot";
-          script = "${pkgs.podman}/bin/podman volume create authelia_redis || true";
           wantedBy = ["multi-user.target"];
         };
 
