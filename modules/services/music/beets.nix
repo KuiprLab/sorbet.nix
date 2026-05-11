@@ -136,6 +136,7 @@ _: {
             quiet = false;
             timid = false;
             log = importLog;
+            group_albums = true;
             quiet_fallback = "asis";
             duplicate_action = "remove";
           };
@@ -155,6 +156,7 @@ _: {
 
           plugins = [
             "chroma"
+            "spotify"
             "fetchart"
             "embedart"
             "musicbrainz"
@@ -188,6 +190,11 @@ _: {
           musicbrainz = {
             user = "Frostplexx";
             pass = "\${MUSICBRAINZ_PASSWORD}";
+            data_source_mismatch_penalty = 0.8;
+          };
+
+          spotify = {
+            data_source_mismatch_penalty = 0.3;
           };
 
           chroma.auto = true;
