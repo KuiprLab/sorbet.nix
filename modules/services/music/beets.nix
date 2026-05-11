@@ -74,7 +74,7 @@ _: {
                   done
 
                   # Capture output, send discord on failure
-                  yes c | ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder} \
+                  ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder} \
                       > /tmp/beets-import.log 2>&1 || true
 
                   if grep -q 'BAD\|checker exited with status' /tmp/beets-import.log; then
