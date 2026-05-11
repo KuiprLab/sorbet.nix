@@ -168,7 +168,6 @@ _: {
           ];
 
           badfiles = {
-            check_on_import = true;
             commands = {
               flac = "${pkgs.flac}/bin/flac --test --warnings-as-errors --silent";
               m4a = "${pkgs.ffmpeg}/bin/ffprobe -v error";
