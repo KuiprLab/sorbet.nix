@@ -198,12 +198,6 @@ _: {
                   };
                 };
               }
-              {
-                "Harvest" = {
-                  description = "Music Downloader";
-                  href = "https://harvest.int.kuipr.de/";
-                };
-              }
             ];
           }
         ];
