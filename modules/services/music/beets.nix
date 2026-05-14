@@ -236,9 +236,9 @@ _: {
               auto = true;
               sources = [
                 "filesystem"
-                "coverart"
-                "fanarttv"
                 "itunes"
+                "fanarttv"
+                "coverart"
               ];
             };
             lyrics = {
