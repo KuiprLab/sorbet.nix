@@ -36,6 +36,8 @@ _: {
       services.beetroot = {
         enable = true;
         # openFirewall = true;
+        user = "daniel";
+        group = "users";
         frontendPort = 4433;
         musicDirectory = musicFolder;
         configDirectory = "${homeDir}/.config/beetroot";
