@@ -40,7 +40,7 @@ _: {
         musicDirectory = musicFolder;
         configDirectory = "${homeDir}/.config/beetroot";
         databasePath = "/home/daniel/.beets/library.db";
-        extraGroups = ["media"];
+        # extraGroups = ["media"];  # Disabled - media group doesn't exist
       };
 
       systemd.user = {
