@@ -40,8 +40,9 @@ _: {
         group = "users";
         frontendPort = 4433;
         musicDirectory = musicFolder;
-        configDirectory = "${homeDir}/.config/beetroot";
+        configDirectory = "${homeDir}/.config/beets"; # Actual beets config location
         databasePath = "/home/daniel/.beets/library.db";
+        stateDirectory = "/home/daniel/.cache/beetroot"; # Use user cache for builds
         # extraGroups = ["media"];  # Disabled - media group doesn't exist
       };
 
