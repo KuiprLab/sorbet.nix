@@ -82,124 +82,128 @@ in {
         python
         */
         ''
-          import hashlib
-          import json
-          import secrets
-          from pathlib import Path
+           import hashlib
+           import json
+           import secrets
+           from pathlib import Path
 
-          import requests
+           import requests
 
-          from fastapi import FastAPI
-          from fastapi.middleware.cors import CORSMiddleware
-          from fastapi.responses import JSONResponse, Response
+           from fastapi import FastAPI
+           from fastapi.middleware.cors import CORSMiddleware
+           from fastapi.responses import JSONResponse, Response
 
-          CONFIG = json.loads(
-              Path("${settingsFile}").read_text()
-          )
+           CONFIG = json.loads(
+               Path("${settingsFile}").read_text()
+           )
 
-          PASSWORD = Path(
-              "${cfg.navidrome.passwordFile}"
-          ).read_text().strip()
+           PASSWORD = Path(
+               "${cfg.navidrome.passwordFile}"
+           ).read_text().strip()
 
-          NAVIDROME_URL = CONFIG["navidrome"]["url"]
-          USERNAME = CONFIG["navidrome"]["username"]
+           NAVIDROME_URL = CONFIG["navidrome"]["url"]
+           USERNAME = CONFIG["navidrome"]["username"]
 
-          app = FastAPI()
+           app = FastAPI()
 
-          if CONFIG["allowedOrigins"]:
-              app.add_middleware(
-                  CORSMiddleware,
-                  allow_origins=CONFIG["allowedOrigins"],
-                  allow_methods=["GET"],
-                  allow_headers=["*"],
-              )
+           if CONFIG["allowedOrigins"]:
+               app.add_middleware(
+                   CORSMiddleware,
+                   allow_origins=CONFIG["allowedOrigins"],
+                   allow_methods=["GET"],
+                   allow_headers=["*"],
+               )
 
-          def auth_params():
-              salt = secrets.token_hex(6)
+           def auth_params():
+               salt = secrets.token_hex(6)
 
-              token = hashlib.md5(
-                  (PASSWORD + salt).encode()
-              ).hexdigest()
+               token = hashlib.md5(
+                   (PASSWORD + salt).encode()
+               ).hexdigest()
 
-              return {
-                  "u": USERNAME,
-                  "t": token,
-                  "s": salt,
-                  "v": "1.16.1",
-                  "c": "now-playing-widget",
-                  "f": "json",
-              }
+               return {
+                   "u": USERNAME,
+                   "t": token,
+                   "s": salt,
+                   "v": "1.16.1",
+                   "c": "now-playing-widget",
+                   "f": "json",
+               }
 
-          @app.get("/now-playing")
-          def now_playing():
-              params = auth_params()
+          @app.get("/")
+          def root():
+              return {"status": "ok", "endpoint": "/now-playing"}
 
-              response = requests.get(
-                  f"{NAVIDROME_URL}/rest/getNowPlaying.view",
-                  params=params,
-                  timeout=5,
-              )
+           @app.get("/now-playing")
+           def now_playing():
+               params = auth_params()
 
-              data = response.json()
+               response = requests.get(
+                   f"{NAVIDROME_URL}/rest/getNowPlaying.view",
+                   params=params,
+                   timeout=5,
+               )
 
-              entries = (
-                  data.get("subsonic-response", {})
-                  .get("nowPlaying", {})
-                  .get("entry", [])
-              )
+               data = response.json()
 
-              if not entries:
-                  return JSONResponse(
-                      {
-                          "playing": False,
-                      },
-                      headers={
-                          "Cache-Control": "public, max-age=10"
-                      },
-                  )
+               entries = (
+                   data.get("subsonic-response", {})
+                   .get("nowPlaying", {})
+                   .get("entry", [])
+               )
 
-              song = entries[0]
+               if not entries:
+                   return JSONResponse(
+                       {
+                           "playing": False,
+                       },
+                       headers={
+                           "Cache-Control": "public, max-age=10"
+                       },
+                   )
 
-              return JSONResponse(
-                  {
-                      "playing": True,
-                      "title": song.get("title"),
-                      "artist": song.get("artist"),
-                      "album": song.get("album"),
-                      "coverArt": (
-                          f"/cover/{song.get('coverArt')}"
-                      ),
-                      "coverId": song.get("coverArt"),
-                      "duration": song.get("duration"),
-                  },
-                  headers={
-                      "Cache-Control": "public, max-age=10"
-                  },
-              )
+               song = entries[0]
 
-          @app.get("/cover/{cover_id}")
-          def cover(cover_id: str):
-              params = auth_params()
+               return JSONResponse(
+                   {
+                       "playing": True,
+                       "title": song.get("title"),
+                       "artist": song.get("artist"),
+                       "album": song.get("album"),
+                       "coverArt": (
+                           f"/cover/{song.get('coverArt')}"
+                       ),
+                       "coverId": song.get("coverArt"),
+                       "duration": song.get("duration"),
+                   },
+                   headers={
+                       "Cache-Control": "public, max-age=10"
+                   },
+               )
 
-              response = requests.get(
-                  f"{NAVIDROME_URL}/rest/getCoverArt.view",
-                  params={
-                      **params,
-                      "id": cover_id,
-                  },
-                  timeout=10,
-              )
+           @app.get("/cover/{cover_id}")
+           def cover(cover_id: str):
+               params = auth_params()
 
-              return Response(
-                  content=response.content,
-                  media_type=response.headers.get(
-                      "content-type",
-                      "image/jpeg",
-                  ),
-                  headers={
-                      "Cache-Control": "public, max-age=3600"
-                  },
-              )
+               response = requests.get(
+                   f"{NAVIDROME_URL}/rest/getCoverArt.view",
+                   params={
+                       **params,
+                       "id": cover_id,
+                   },
+                   timeout=10,
+               )
+
+               return Response(
+                   content=response.content,
+                   media_type=response.headers.get(
+                       "content-type",
+                       "image/jpeg",
+                   ),
+                   headers={
+                       "Cache-Control": "public, max-age=3600"
+                   },
+               )
         '';
 
       pythonEnv = pkgs.python3.withPackages (
