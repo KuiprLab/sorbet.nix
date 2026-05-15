@@ -183,10 +183,10 @@ in {
                   }
 
                   el.innerHTML = `
-                    <img src="${data.coverArt}" />
+                    <img src="$${data.coverArt}" />
                     <div class="meta">
-                      <strong>${data.title}</strong>
-                      <span>${data.artist}</span>
+                      <strong>$${data.title}</strong>
+                      <span>$${data.artist}</span>
                     </div>
                   `;
                 } catch (e) {
