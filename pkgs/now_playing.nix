@@ -134,6 +134,73 @@ in {
           def root():
              return {"status": "ok", "endpoint": "/now-playing"}
 
+          @app.get("/widget", response_class=HTMLResponse)
+          def widget():
+              return """
+          <!doctype html>
+          <html>
+          <head>
+            <meta charset="utf-8" />
+            <style>
+              body {
+                margin: 0;
+                font-family: sans-serif;
+                background: transparent;
+                color: white;
+              }
+              .box {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px;
+              }
+              img {
+                width: 48px;
+                height: 48px;
+                border-radius: 6px;
+              }
+              .meta {
+                display: flex;
+                flex-direction: column;
+                font-size: 12px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="box" id="content">Loading...</div>
+
+            <script>
+              async function load() {
+                try {
+                  const res = await fetch("/now-playing");
+                  const data = await res.json();
+
+                  const el = document.getElementById("content");
+
+                  if (!data.playing) {
+                    el.innerHTML = "Nothing playing";
+                    return;
+                  }
+
+                  el.innerHTML = `
+                    <img src="${data.coverArt}" />
+                    <div class="meta">
+                      <strong>${data.title}</strong>
+                      <span>${data.artist}</span>
+                    </div>
+                  `;
+                } catch (e) {
+                  document.getElementById("content").innerText = "Error loading";
+                }
+              }
+
+              load();
+              setInterval(load, 10000);
+            </script>
+          </body>
+          </html>
+          """
+
           @app.get("/now-playing")
           def now_playing():
               params = auth_params()
