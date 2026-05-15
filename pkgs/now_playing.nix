@@ -22,6 +22,12 @@ in {
       description = "Host address to bind to.";
     };
 
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "now-playing";
+      description = "User to run the now-playing service as.";
+    };
+
     port = lib.mkOption {
       type = lib.types.port;
       default = 8765;
@@ -216,6 +222,9 @@ in {
         Type = "simple";
 
         DynamicUser = true;
+
+        User = cfg.user;
+        Group = cfg.user;
 
         ExecStart = ''
           ${pythonEnv}/bin/uvicorn \
