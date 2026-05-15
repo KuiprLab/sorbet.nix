@@ -32,7 +32,8 @@ _: {
         };
 
         allowedOrigins = [
-          "https://example.com"
+          "https://frostplexx.neocities.org/"
+          "http://localhost:8080/"
         ];
       };
     };
