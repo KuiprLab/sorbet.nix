@@ -18,7 +18,7 @@ _: {
         sopsFile = ../../../secrets/sorbet/now_playing;
         format = "binary";
         key = "";
-        uid = 1000;
+        # uid = 1000;
       };
 
       services.now-playing = {
