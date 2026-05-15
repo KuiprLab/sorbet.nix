@@ -167,7 +167,7 @@ _: {
               log = importLog;
               group_albums = true;
               quiet_fallback = "asis";
-              duplicate_action = "remove";
+              duplicate_action = "merge";
             };
 
             bucket.bucket_alpha = [
