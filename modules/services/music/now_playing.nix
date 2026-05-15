@@ -1,6 +1,6 @@
 _: {
   flake = {
-    caddyVirtualHosts."now_playing.ext.kuipr.de" = ''
+    caddyVirtualHosts."nowplaying.ext.kuipr.de" = ''
       reverse_proxy localhost:8765 {
         header_up Host {host}
         header_up X-Real-IP {remote_host}
