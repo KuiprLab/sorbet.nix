@@ -30,7 +30,6 @@ _: {
       environment.systemPackages = [
         pkgs.rclone
         pkgs.chromaprint
-        pkgs.inotify-tools
       ];
 
       services.beetroot = {
@@ -47,30 +46,55 @@ _: {
       };
 
       systemd.user = {
-        timers.beets-maintenance = {
-          description = "Weekly beets library maintenance";
-          timerConfig = {
-            OnCalendar = "weekly";
-            Persistent = true;
+        timers = {
+          beets-watch = {
+            description = "Periodically check music inbox for auto-import";
+            timerConfig = {
+              OnBootSec = "2min";
+              OnUnitActiveSec = "10min";
+              Persistent = true;
+            };
+            wantedBy = ["timers.target"];
           };
-          wantedBy = ["default.target"];
+
+          beets-maintenance = {
+            description = "Weekly beets library maintenance";
+            timerConfig = {
+              OnCalendar = "weekly";
+              Persistent = true;
+            };
+            wantedBy = ["default.target"];
+          };
         };
 
         services = {
           beets-watch = {
-            description = "Watch music inbox and auto-import via beets";
-            wantedBy = ["default.target"];
+            description = "Check music inbox and auto-import via beets";
             serviceConfig = {
-              Type = "simple";
-              Restart = "on-failure";
-              RestartSec = "5s";
-              TimeoutStartSec = "3h";
+              Type = "oneshot";
               EnvironmentFile = config.sops.secrets."beets/acoustid_key".path;
-              ExecStart = pkgs.writeShellScript "beets-watch" ''
+              ExecStart = pkgs.writeShellScript "beets-import" ''
                 set -euo pipefail
                 mkdir -p ${inboxFolder}
-                echo "Watching ${inboxFolder} for new files..."
 
+                # Exit early if inbox is empty
+                if [ -z "$(${pkgs.findutils}/bin/find ${inboxFolder} -mindepth 1 -type f -print -quit)" ]; then
+                  echo "Inbox is empty, nothing to import"
+                  exit 0
+                fi
+
+                echo "Files found in ${inboxFolder}, checking if inbox is settled..."
+
+                # Wait for inbox to settle (no files modified in the last minute)
+                while true; do
+                  recent=$(${pkgs.findutils}/bin/find ${inboxFolder} -mmin -1 | wc -l)
+                  if [ "$recent" -eq 0 ]; then
+                    echo "Inbox settled, importing..."
+                    break
+                  fi
+                  echo "$recent file(s) still being written, waiting..."
+                  sleep 30
+                done
 
                 notify_discord() {
                   local msg="$1"
@@ -79,51 +103,33 @@ _: {
                     -d "{\"content\": $(echo -n "$msg" | ${pkgs.jq}/bin/jq -Rs .)}" || true
                 }
 
-                ${pkgs.inotify-tools}/bin/inotifywait \
-                  --monitor \
-                  --recursive \
-                  --event close_write,moved_to \
-                  --format "%w%f" \
-                  "${inboxFolder}" | while read -r _event; do
-                    echo "Change detected, waiting for inbox to settle..."
-                    while true; do
-                      recent=$(${pkgs.findutils}/bin/find ${inboxFolder} -mmin -1 | wc -l)
-                      if [ "$recent" -eq 0 ]; then
-                        echo "Inbox settled, importing..."
-                        break
-                      fi
-                      echo "$recent file(s) still being written, waiting..."
-                      sleep 5
-                    done
+                # Capture output, send discord on failure
+                ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder} \
+                    > /tmp/beets-import.log 2>&1 || true
 
-                    # Capture output, send discord on failure
-                    ${pkgs.beets}/bin/beet -v import -q --group-albums ${inboxFolder} \
-                        > /tmp/beets-import.log 2>&1 || true
+                if grep -q 'BAD\|checker exited with status' /tmp/beets-import.log; then
+                  BAD=$(grep -A1 'BAD' /tmp/beets-import.log | head -10)
+                  notify_discord "⚠️ beets import had bad files on sorbet (continued)\n\`\`\`\n$BAD\n\`\`\`"
+                fi
 
-                    if grep -q 'BAD\|checker exited with status' /tmp/beets-import.log; then
-                      BAD=$(grep -A1 'BAD' /tmp/beets-import.log | head -10)
-                      notify_discord "⚠️ beets import had bad files on sorbet (continued)\n\`\`\`\n$BAD\n\`\`\`"
-                    fi
+                # Remove non-audio leftover files (artwork, logs, metadata junk)
+                ${pkgs.findutils}/bin/find ${inboxFolder} \
+                  -type f \
+                  ! -name "*.flac" \
+                  ! -name "*.mp3" \
+                  ! -name "*.ogg" \
+                  ! -name "*.opus" \
+                  ! -name "*.m4a" \
+                  ! -name "*.wav" \
+                  ! -name "*.aiff" \
+                  -delete
 
-                    # Remove non-audio leftover files (artwork, logs, metadata junk)
-                    ${pkgs.findutils}/bin/find ${inboxFolder} \
-                      -type f \
-                      ! -name "*.flac" \
-                      ! -name "*.mp3" \
-                      ! -name "*.ogg" \
-                      ! -name "*.opus" \
-                      ! -name "*.m4a" \
-                      ! -name "*.wav" \
-                      ! -name "*.aiff" \
-                      -delete
-
-                    # Remove empty directories
-                    ${pkgs.findutils}/bin/find ${inboxFolder} \
-                      -mindepth 1 \
-                      -type d \
-                      -empty \
-                      -delete
-                  done
+                # Remove empty directories
+                ${pkgs.findutils}/bin/find ${inboxFolder} \
+                  -mindepth 1 \
+                  -type d \
+                  -empty \
+                  -delete
               '';
             };
           };
