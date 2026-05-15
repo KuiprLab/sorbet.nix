@@ -1,5 +1,5 @@
 _: {
-  flake.eclairNixosModules.now_playing_package = {
+  flake.nixosModules.now_playing_package = {
     config,
     lib,
     pkgs,

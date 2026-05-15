@@ -10,10 +10,6 @@ _: {
     '';
 
     nixosModules.now_playing = {config, ...}: {
-      imports = [
-        ../../../pkgs/now_playing.nix
-      ];
-
       sops.secrets."now_playing" = {
         sopsFile = ../../../secrets/sorbet/now_playing;
         format = "binary";
