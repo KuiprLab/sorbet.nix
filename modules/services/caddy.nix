@@ -20,7 +20,7 @@
       config,
       ...
     }: {
-      networking.firewall.allowedTCPPorts = [80 443];
+      networking.firewall.allowedTCPPorts = [80 443 3001];
 
       sops.secrets."caddy/bunny_api_key" = {
         sopsFile = ../../secrets/sorbet/caddy;
