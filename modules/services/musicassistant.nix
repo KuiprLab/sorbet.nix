@@ -16,6 +16,11 @@ _: {
         alerts = [{type = "discord";}];
       }
     ];
+    services.avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
 
     nixosModules.musicassistant = _: {
       # Enable chromecast ports
@@ -46,8 +51,6 @@ _: {
 
           extraOptions = [
             "--network=host"
-            "--cap-add=SYS_ADMIN"
-            "--cap-add=DAC_READ_SEARCH"
           ];
         };
       };
