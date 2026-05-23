@@ -23,7 +23,7 @@ in {
     homeManagerModules = {};
 
     nixosConfigurations.sorbet = inputs.nixpkgs.lib.nixosSystem {
-      stdenv.hostPlatform.system = "x86_64-linux";
+      system = "x86_64-linux";
       modules =
         [
           self.nixosModules.sorbetConfiguration
