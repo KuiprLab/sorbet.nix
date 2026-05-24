@@ -30,6 +30,7 @@ _: {
       environment.systemPackages = [
         pkgs.rclone
         pkgs.chromaprint
+        pkgs.gst_all_1.gstreamer
       ];
 
       services.beetroot = {
