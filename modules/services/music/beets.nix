@@ -177,6 +177,11 @@ _: {
               "S-Z"
             ];
 
+            replaygain = {
+              auto = true;
+              backend = "gstreamer";
+            };
+
             paths = {
               default = "%bucket{$albumartist,alpha}/$albumartist/$album/$track $title";
               singleton = "%bucket{$artist,alpha}/$artist/$album/$title";
@@ -190,6 +195,7 @@ _: {
               "embedart"
               "musicbrainz"
               "mbsync"
+              "replaygain"
               "lyrics"
               "bucket"
               "missing"
