@@ -10,7 +10,7 @@ _: {
       sops.secrets = {
         "beetroot" = {
           sopsFile = ../../../secrets/sorbet/beetroot.yaml;
-          format = "yml";
+          format = "yaml";
           key = "";
         };
       };
