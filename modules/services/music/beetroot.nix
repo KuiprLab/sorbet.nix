@@ -11,41 +11,39 @@ _: {
       '';
     };
 
-    nixosModules.beetroot =
-      { config, ... }:
-      {
-        sops.secrets = {
-          "beetroot" = {
-            sopsFile = ../../../secrets/sorbet/beetroot.yaml;
-            format = "yaml";
-            key = "";
-            user = "daniel";
-          };
-        };
-
-        systemd.tmpfiles.rules = [
-          "d /home/daniel/beetroot 0755 daniel music - -"
-          "d /home/daniel/music-inbox 0755 daniel music - -"
-        ];
-
-        virtualisation.oci-containers.containers.beetroot-v2 = {
-          image = "ghcr.io/frostplexx/beetroot:main";
-          ports = [ "7290:3000" ];
-          volumes = [
-            "/home/daniel/beetroot:/data"
-            "/media/data/music/beetroot:/music"
-            "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
-            "/home/daniel/music-inbox:/inbox"
-          ];
-          environment = {
-            NODE_ENV = "production";
-            CONFIG_PATH = "/run/secrets/beetroot";
-          };
-          extraOptions = [
-            "--user=daniel"
-            "--pull=newer"
-          ];
+    nixosModules.beetroot = {config, ...}: {
+      sops.secrets = {
+        "beetroot" = {
+          sopsFile = ../../../secrets/sorbet/beetroot.yaml;
+          format = "yaml";
+          key = "";
+          user = "daniel";
         };
       };
+
+      systemd.tmpfiles.rules = [
+        "d /home/daniel/beetroot 0755 daniel music - -"
+        "d /home/daniel/music-inbox 0755 daniel music - -"
+      ];
+
+      virtualisation.oci-containers.containers.beetroot-v2 = {
+        image = "ghcr.io/frostplexx/beetroot:main";
+        ports = ["7290:3000"];
+        volumes = [
+          "/home/daniel/beetroot:/data"
+          "/media/data/music/beetroot:/music"
+          "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
+          "/home/daniel/music-inbox:/inbox"
+        ];
+        environment = {
+          NODE_ENV = "production";
+          CONFIG_PATH = "/run/secrets/beetroot";
+        };
+        extraOptions = [
+          "--user=daniel"
+          "--pull=newer"
+        ];
+      };
+    };
   };
 }
