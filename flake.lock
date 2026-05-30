@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1780130574,
-        "narHash": "sha256-gaMLaBXQ73zyQypwBPzRAVQSvXIzxVL6rb3SQJ8JEbY=",
+        "lastModified": 1780130817,
+        "narHash": "sha256-GeD+/bKuyqy5cMu3yYgqiuTau0u1m+pLyfGOLEIUIVw=",
         "owner": "frostplexx",
         "repo": "Beetroot",
-        "rev": "26e9c346ec28566d5c401007bbc951c216dd529b",
+        "rev": "8da72ec078d845bf7dd20097afb08454c3c8032a",
         "type": "github"
       },
       "original": {
