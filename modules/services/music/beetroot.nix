@@ -1,7 +1,7 @@
 _: {
   flake = {
     caddyVirtualHosts = {
-      "beets.int.kuipr.de" = ''
+      "beet.int.kuipr.de" = ''
         reverse_proxy localhost:7290
       '';
     };
@@ -16,7 +16,7 @@ _: {
       };
 
       virtualisation.oci-containers.containers.beetroot-v2 = {
-        image = "ghcr.io/you/beetroot:latest";
+        image = "ghcr.io/frostplexx/beetroot:latest";
         ports = ["7290:3000"];
         volumes = [
           "/home/daniel/beetroot:/data"
