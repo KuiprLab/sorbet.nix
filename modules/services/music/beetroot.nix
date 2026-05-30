@@ -27,7 +27,7 @@ _: {
           "/home/daniel/beetroot:/data"
           "/media/data/music/beetroot:/music"
           "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
-            "/home/daniel/music-inbox:/inbox"
+          "/home/daniel/music-inbox:/inbox"
         ];
         environment = {
           NODE_ENV = "production";
