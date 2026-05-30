@@ -16,6 +16,10 @@ _: {
         };
       };
 
+      systemd.tmpfiles.rules = [
+        "d /home/daniel/beetroot 0755 root root - -"
+      ];
+
       virtualisation.oci-containers.containers.beetroot-v2 = {
         image = "ghcr.io/frostplexx/beetroot:sha-e9f9bef";
         ports = ["7290:3000"];
@@ -28,6 +32,7 @@ _: {
           NODE_ENV = "production";
           CONFIG_PATH = "/run/secrets/beetroot";
         };
+        extraOptions = ["--user=root"];
       };
     };
   };
