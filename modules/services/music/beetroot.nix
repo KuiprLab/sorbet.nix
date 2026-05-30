@@ -11,36 +11,41 @@ _: {
       '';
     };
 
-    nixosModules.beetroot = {config, ...}: {
-      sops.secrets = {
-        "beetroot" = {
-          sopsFile = ../../../secrets/sorbet/beetroot.yaml;
-          format = "yaml";
-          key = "";
-          mode = "0444";
+    nixosModules.beetroot =
+      { config, ... }:
+      {
+        sops.secrets = {
+          "beetroot" = {
+            sopsFile = ../../../secrets/sorbet/beetroot.yaml;
+            format = "yaml";
+            key = "";
+            user = "navidrome";
+          };
         };
-      };
 
-      systemd.tmpfiles.rules = [
-        "d /home/daniel/beetroot 0755 root root - -"
-        "d /home/daniel/music-inbox 0755 root root - -"
-      ];
-
-      virtualisation.oci-containers.containers.beetroot-v2 = {
-        image = "ghcr.io/frostplexx/beetroot:main";
-        ports = ["7290:3000"];
-        volumes = [
-          "/home/daniel/beetroot:/data"
-          "/media/data/music/beetroot:/music"
-          "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
-          "/home/daniel/music-inbox:/inbox"
+        systemd.tmpfiles.rules = [
+          "d /home/daniel/beetroot 0755 root root - -"
+          "d /home/daniel/music-inbox 0755 root root - -"
         ];
-        environment = {
-          NODE_ENV = "production";
-          CONFIG_PATH = "/run/secrets/beetroot";
+
+        virtualisation.oci-containers.containers.beetroot-v2 = {
+          image = "ghcr.io/frostplexx/beetroot:main";
+          ports = [ "7290:3000" ];
+          volumes = [
+            "/home/daniel/beetroot:/data"
+            "/media/data/music/beetroot:/music"
+            "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
+            "/home/daniel/music-inbox:/inbox"
+          ];
+          environment = {
+            NODE_ENV = "production";
+            CONFIG_PATH = "/run/secrets/beetroot";
+          };
+          extraOptions = [
+            "--user=navidrome"
+            "--pull=newer"
+          ];
         };
-        extraOptions = ["--user=root" "--pull=newer"];
       };
-    };
   };
 }
