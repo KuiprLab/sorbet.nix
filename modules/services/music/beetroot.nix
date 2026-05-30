@@ -22,7 +22,7 @@ _: {
       ];
 
       virtualisation.oci-containers.containers.beetroot-v2 = {
-        image = "ghcr.io/frostplexx/beetroot:sha-e9f9bef";
+        image = "ghcr.io/frostplexx/beetroot:main";
         ports = ["7290:3000"];
         volumes = [
           "/home/daniel/beetroot:/data"
