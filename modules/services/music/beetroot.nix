@@ -39,7 +39,7 @@ _: {
           NODE_ENV = "production";
           CONFIG_PATH = "/run/secrets/beetroot";
         };
-        extraOptions = ["--user=root"];
+        extraOptions = ["--user=root" "--pull=newer" ];
       };
     };
   };
