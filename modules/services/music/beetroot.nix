@@ -19,12 +19,12 @@ _: {
             sopsFile = ../../../secrets/sorbet/beetroot.yaml;
             format = "yaml";
             key = "";
-            user = "navidrome";
+            user = "daniel";
           };
         };
 
         systemd.tmpfiles.rules = [
-          "d /home/daniel/beetroot 0755 navidrome music - -"
+          "d /home/daniel/beetroot 0755 daniel music - -"
           "d /home/daniel/music-inbox 0755 daniel music - -"
         ];
 
@@ -42,7 +42,7 @@ _: {
             CONFIG_PATH = "/run/secrets/beetroot";
           };
           extraOptions = [
-            "--user=navidrome"
+            "--user=daniel"
             "--pull=newer"
           ];
         };
