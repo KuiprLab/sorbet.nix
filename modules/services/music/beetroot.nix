@@ -17,7 +17,7 @@ _: {
           sopsFile = ../../../secrets/sorbet/beetroot.yaml;
           format = "yaml";
           key = "";
-          user = "daniel";
+          owner = "daniel";
         };
       };
 
@@ -32,6 +32,7 @@ _: {
         volumes = [
           "/home/daniel/beetroot:/data"
           "/media/data/music/beetroot:/music"
+          "/media/data/music/tmp:/tmp"
           "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
           "/home/daniel/music-inbox:/inbox"
         ];
