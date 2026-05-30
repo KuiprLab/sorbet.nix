@@ -23,7 +23,6 @@ _: {
 
       systemd.tmpfiles.rules = [
         "d /home/daniel/beetroot 0755 daniel music - -"
-        "d /home/daniel/music-inbox 0755 daniel music - -"
       ];
 
       virtualisation.oci-containers.containers.beetroot-v2 = {
@@ -31,10 +30,8 @@ _: {
         ports = ["7290:3000"];
         volumes = [
           "/home/daniel/beetroot:/data"
-          "/media/data/music/beetroot:/music"
-          "/media/data/music/tmp:/tmp"
+          "/media/data/music:/music"
           "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
-          "/home/daniel/music-inbox:/inbox"
         ];
         user = "1000:100";
         environment = {
