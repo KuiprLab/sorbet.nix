@@ -20,7 +20,7 @@ _: {
           explo = {
             volumes = [
               "${config.sops.secrets."explo".path}:/opt/explo/.env"
-              "/home/daniel/music/explo:/data/"
+              "/media/data/music/explo:/data/"
               "/home/daniel/slskd-downloads:/slskd/"
             ];
             environment.TZ = "Europe/Berlin";
