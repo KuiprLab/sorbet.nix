@@ -12,6 +12,7 @@ _: {
           sopsFile = ../../../secrets/sorbet/beetroot.yaml;
           format = "yaml";
           key = "";
+          mode = "0444";
         };
       };
 
@@ -21,10 +22,11 @@ _: {
         volumes = [
           "/home/daniel/beetroot:/data"
           "/media/data/music/beetroot:/music"
+          "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
         ];
         environment = {
           NODE_ENV = "production";
-          CONFIG_PATH = config.sops.secrets."beetroot".path;
+          CONFIG_PATH = "/run/secrets/beetroot";
         };
       };
     };
