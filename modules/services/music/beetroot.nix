@@ -18,6 +18,7 @@ _: {
 
       systemd.tmpfiles.rules = [
         "d /home/daniel/beetroot 0755 root root - -"
+        "d /home/daniel/music-inbox 0755 root root - -"
       ];
 
       virtualisation.oci-containers.containers.beetroot-v2 = {
