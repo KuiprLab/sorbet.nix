@@ -2,7 +2,12 @@ _: {
   flake = {
     caddyVirtualHosts = {
       "beet.int.kuipr.de" = ''
-        reverse_proxy localhost:7290
+        reverse_proxy localhost:7290 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
       '';
     };
 
