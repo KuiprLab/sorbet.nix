@@ -6,7 +6,7 @@ _: {
     ...
   }: let
     homeDir = "/home/daniel";
-    musicFolder = "${homeDir}/music";
+    musicFolder = "/media/data/music";
     inboxFolder = "${homeDir}/music-inbox";
     pluginDir = "/var/lib/navidrome/plugins";
     playlistsDir = "/var/lib/navidrome/playlists";

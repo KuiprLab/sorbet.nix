@@ -2,7 +2,7 @@
 _: {
   flake.nixosModules.musicSamba = _: let
     homeDir = "/home/daniel";
-    musicFolder = "${homeDir}/music";
+    dataFolder = "/media/data";
     inboxFolder = "${homeDir}/music-inbox";
 
     mkSambaShare = path: {
@@ -27,7 +27,7 @@ _: {
             "security" = "user";
             "invalid users" = ["root"];
           };
-          music = mkSambaShare musicFolder;
+          data = mkSambaShare dataFolder;
           inbox = mkSambaShare inboxFolder;
         };
       };
