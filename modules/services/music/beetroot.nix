@@ -36,12 +36,12 @@ _: {
           "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
           "/home/daniel/music-inbox:/inbox"
         ];
+        user = "1000:100";
         environment = {
           NODE_ENV = "production";
           CONFIG_PATH = "/run/secrets/beetroot";
         };
         extraOptions = [
-          "--user=daniel"
           "--pull=newer"
         ];
       };
