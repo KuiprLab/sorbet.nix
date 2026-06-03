@@ -304,11 +304,11 @@
     },
     "nixpkgs-crowdsec": {
       "locked": {
-        "lastModified": 1778875418,
-        "narHash": "sha256-F3c+tnNGMZfDMlb4rhU+ThWIMW6ygPbjjZEdV4bS1uI=",
+        "lastModified": 1780424212,
+        "narHash": "sha256-3mUjG/7A0x/P3q2Mzsqq+aBO4kWL86oxLOeleysvAEA=",
         "owner": "TornaxO7",
         "repo": "nixpkgs",
-        "rev": "bc75068c929ebbd5465716c0b53ce91adca9ddfb",
+        "rev": "5500e2a84a59e9bafd7ff9030f607a84b8784d32",
         "type": "github"
       },
       "original": {
