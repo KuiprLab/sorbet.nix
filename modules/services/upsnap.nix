@@ -1,7 +1,7 @@
 _: {
   flake = {
     caddyVirtualHosts."up.int.kuipr.de" = ''
-      reverse_proxy 127.0.0.1:8091
+      reverse_proxy 127.0.0.1:8090
     '';
 
     nixosModules.upsnap = {pkgs, ...}: {
@@ -10,7 +10,7 @@ _: {
           "upsnap-data:/app/pb_data"
         ];
         user = "1000:100";
-        ports = ["8091:8091"];
+        ports = ["8090:8090"];
         environment = {
           TZ = "Europe/Berlin";
           SLSKD_REMOTE_CONFIGURATION = "true";
