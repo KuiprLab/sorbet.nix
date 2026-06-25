@@ -10,6 +10,7 @@ _: {
           "data:/app/pb_data"
         ];
         user = "1000:100";
+        ports = ["8091:8091"];
         environment = {
           TZ = "Europe/Berlin";
           SLSKD_REMOTE_CONFIGURATION = "true";
