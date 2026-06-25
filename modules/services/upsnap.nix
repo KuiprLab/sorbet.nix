@@ -4,10 +4,10 @@ _: {
       reverse_proxy 127.0.0.1:8091
     '';
 
-    nixosModules.upsnap = _: {
+    nixosModules.upsnap = {pkgs, ...}: {
       virtualisation.oci-containers.containers.upsnap = {
         volumes = [
-          "data:/app/pb_data"
+          "upsnap-data:/app/pb_data"
         ];
         user = "1000:100";
         ports = ["8091:8091"];
@@ -23,6 +23,14 @@ _: {
           "--dns=192.168.0.85"
           "--cap-add=NET_RAW"
         ];
+      };
+
+      systemd.services = {
+        "podman-volume-upsnap-data" = {
+          serviceConfig.Type = "oneshot";
+          script = "${pkgs.podman}/bin/podman volume create upsnap-data || true";
+          wantedBy = ["multi-user.target"];
+        };
       };
     };
   };
