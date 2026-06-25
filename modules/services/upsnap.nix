@@ -4,14 +4,7 @@ _: {
       reverse_proxy 127.0.0.1:8091
     '';
 
-    nixosModules.upsnap = {config, ...}: {
-      sops.secrets."slskd" = {
-        sopsFile = ../../../secrets/sorbet/slskd.yml;
-        format = "yaml";
-        key = "";
-        uid = 1000;
-      };
-
+    nixosModules.upsnap = _: {
       virtualisation.oci-containers.containers.upsnap = {
         volumes = [
           "data:/app/pb_data"
