@@ -7,10 +7,9 @@ _: {
     nixosModules.ollama = {pkgs, ...}: {
       services.ollama = {
         enable = true;
-        # loadModels = [
-        #   "ornith:35b"
-        #   "gemma4:31b"
-        # ];
+        loadModels = [
+          "gemma4:31b"
+        ];
         openFirewall = true;
         syncModels = true;
       };
