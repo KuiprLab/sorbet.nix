@@ -6,6 +6,10 @@ in {
 
     environment.systemPackages = with pkgs; [
       # Base system
+
+      # For the full LXD experience, you usually install the lxd package
+      # and initialize it via 'lxd init'
+      lxd
       neovim
       git
       just
@@ -30,6 +34,8 @@ in {
     };
 
     virtualisation = {
+      lxc.enable = true;
+
       podman = {
         enable = true;
         extraPackages = [pkgs.podman-compose];
