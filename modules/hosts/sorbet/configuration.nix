@@ -29,6 +29,8 @@ in {
       enable = true;
     };
 
+    networking.nftables.enable = true;
+
     virtualisation = {
       incus = {
         enable = true;
