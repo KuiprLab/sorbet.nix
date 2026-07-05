@@ -6,8 +6,6 @@ in {
 
     environment.systemPackages = with pkgs; [
       # Base system
-
-      incus
       neovim
       git
       just
@@ -32,7 +30,11 @@ in {
     };
 
     virtualisation = {
-      lxc.enable = true;
+      incus = {
+        enable = true;
+        ui.enable = true;
+        agent.enable = true;
+      };
 
       podman = {
         enable = true;
