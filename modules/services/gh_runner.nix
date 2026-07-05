@@ -41,6 +41,10 @@ _: {
           DIFF=$(dix --color never "''${OLD}" "''${NEW}" 2>/dev/null || echo "Could not generate diff")
 
           if [ "''${EXIT}" -eq 0 ]; then
+            # Skip notification when nothing changed
+            if [ -z "''${DIFF}" ]; then
+              exit 0
+            fi
             BODY=$(printf "%s\n%s\n%s\n%s\n%s" \
               "SUCCESS: sorbet deploy succeeded" \
               "**Changes:**" \
