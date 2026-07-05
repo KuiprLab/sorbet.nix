@@ -32,7 +32,7 @@ _: {
       # services.unifi-os-server = {
       #   enable = true;
       #   package = pkgs.callPackage ../../pkgs/unifi-os-server-image {
-      #     sha256 = "sha256-IPoWR5GTiy7J1WgMEYdTxGo26qM2nO+U1c742pRo354=";
+      #     sha256 = "sha256-2xdlbyItNx2l+W7RBOM1A74WynVYF/EmQJtn2ACbFBk=";
       #   };
       #   systemIp = "192.168.0.85";
       #   openFirewall = true;
