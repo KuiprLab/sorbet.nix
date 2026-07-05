@@ -160,6 +160,7 @@ in {
             "networkmanager"
             "root"
             "wheel"
+            "incus-admin"
           ];
         };
       };
