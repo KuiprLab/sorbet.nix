@@ -1,9 +1,7 @@
-_:
-let
+_: let
   user = "daniel";
-in
-{
-  flake.nixosModules.sorbetConfiguration = { pkgs, ... }: {
+in {
+  flake.nixosModules.sorbetConfiguration = {pkgs, ...}: {
     system.stateVersion = "24.05";
 
     environment.systemPackages = with pkgs; [
@@ -32,7 +30,7 @@ in
     };
 
     networking = {
-      firewall.trustedInterfaces = [ "incusbr0" ];
+      firewall.trustedInterfaces = ["incusbr0"];
       nftables.enable = true;
     };
 
@@ -45,14 +43,14 @@ in
 
       podman = {
         enable = true;
-        extraPackages = [ pkgs.podman-compose ];
+        extraPackages = [pkgs.podman-compose];
         dockerCompat = true;
         dockerSocket.enable = true;
         defaultNetwork.settings.dns_enabled = true;
         autoPrune = {
           enable = true;
           dates = "weekly";
-          flags = [ "--all" ];
+          flags = ["--all"];
         };
       };
       # Enable container features
