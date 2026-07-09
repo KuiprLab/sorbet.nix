@@ -22,6 +22,7 @@ _: {
         extraOptions = [
           "--dns=192.168.0.85"
           "--cap-add=NET_RAW"
+          "--network=host"
         ];
       };
 
