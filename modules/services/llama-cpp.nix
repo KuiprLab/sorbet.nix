@@ -89,12 +89,11 @@ in {
       systemd.services.llama-cpp-download = lib.mkIf (runtimeModels != []) {
         description = "Download llama.cpp GGUF models";
         before = ["llama-cpp.service"];
-        wantedBy = ["llama-cpp.service"];
+        requiredBy = ["llama-cpp.service"];
         unitConfig.RequiresMountsFor = "/var/lib/llama-cpp";
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          WorkingDirectory = "/var/lib/llama-cpp";
         };
         script = ''
           mkdir -p /var/lib/llama-cpp/models
@@ -114,13 +113,12 @@ in {
       systemd.services.llama-cpp-provision = lib.mkIf (buildModels != []) {
         description = "Provision Nix-store models for llama-cpp";
         before = ["llama-cpp.service"];
-        wantedBy = ["llama-cpp.service"];
+        requiredBy = ["llama-cpp.service"];
         after = ["llama-cpp-download.service"];
         unitConfig.RequiresMountsFor = "/var/lib/llama-cpp";
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          WorkingDirectory = "/var/lib/llama-cpp";
         };
         script = ''
           mkdir -p /var/lib/llama-cpp/models
