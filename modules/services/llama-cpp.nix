@@ -60,12 +60,14 @@ in {
 
       # Nix store paths for hashed models
       fetchedModels = builtins.listToAttrs (map (m: {
-        name = m.name;
-        value = pkgs.fetchurl { inherit (m) url hash; };
-      }) buildModels);
+          name = m.name;
+          value = pkgs.fetchurl {inherit (m) url hash;};
+        })
+        buildModels);
 
       # Primary model = first one in the list
-      primaryModel = lib.lists.optional (models != [])
+      primaryModel =
+        lib.lists.optional (models != [])
         (
           if (builtins.head models).hash != null
           then "${fetchedModels.${(builtins.head models).name}}"
@@ -75,12 +77,14 @@ in {
       services.llama-cpp = {
         enable = true;
         openFirewall = true;
-        settings = {
-          host = "127.0.0.1";
-          port = 1337;
-        } // lib.optionalAttrs (models != []) {
-          model = lib.head primaryModel;
-        };
+        settings =
+          {
+            host = "127.0.0.1";
+            port = 1337;
+          }
+          // lib.optionalAttrs (models != []) {
+            model = lib.head primaryModel;
+          };
       };
 
       # ---- Runtime download for models without hash ----
@@ -98,13 +102,14 @@ in {
         script = ''
           mkdir -p /var/lib/llama-cpp/models
           ${builtins.concatStringsSep "\n" (map (m: ''
-            if [ ! -f /var/lib/llama-cpp/models/${m.name}.gguf ]; then
-              echo "Downloading ${m.name}..."
-              ${pkgs.curl}/bin/curl -fLo /var/lib/llama-cpp/models/${m.name}.gguf \
-                "${m.url}"
-              chmod 644 /var/lib/llama-cpp/models/${m.name}.gguf
-            fi
-          '') runtimeModels)}
+              if [ ! -f /var/lib/llama-cpp/models/${m.name}.gguf ]; then
+                echo "Downloading ${m.name}..."
+                ${pkgs.curl}/bin/curl -fLo /var/lib/llama-cpp/models/${m.name}.gguf \
+                  "${m.url}"
+                chmod 644 /var/lib/llama-cpp/models/${m.name}.gguf
+              fi
+            '')
+            runtimeModels)}
         '';
       };
 
@@ -123,8 +128,9 @@ in {
         script = ''
           mkdir -p /var/lib/llama-cpp/models
           ${builtins.concatStringsSep "\n" (map (m: ''
-            ln -sf ${fetchedModels.${m.name}} /var/lib/llama-cpp/models/${m.name}.gguf
-          '') buildModels)}
+              ln -sf ${fetchedModels.${m.name}} /var/lib/llama-cpp/models/${m.name}.gguf
+            '')
+            buildModels)}
         '';
       };
     };
