@@ -1,0 +1,132 @@
+{
+  lib,
+  config,
+  ...
+}: let
+  inherit (lib) types;
+in {
+  options.flake = {
+    llamaCppModels = lib.mkOption {
+      type = types.listOf (types.submodule {
+        options = {
+          name = lib.mkOption {
+            type = types.str;
+            description = "Model label (used as filename in the store).";
+          };
+          url = lib.mkOption {
+            type = types.str;
+            description = "URL to the GGUF file on Hugging Face.";
+          };
+          hash = lib.mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            example = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            description = ''
+              SHA256 SRI hash for build-time verification.
+              If null, a runtime download service is used instead.
+            '';
+          };
+        };
+      });
+      default = [];
+      description = "llama.cpp GGUF model definitions. Auto-downloaded.";
+    };
+  };
+
+  config.flake = {
+    caddyVirtualHosts."ai.int.kuipr.de" = ''
+      reverse_proxy localhost:1337
+    '';
+
+    llamaCppModels = [
+      {
+        name = "Qwen3.5-9B";
+        url = "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/main/Qwen3.5-9B-UD-Q4_K_XL.gguf?download=true";
+        # Runtime download (no hash) — file is ~6GB, stored in /var/lib/llama-cpp/models/
+        hash = null;
+      }
+    ];
+
+    nixosModules.llama-cpp = {
+      config,
+      pkgs,
+      ...
+    }: let
+      models = config.flake.llamaCppModels;
+
+      # Separate models with/without hash
+      buildModels = builtins.filter (m: m.hash != null) models;
+      runtimeModels = builtins.filter (m: m.hash == null) models;
+
+      # Nix store paths for hashed models
+      fetchedModels = builtins.listToAttrs (map (m: {
+        name = m.name;
+        value = pkgs.fetchurl { inherit (m) url hash; };
+      }) buildModels);
+
+      # Primary model = first one in the list
+      primaryModel = lib.lists.optional (models != [])
+        (
+          if (builtins.head models).hash != null
+          then "${fetchedModels.${(builtins.head models).name}}"
+          else "/var/lib/llama-cpp/models/${(builtins.head models).name}.gguf"
+        );
+    in {
+      services.llama-cpp = {
+        enable = true;
+        openFirewall = true;
+        settings = {
+          host = "127.0.0.1";
+          port = 1337;
+        } // lib.optionalAttrs (models != []) {
+          model = lib.head primaryModel;
+        };
+      };
+
+      # ---- Runtime download for models without hash ----
+      # No StateDirectory here — main service owns that. Script creates dir manually.
+      systemd.services.llama-cpp-download = lib.mkIf (runtimeModels != []) {
+        description = "Download llama.cpp GGUF models";
+        before = ["llama-cpp.service"];
+        wantedBy = ["llama-cpp.service"];
+        unitConfig.RequiresMountsFor = "/var/lib/llama-cpp";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          WorkingDirectory = "/var/lib/llama-cpp";
+        };
+        script = ''
+          mkdir -p /var/lib/llama-cpp/models
+          ${builtins.concatStringsSep "\n" (map (m: ''
+            if [ ! -f /var/lib/llama-cpp/models/${m.name}.gguf ]; then
+              echo "Downloading ${m.name}..."
+              ${pkgs.curl}/bin/curl -fLo /var/lib/llama-cpp/models/${m.name}.gguf \
+                "${m.url}"
+              chmod 644 /var/lib/llama-cpp/models/${m.name}.gguf
+            fi
+          '') runtimeModels)}
+        '';
+      };
+
+      # ---- Symlink Nix-store models into state dir ----
+      systemd.services.llama-cpp-provision = lib.mkIf (buildModels != []) {
+        description = "Provision Nix-store models for llama-cpp";
+        before = ["llama-cpp.service"];
+        wantedBy = ["llama-cpp.service"];
+        after = ["llama-cpp-download.service"];
+        unitConfig.RequiresMountsFor = "/var/lib/llama-cpp";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          WorkingDirectory = "/var/lib/llama-cpp";
+        };
+        script = ''
+          mkdir -p /var/lib/llama-cpp/models
+          ${builtins.concatStringsSep "\n" (map (m: ''
+            ln -sf ${fetchedModels.${m.name}} /var/lib/llama-cpp/models/${m.name}.gguf
+          '') buildModels)}
+        '';
+      };
+    };
+  };
+}
