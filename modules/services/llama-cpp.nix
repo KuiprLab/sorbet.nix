@@ -4,6 +4,11 @@
   ...
 }: let
   inherit (lib) types;
+
+  # ---- Process models in flake-parts scope ----
+  models = config.flake.llamaCppModels;
+  buildModels = builtins.filter (m: m.hash != null) models;
+  runtimeModels = builtins.filter (m: m.hash == null) models;
 in {
   options.flake = {
     llamaCppModels = lib.mkOption {
@@ -47,27 +52,20 @@ in {
       }
     ];
 
+    # Inner NixOS module — config here is NixOS config, NOT flake-parts config.
+    # models/buildModels/runtimeModels are captured from the outer let (flake-parts scope).
     nixosModules.llama-cpp = {
-      config,
       pkgs,
       ...
     }: let
-      models = config.flake.llamaCppModels;
-
-      # Separate models with/without hash
-      buildModels = builtins.filter (m: m.hash != null) models;
-      runtimeModels = builtins.filter (m: m.hash == null) models;
-
-      # Nix store paths for hashed models
+      # Nix store paths for hashed models (pkgs.fetchurl only available in NixOS module scope)
       fetchedModels = builtins.listToAttrs (map (m: {
-          name = m.name;
-          value = pkgs.fetchurl {inherit (m) url hash;};
-        })
-        buildModels);
+        name = m.name;
+        value = pkgs.fetchurl { inherit (m) url hash; };
+      }) buildModels);
 
-      # Primary model = first one in the list
-      primaryModel =
-        lib.lists.optional (models != [])
+      # Primary model path = first model in the list
+      primaryModel = lib.lists.optional (models != [])
         (
           if (builtins.head models).hash != null
           then "${fetchedModels.${(builtins.head models).name}}"
