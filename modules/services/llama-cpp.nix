@@ -71,6 +71,11 @@ in {
           else "/var/lib/llama-cpp/models/${(builtins.head models).name}.gguf"
         );
     in {
+      hardware.graphics.extraPackages = with pkgs; [
+        intel-compute-runtime
+        vulkan-intel
+      ];
+
       services.llama-cpp = {
         enable = true;
         openFirewall = true;
