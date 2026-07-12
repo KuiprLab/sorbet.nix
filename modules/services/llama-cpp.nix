@@ -74,10 +74,12 @@ in {
       services.llama-cpp = {
         enable = true;
         openFirewall = true;
+        package = pkgs.llama-cpp-vulkan;
         settings =
           {
             host = "127.0.0.1";
             port = 1337;
+            n-gpu-layers = 999;
           }
           // lib.optionalAttrs (models != []) {
             model = lib.head primaryModel;
