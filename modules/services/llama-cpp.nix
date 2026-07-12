@@ -54,18 +54,17 @@ in {
 
     # Inner NixOS module — config here is NixOS config, NOT flake-parts config.
     # models/buildModels/runtimeModels are captured from the outer let (flake-parts scope).
-    nixosModules.llama-cpp = {
-      pkgs,
-      ...
-    }: let
+    nixosModules.llama-cpp = {pkgs, ...}: let
       # Nix store paths for hashed models (pkgs.fetchurl only available in NixOS module scope)
       fetchedModels = builtins.listToAttrs (map (m: {
-        name = m.name;
-        value = pkgs.fetchurl { inherit (m) url hash; };
-      }) buildModels);
+          name = m.name;
+          value = pkgs.fetchurl {inherit (m) url hash;};
+        })
+        buildModels);
 
       # Primary model path = first model in the list
-      primaryModel = lib.lists.optional (models != [])
+      primaryModel =
+        lib.lists.optional (models != [])
         (
           if (builtins.head models).hash != null
           then "${fetchedModels.${(builtins.head models).name}}"
