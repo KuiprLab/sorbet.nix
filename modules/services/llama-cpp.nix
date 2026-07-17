@@ -47,8 +47,9 @@ in {
 
     llamaCppModels = [
       {
-        name = "Qwen3.5-9B";
-        url = "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/main/Qwen3.5-9B-UD-Q4_K_XL.gguf?download=true";
+        name = "Gemma";
+        url = "https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf?download=true";
+
         # Runtime download (no hash) — file is ~6GB, stored in /var/lib/llama-cpp/models/
         hash = null;
       }
