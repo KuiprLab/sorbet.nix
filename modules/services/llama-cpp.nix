@@ -86,7 +86,9 @@ in {
             ANONYMIZED_TELEMETRY = "False";
             DO_NOT_TRACK = "True";
             SCARF_NO_ANALYTICS = "True";
-            OLLAMA_API_BASE_URL = "http://127.0.0.1:1337";
+            # llama.cpp serves an OpenAI-compatible API, not the Ollama protocol
+            OPENAI_API_BASE_URL = "http://127.0.0.1:1337/v1";
+            OPENAI_API_KEY = "sk-no-key-required";
             # Disable authentication
             WEBUI_AUTH = "False";
           };
