@@ -12,27 +12,29 @@
 in {
   options.flake = {
     llamaCppModels = lib.mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          name = lib.mkOption {
-            type = types.str;
-            description = "Model label (used as filename in the store).";
+      type = types.listOf (
+        types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = types.str;
+              description = "Model label (used as filename in the store).";
+            };
+            url = lib.mkOption {
+              type = types.str;
+              description = "URL to the GGUF file on Hugging Face.";
+            };
+            hash = lib.mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              example = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+              description = ''
+                SHA256 SRI hash for build-time verification.
+                If null, a runtime download service is used instead.
+              '';
+            };
           };
-          url = lib.mkOption {
-            type = types.str;
-            description = "URL to the GGUF file on Hugging Face.";
-          };
-          hash = lib.mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            example = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-            description = ''
-              SHA256 SRI hash for build-time verification.
-              If null, a runtime download service is used instead.
-            '';
-          };
-        };
-      });
+        }
+      );
       default = [];
       description = "llama.cpp GGUF model definitions. Auto-downloaded.";
     };
@@ -40,7 +42,7 @@ in {
 
   config.flake = {
     caddyVirtualHosts."ai.int.kuipr.de" = ''
-      reverse_proxy localhost:1337
+      reverse_proxy localhost:5890
     '';
 
     llamaCppModels = [
@@ -56,25 +58,36 @@ in {
     # models/buildModels/runtimeModels are captured from the outer let (flake-parts scope).
     nixosModules.llama-cpp = {pkgs, ...}: let
       # Nix store paths for hashed models (pkgs.fetchurl only available in NixOS module scope)
-      fetchedModels = builtins.listToAttrs (map (m: {
+      fetchedModels = builtins.listToAttrs (
+        map (m: {
           name = m.name;
           value = pkgs.fetchurl {inherit (m) url hash;};
         })
-        buildModels);
+        buildModels
+      );
 
       # Primary model path = first model in the list
-      primaryModel =
-        lib.lists.optional (models != [])
-        (
-          if (builtins.head models).hash != null
-          then "${fetchedModels.${(builtins.head models).name}}"
-          else "/var/lib/llama-cpp/models/${(builtins.head models).name}.gguf"
-        );
+      primaryModel = lib.lists.optional (models != []) (
+        if (builtins.head models).hash != null
+        then "${fetchedModels.${(builtins.head models).name}}"
+        else "/var/lib/llama-cpp/models/${(builtins.head models).name}.gguf"
+      );
     in {
       hardware.graphics.extraPackages = with pkgs; [
         intel-compute-runtime
         vulkan-intel
       ];
+
+      open-webui = {
+        enable = true;
+        environment = {
+          OLLAMA_API_BASE_URL = "http://127.0.0.1:1337";
+          # Disable authentication
+          WEBUI_AUTH = "False";
+        };
+        openFirewall = true;
+        port = 5890;
+      };
 
       services.llama-cpp = {
         enable = true;
@@ -104,7 +117,8 @@ in {
         };
         script = ''
           mkdir -p /var/lib/llama-cpp/models
-          ${builtins.concatStringsSep "\n" (map (m: ''
+          ${builtins.concatStringsSep "\n" (
+            map (m: ''
               if [ ! -f /var/lib/llama-cpp/models/${m.name}.gguf ]; then
                 echo "Downloading ${m.name}..."
                 ${pkgs.curl}/bin/curl -fLo /var/lib/llama-cpp/models/${m.name}.gguf \
@@ -112,7 +126,8 @@ in {
                 chmod 644 /var/lib/llama-cpp/models/${m.name}.gguf
               fi
             '')
-            runtimeModels)}
+            runtimeModels
+          )}
         '';
       };
 
@@ -129,10 +144,12 @@ in {
         };
         script = ''
           mkdir -p /var/lib/llama-cpp/models
-          ${builtins.concatStringsSep "\n" (map (m: ''
+          ${builtins.concatStringsSep "\n" (
+            map (m: ''
               ln -sf ${fetchedModels.${m.name}} /var/lib/llama-cpp/models/${m.name}.gguf
             '')
-            buildModels)}
+            buildModels
+          )}
         '';
       };
     };
