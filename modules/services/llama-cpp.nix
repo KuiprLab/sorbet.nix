@@ -99,7 +99,6 @@ in {
 
         llama-cpp = {
           enable = true;
-          openFirewall = true;
           package = pkgs.llama-cpp-vulkan;
           settings =
             {
