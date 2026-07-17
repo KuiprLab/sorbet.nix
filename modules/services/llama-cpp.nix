@@ -105,10 +105,6 @@ in {
               host = "127.0.0.1";
               port = 1337;
               n-gpu-layers = 999;
-              batch-size = 256;
-              ubatch-size = 256;
-              flash-attn = true;
-              ctx-size = 8192;
             }
             // lib.optionalAttrs (models != []) {
               model = lib.head primaryModel;
