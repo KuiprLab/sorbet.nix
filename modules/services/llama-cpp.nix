@@ -81,7 +81,11 @@ in {
       services = {
         open-webui = {
           enable = true;
+          host = "0.0.0.0";
           environment = {
+            ANONYMIZED_TELEMETRY = "False";
+            DO_NOT_TRACK = "True";
+            SCARF_NO_ANALYTICS = "True";
             OLLAMA_API_BASE_URL = "http://127.0.0.1:1337";
             # Disable authentication
             WEBUI_AUTH = "False";
