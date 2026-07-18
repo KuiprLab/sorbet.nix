@@ -61,7 +61,7 @@ in {
       # Nix store paths for hashed models (pkgs.fetchurl only available in NixOS module scope)
       fetchedModels = builtins.listToAttrs (
         map (m: {
-          name = m.name;
+          inherit (m) name;
           value = pkgs.fetchurl {inherit (m) url hash;};
         })
         buildModels
