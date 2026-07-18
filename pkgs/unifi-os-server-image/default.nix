@@ -6,9 +6,9 @@
   coreutils,
   findutils,
   gnugrep,
-  version ? "5.0.6",
+  version ? "5.0.8",
   # url ? "https://fw-download.ubnt.com/data/unifi-os-server/df5b-linux-arm64-5.0.6-f35e944c-f4b6-4190-93a8-be61b96c58f4.6-arm64",
-  url ? "https://fw-download.ubnt.com/data/unifi-os-server/1856-linux-x64-5.0.6-33f4990f-6c68-4e72-9d9c-477496c22450.6-x64",
+  url ? "https://fw-download.ubnt.com/data/unifi-os-server/c2e4-linux-x64-5.0.8-bcb62759-753a-4be2-8546-a6e0de63e59a.8-x64",
   sha256,
 }:
 stdenvNoCC.mkDerivation rec {

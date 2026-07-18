@@ -20,7 +20,7 @@
       config,
       ...
     }: {
-      networking.firewall.allowedTCPPorts = [80 443];
+      networking.firewall.allowedTCPPorts = [80 443 3001];
 
       sops.secrets."caddy/bunny_api_key" = {
         sopsFile = ../../secrets/sorbet/caddy;
@@ -33,7 +33,7 @@
         enable = true;
         package = pkgs.caddy.withPlugins {
           plugins = ["github.com/caddy-dns/bunny@v1.2.0"];
-          hash = "sha256-plyqmKyP631uVGWP1aV3xAKvguUYh6cYji5Yfw8fyi8=";
+          hash = "sha256-zKqfJW6ScRsrYTwUTyGkj46G5//RwHITd+a/mDj/6FQ=";
         };
         globalConfig = ''
           acme_dns bunny {env.BUNNY_API_KEY}

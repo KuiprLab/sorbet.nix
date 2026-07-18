@@ -32,6 +32,7 @@ in {
           inputs.determinate.nixosModules.default
 
           inputs.sops-nix.nixosModules.sops
+          inputs.beetroot.nixosModules.default
           # Nixpkgs configuration
           {
             nixpkgs.config = nixpkgsConfig;

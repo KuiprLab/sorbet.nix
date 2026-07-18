@@ -29,7 +29,18 @@ in {
       enable = true;
     };
 
+    networking = {
+      firewall.trustedInterfaces = ["incusbr0"];
+      nftables.enable = true;
+    };
+
     virtualisation = {
+      incus = {
+        enable = true;
+        ui.enable = true;
+        agent.enable = true;
+      };
+
       podman = {
         enable = true;
         extraPackages = [pkgs.podman-compose];
@@ -152,6 +163,7 @@ in {
             "networkmanager"
             "root"
             "wheel"
+            "incus-admin"
           ];
         };
       };

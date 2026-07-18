@@ -38,7 +38,7 @@
 
   # Exact image name:tag embedded in `image.tar`.
   # Must match the repository:tag inside the archive.
-  imageTag = "uosserver:0.0.54";
+  imageTag = "uosserver:0.0.56";
 in {
   # reverse engineered via
   # https://www.unihosted.com/blog/running-unifi-os-server-in-docker

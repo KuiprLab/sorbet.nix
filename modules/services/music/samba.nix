@@ -2,7 +2,7 @@
 _: {
   flake.nixosModules.musicSamba = _: let
     homeDir = "/home/daniel";
-    musicFolder = "${homeDir}/music";
+    dataFolder = "/media/data";
     inboxFolder = "${homeDir}/music-inbox";
 
     mkSambaShare = path: {
@@ -13,6 +13,7 @@ _: {
       "valid users" = ["daniel"];
       "create mask" = "0644";
       "directory mask" = "0755";
+      "vfs objects" = "streams_xattr";
     };
   in {
     # TODO: add `sudo smbpasswd -a daniel` as a post-deploy step
@@ -26,7 +27,7 @@ _: {
             "security" = "user";
             "invalid users" = ["root"];
           };
-          music = mkSambaShare musicFolder;
+          data = mkSambaShare dataFolder;
           inbox = mkSambaShare inboxFolder;
         };
       };
@@ -35,7 +36,7 @@ _: {
     };
 
     networking.firewall = {
-      allowedTCPPorts = [445 139];
+      allowedTCPPorts = [445 139 5173];
       allowedUDPPorts = [137 138 5355 3702];
     };
   };
