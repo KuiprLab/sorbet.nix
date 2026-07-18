@@ -62,6 +62,10 @@ _: {
         "EnableSharing" = true;
         "AutoImportPlaylists" = true;
         "Subsonic.DefaultReportRealPath" = true;
+        "ExtAuth.TrustedSources" = "127.0.0.1/32";
+        "ExtAuth.UserHeader" = "Remote-User";
+        "ExtAuth.LogoutURL" = "https://auth.ext.kuipr.de/logout";
+        "EnableUserEditing" = false;
       };
     };
   };
