@@ -66,7 +66,7 @@
         config,
         ...
       }: let
-        indexHtml = pkgs.writeText "index.html" ''
+        indexDir = pkgs.writeTextDir "index.html" ''
           <!DOCTYPE html>
           <html lang="en" data-theme="dark">
           <head>
@@ -195,7 +195,7 @@
             // {
               "home.int.kuipr.de" = {
                 extraConfig = ''
-                  root * ${indexHtml}
+                  root * ${indexDir}
                   file_server
                 '';
               };
