@@ -21,7 +21,7 @@ _: {
 
     nixosModules.koito = _: {
       virtualisation.oci-containers.containers.koito = {
-        image = "gabehf/koito:latest";
+        image = "docker.io/gabehf/koito:latest";
         volumes = [
           "koito-data:/etc/koito"
         ];
