@@ -95,14 +95,13 @@
             in ''
               <li><a href="https://${host}">${displayName}</a>${
                 if hasDomain
-                then " <span class='domain'>\u2014 ${host}</span>"
+                then " <span class='domain'>&mdash; ${host}</span>"
                 else ""
               }</li>
             '')
             virtualHosts)}
             </ul>
             <hr>
-            <footer>generated at build time</footer>
           </body>
           </html>
         '';
