@@ -68,86 +68,24 @@
       }: let
         indexDir = pkgs.writeTextDir "index.html" ''
           <!DOCTYPE html>
-          <html lang="en" data-theme="dark">
+          <html>
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>sorbet</title>
             <style>
-              *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-              :root {
-                --bg: #0f1117;
-                --surface: #1a1d27;
-                --border: #2a2d3a;
-                --text: #e1e4ed;
-                --text-dim: #888ba0;
-                --accent: #7c8aff;
-                --accent-hover: #9ba6ff;
-                --radius: 10px;
-              }
-              body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                background: var(--bg);
-                color: var(--text);
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 3rem 1rem;
-              }
-              h1 {
-                font-size: 1.5rem;
-                font-weight: 600;
-                letter-spacing: -0.02em;
-                margin-bottom: 2rem;
-                color: var(--accent);
-              }
-              .grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 0.75rem;
-                width: 100%;
-                max-width: 900px;
-              }
-              a {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 0.875rem 1rem;
-                background: var(--surface);
-                border: 1px solid var(--border);
-                border-radius: var(--radius);
-                text-decoration: none;
-                color: var(--text);
-                font-size: 0.9rem;
-                transition: border-color 0.15s, background 0.15s;
-              }
-              a:hover {
-                border-color: var(--accent);
-                background: #222639;
-              }
-              .host {
-                font-weight: 500;
-              }
-              .scheme {
-                color: var(--text-dim);
-                font-size: 0.8rem;
-              }
-              .domain {
-                color: var(--text-dim);
-                font-size: 0.8rem;
-                margin-left: auto;
-              }
-              footer {
-                margin-top: 3rem;
-                font-size: 0.8rem;
-                color: var(--text-dim);
-              }
+              body { font-family: sans-serif; max-width: 40em; margin: 2em auto; padding: 0 1em; }
+              h1 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1em; }
+              ul { list-style: none; padding: 0; }
+              li { margin: 0.4em 0; }
+              a { color: -webkit-link; }
+              .domain { color: #666; font-size: 0.85em; }
+              hr { margin: 1.5em 0; border: none; border-top: 1px solid #ccc; }
             </style>
           </head>
           <body>
             <h1>sorbet</h1>
-            <div class="grid">
+            <ul>
               ${lib.concatStringsSep "\n" (lib.mapAttrsToList (host: v: let
               displayName =
                 if v.name != null
@@ -155,18 +93,15 @@
                 else host;
               hasDomain = v.name != null;
             in ''
-              <a href="https://${host}">
-                <span class="scheme">https://</span>
-                <span class="host">${displayName}</span>
-                ${
+              <li><a href="https://${host}">${displayName}</a>${
                 if hasDomain
-                then "<span class='domain'>${host}</span>"
+                then " <span class='domain'>\u2014 ${host}</span>"
                 else ""
-              }
-              </a>
+              }</li>
             '')
             virtualHosts)}
-            </div>
+            </ul>
+            <hr>
             <footer>generated at build time</footer>
           </body>
           </html>
