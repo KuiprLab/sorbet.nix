@@ -3,9 +3,12 @@
 # required to edit. Admin password from sops.
 _: {
   flake = {
-    caddyVirtualHosts."grafana.int.kuipr.de" = ''
-      reverse_proxy localhost:3000
-    '';
+    caddyVirtualHosts."grafana.int.kuipr.de" = {
+      extraConfig = ''
+        reverse_proxy localhost:3000
+      '';
+      name = "Grafana";
+    };
 
     gatusEndpoints = [
       {

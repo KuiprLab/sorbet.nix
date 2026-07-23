@@ -222,9 +222,12 @@
       ]
       ++ eclairExtLoopbackEndpoints;
 
-    caddyVirtualHosts."gatus.int.kuipr.de" = ''
-      reverse_proxy localhost:8888
-    '';
+    caddyVirtualHosts."gatus.int.kuipr.de" = {
+      extraConfig = ''
+        reverse_proxy localhost:8888
+      '';
+      name = "Gatus";
+    };
 
     gatusExtraConfig = {
       # Expose /metrics for prometheus scrape (see prometheus.nix).

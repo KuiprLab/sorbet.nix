@@ -41,9 +41,12 @@ in {
   };
 
   config.flake = {
-    caddyVirtualHosts."ai.int.kuipr.de" = ''
-      reverse_proxy 127.0.0.1:5890
-    '';
+    caddyVirtualHosts."ai.int.kuipr.de" = {
+      extraConfig = ''
+        reverse_proxy 127.0.0.1:5890
+      '';
+      name = "Llama.cpp";
+    };
 
     llamaCppModels = [
       {

@@ -4,38 +4,50 @@
 _: {
   flake = {
     caddyVirtualHosts = {
-      "music.int.kuipr.de" = ''
-        reverse_proxy localhost:4533 {
-          header_up Host {host}
-          header_up X-Real-IP {remote_host}
-          header_up X-Forwarded-For {remote_host}
-          header_up X-Forwarded-Proto {scheme}
-        }
-      '';
-      "music.ext.kuipr.de" = ''
-        reverse_proxy localhost:4533 {
-          header_up Host {host}
-          header_up X-Real-IP {remote_host}
-          header_up X-Forwarded-For {remote_host}
-          header_up X-Forwarded-Proto {scheme}
-        }
-      '';
-      "tagger.int.kuipr.de" = ''
-        reverse_proxy localhost:8099 {
-          header_up Host {host}
-          header_up X-Real-IP {remote_host}
-          header_up X-Forwarded-For {remote_host}
-          header_up X-Forwarded-Proto {scheme}
-        }
-      '';
-      "musai.int.kuipr.de" = ''
-        reverse_proxy localhost:8000 {
-          header_up Host {host}
-          header_up X-Real-IP {remote_host}
-          header_up X-Forwarded-For {remote_host}
-          header_up X-Forwarded-Proto {scheme}
-        }
-      '';
+      "music.int.kuipr.de" = {
+        extraConfig = ''
+          reverse_proxy localhost:4533 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+        name = "Navidrome";
+      };
+      "music.ext.kuipr.de" = {
+        extraConfig = ''
+          reverse_proxy localhost:4533 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+        name = "Navidrome (ext)";
+      };
+      "tagger.int.kuipr.de" = {
+        extraConfig = ''
+          reverse_proxy localhost:8099 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+        name = "Tagger";
+      };
+      "musai.int.kuipr.de" = {
+        extraConfig = ''
+          reverse_proxy localhost:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+        name = "Audiomuse AI";
+      };
     };
 
     gatusEndpoints = [

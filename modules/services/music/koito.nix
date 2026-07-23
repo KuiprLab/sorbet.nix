@@ -2,9 +2,12 @@
 # https://koito.io
 _: {
   flake = {
-    caddyVirtualHosts."koito.int.kuipr.de" = ''
-      reverse_proxy localhost:4110
-    '';
+    caddyVirtualHosts."koito.int.kuipr.de" = {
+      extraConfig = ''
+        reverse_proxy localhost:4110
+      '';
+      name = "Koito";
+    };
 
     gatusEndpoints = [
       {

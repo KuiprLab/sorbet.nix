@@ -5,9 +5,12 @@
 # Auth sessions (spotify tokens, last.fm sessions) stored in podman volume.
 _: {
   flake = {
-    caddyVirtualHosts."scrobble.int.kuipr.de" = ''
-      reverse_proxy localhost:9078
-    '';
+    caddyVirtualHosts."scrobble.int.kuipr.de" = {
+      extraConfig = ''
+        reverse_proxy localhost:9078
+      '';
+      name = "Multi Scrobbler";
+    };
 
     gatusEndpoints = [
       {
