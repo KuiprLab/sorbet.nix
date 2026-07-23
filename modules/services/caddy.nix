@@ -95,7 +95,7 @@
             in ''
               <li><a href="https://${host}">${displayName}</a>${
                 if hasDomain
-                then " <span class='domain'>&mdash; ${host}</span>"
+                then " <span class='domain'>(${host})</span>"
                 else ""
               }</li>
             '')
