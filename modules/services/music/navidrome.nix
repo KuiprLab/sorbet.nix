@@ -3,6 +3,7 @@ _: {
   flake.nixosModules.navidrome = {
     pkgs,
     lib,
+    config,
     ...
   }: let
     homeDir = "/home/daniel";
@@ -32,9 +33,16 @@ _: {
       })
     ];
   in {
+    sops.secrets."navidrome/env" = {
+      sopsFile = ../../../secrets/sorbet/navidrome.env;
+      format = "dotenv";
+      key = "";
+    };
+
     systemd = {
       services.navidrome.serviceConfig = {
         BindReadOnlyPaths = [musicFolder];
+        EnvironmentFile = config.sops.secrets."navidrome/env".path;
         ProtectHome = lib.mkForce false;
       };
 
@@ -56,6 +64,10 @@ _: {
         "Backup.Path" = "/var/lib/navidrome/backups";
         "Backup.Count" = 7;
         "Backup.Schedule" = "0 0 * * *";
+        # Last.fm: artist bios, images, similar artists, top songs, album art
+        # API keys injected via ND_LASTFM_APIKEY / ND_LASTFM_SECRET from sops
+        "LastFM.Enabled" = true;
+
         "CoverArtPriority" = "embedded, cover.*, folder.*, external";
         "ArtistArtPriority" = "artist.*, album/artist.*, external";
         "Scanner.PurgeMissing" = "always";
