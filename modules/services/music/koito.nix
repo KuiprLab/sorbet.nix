@@ -22,19 +22,36 @@ _: {
       }
     ];
 
-    nixosModules.koito = _: {
-      virtualisation.oci-containers.containers.koito = {
-        image = "docker.io/gabehf/koito:latest";
-        volumes = [
-          "koito-data:/etc/koito"
-        ];
-        environment = {
-          TZ = "Europe/Berlin";
-          KOITO_DEFAULT_USERNAME = "daniel";
-        };
-        ports = ["127.0.0.1:4110:4110"];
-        labels = {
-          "io.containers.autoupdate" = "registry";
+    nixosModules.koito = {config, ...}: {
+      sops.secrets."last-fm-presence" = {
+        sopsFile = ../../../secrets/sorbet/last-fm-presence.env;
+        format = "dotenv";
+        key = "";
+      };
+
+      virtualisation.oci-containers.containers = {
+        koito = {
+          image = "docker.io/gabehf/koito:latest";
+          volumes = [
+            "koito-data:/etc/koito"
+          ];
+          environment = {
+            TZ = "Europe/Berlin";
+            KOITO_DEFAULT_USERNAME = "daniel";
+          };
+          ports = ["127.0.0.1:4110:4110"];
+          labels = {
+            "io.containers.autoupdate" = "registry";
+          };
+
+          last-fm-presence = {
+            image = "ghcr.io/frostplexx/lastfm-discord-presence:main";
+            volumes = [];
+            environmentFile = config.sops.secrets."last-fm-presence".path;
+            labels = {
+              "io.containers.autoupdate" = "registry";
+            };
+          };
         };
       };
     };
