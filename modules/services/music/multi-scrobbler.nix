@@ -28,6 +28,7 @@ _: {
         format = "binary";
         key = "";
         owner = "root";
+        mode = "0444";
       };
 
       systemd.tmpfiles.rules = [
