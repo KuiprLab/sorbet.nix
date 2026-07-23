@@ -48,7 +48,7 @@ _: {
         last-fm-presence = {
           image = "ghcr.io/frostplexx/lastfm-discord-presence:main";
           volumes = [];
-          environmentFile = config.sops.secrets."last-fm-presence".path;
+          environmentFiles = [config.sops.secrets."last-fm-presence".path];
           labels = {
             "io.containers.autoupdate" = "registry";
           };
