@@ -125,7 +125,7 @@
             acme_dns bunny {env.BUNNY_API_KEY}
           '';
           virtualHosts =
-            lib.mapAttrs (_: v: {extraConfig = v.extraConfig;}) virtualHosts
+            lib.mapAttrs (_: v: {inherit (v) extraConfig;}) virtualHosts
             // {
               "home.int.kuipr.de" = {
                 extraConfig = ''
