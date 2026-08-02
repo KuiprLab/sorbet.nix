@@ -36,12 +36,17 @@ _: {
             engines.keep_only = [
               "startpage"
               "duckduckgo"
+              "brave"
+              "bing"
+              "mojeek"
               "github"
               "reddit"
               "youtube"
               "wikipedia"
               "startpage images"
               "duckduckgo images"
+              "brave.images"
+              "wikicommons.images"
               "bandcamp"
               "soundcloud"
               "arxiv"
@@ -93,10 +98,26 @@ _: {
             {
               name = "startpage";
               categories = ["general"];
+              weight = 0.5;
             }
             {
               name = "duckduckgo";
               categories = ["general"];
+              weight = 0.5;
+            }
+            {
+              name = "brave";
+              categories = ["general"];
+            }
+            {
+              name = "bing";
+              categories = ["general"];
+              disabled = false;
+            }
+            {
+              name = "mojeek";
+              categories = ["general"];
+              disabled = false;
             }
             {
               name = "github";
@@ -121,6 +142,14 @@ _: {
             }
             {
               name = "duckduckgo images";
+              categories = ["images"];
+            }
+            {
+              name = "brave.images";
+              categories = ["images"];
+            }
+            {
+              name = "wikicommons.images";
               categories = ["images"];
             }
             {
