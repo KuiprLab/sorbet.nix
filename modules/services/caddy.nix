@@ -59,7 +59,6 @@
 
     nixosModules.caddy = let
       virtualHosts = config.flake.caddyVirtualHosts;
-      hostnames = lib.sort (a: b: a < b) (lib.attrNames virtualHosts);
     in
       {
         pkgs,
