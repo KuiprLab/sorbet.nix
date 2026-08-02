@@ -32,7 +32,27 @@ _: {
         domain = "searx.int.kuipr.de";
         environmentFile = config.sops.secrets."searxng.env".path;
         settings = {
-          use_default_settings = true;
+          use_default_settings = {
+            engines.keep_only = [
+              "startpage"
+              "duckduckgo"
+              "github"
+              "reddit"
+              "youtube"
+              "wikipedia"
+            ];
+          };
+
+          search = {
+            safe_search = 0;
+            default_lang = "en";
+          };
+
+          ui = {
+            default_locale = "en";
+            default_theme = "simple";
+          };
+
           server = {
             bind_address = "127.0.0.1";
             port = "8082";
@@ -41,6 +61,43 @@ _: {
             limiter = false;
             public_instance = false;
           };
+
+          categories_as_tabs = {
+            general = {};
+            images = {};
+            music = {};
+            it = {};
+            science = {};
+            files = {};
+          };
+
+          engines = [
+            {
+              name = "startpage";
+              categories = ["general"];
+            }
+            {
+              name = "duckduckgo";
+              categories = ["general"];
+            }
+            {
+              name = "github";
+              categories = ["it"];
+            }
+            {
+              name = "reddit";
+              categories = ["general"];
+              disabled = false;
+            }
+            {
+              name = "youtube";
+              categories = ["general"];
+            }
+            {
+              name = "wikipedia";
+              categories = ["general"];
+            }
+          ];
         };
       };
     };
