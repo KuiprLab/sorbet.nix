@@ -230,8 +230,6 @@
     };
 
     gatusExtraConfig = {
-      # Expose /metrics for prometheus scrape (see prometheus.nix).
-      metrics = true;
       storage = {
         type = "sqlite";
         path = "/data/data.db";
