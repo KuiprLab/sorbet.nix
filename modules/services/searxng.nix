@@ -40,6 +40,15 @@ _: {
               "reddit"
               "youtube"
               "wikipedia"
+              "startpage images"
+              "duckduckgo images"
+              "bandcamp"
+              "soundcloud"
+              "arxiv"
+              "pubmed"
+              "semantic scholar"
+              "bt4g"
+              "wikicommons.files"
             ];
           };
 
@@ -105,6 +114,42 @@ _: {
             {
               name = "wikipedia";
               categories = ["general"];
+            }
+            {
+              name = "startpage images";
+              categories = ["images"];
+            }
+            {
+              name = "duckduckgo images";
+              categories = ["images"];
+            }
+            {
+              name = "bandcamp";
+              categories = ["music"];
+            }
+            {
+              name = "soundcloud";
+              categories = ["music"];
+            }
+            {
+              name = "arxiv";
+              categories = ["science"];
+            }
+            {
+              name = "pubmed";
+              categories = ["science"];
+            }
+            {
+              name = "semantic scholar";
+              categories = ["science"];
+            }
+            {
+              name = "bt4g";
+              categories = ["files"];
+            }
+            {
+              name = "wikicommons.files";
+              categories = ["files"];
             }
           ];
         };
