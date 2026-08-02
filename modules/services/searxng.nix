@@ -2,7 +2,7 @@ _: {
   flake = {
     caddyVirtualHosts."searx.int.kuipr.de" = {
       extraConfig = ''
-        reverse_proxy 127.0.0.1:8080
+        reverse_proxy 127.0.0.1:8082
       '';
       name = "SearXNG";
     };
@@ -35,7 +35,7 @@ _: {
           use_default_settings = true;
           server = {
             bind_address = "127.0.0.1";
-            port = "8080";
+            port = "8082";
             base_url = "https://searx.int.kuipr.de/";
             secret_key = "$SEARXNG_SECRET_KEY";
           };
