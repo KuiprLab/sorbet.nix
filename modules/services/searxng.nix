@@ -38,6 +38,8 @@ _: {
             port = "8082";
             base_url = "https://searx.int.kuipr.de/";
             secret_key = "$SEARXNG_SECRET_KEY";
+            limiter = false;
+            public_instance = false;
           };
         };
       };
