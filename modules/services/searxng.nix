@@ -46,11 +46,20 @@ _: {
           search = {
             safe_search = 0;
             default_lang = "en";
+            autocomplete = "duckduckgo";
+            autocomplete_min = 2;
+            favicon_resolver = "duckduckgo";
           };
 
           ui = {
             default_locale = "en";
             default_theme = "simple";
+            center_alignment = true;
+            hotkeys = "vim";
+          };
+
+          plugins = {
+            "searx.plugins.infinite_scroll.SXNGPlugin".active = true;
           };
 
           server = {
