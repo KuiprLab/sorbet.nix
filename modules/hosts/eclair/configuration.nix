@@ -49,6 +49,12 @@ _: {
     # Nix settings
     nix = {
       channel.enable = false;
+      # Automatic garbage collection: weekly, keep the last 30 days.
+      gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+      };
       extraOptions = ''
         experimental-features = nix-command flakes
         warn-dirty = false
