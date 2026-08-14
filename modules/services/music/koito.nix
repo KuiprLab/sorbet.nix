@@ -40,7 +40,7 @@ _: {
         };
         "subtidal" = {
           sopsFile = ../../../secrets/sorbet/subtidal.toml;
-          format = "toml";
+          format = "binary";
           key = "";
         };
       };
