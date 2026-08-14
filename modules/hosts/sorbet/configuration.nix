@@ -87,6 +87,9 @@ in {
         warn-dirty = false
       '';
       settings = {
+        # Cap build parallelism so deploys don't peg the machine.
+        max-jobs = 4;
+        cores = 2;
         substituters = [
           "https://cache.nixos.org/"
           "https://sorbet.cachix.org"

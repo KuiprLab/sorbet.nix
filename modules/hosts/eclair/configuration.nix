@@ -54,6 +54,9 @@ _: {
         warn-dirty = false
       '';
       settings = {
+        # Safety net — eclair must never build heavy closures itself.
+        max-jobs = 1;
+        cores = 1;
         substituters = [
           "https://cache.nixos.org/"
           "https://sorbet.cachix.org"
