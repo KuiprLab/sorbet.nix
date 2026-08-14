@@ -41,6 +41,8 @@ _: {
         "subtidal" = {
           sopsFile = ../../../secrets/sorbet/subtidal.toml;
           format = "binary";
+          owner = "daniel";
+          mode = "755";
           key = "";
         };
       };
