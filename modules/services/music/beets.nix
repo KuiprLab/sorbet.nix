@@ -97,7 +97,7 @@ _: {
               data_source_mismatch_penalty = 0.3;
             };
 
-            chroma.auto = true;
+            chroma.auto = false;
             acoustid.apikey = "\${ACOUSTID_APIKEY}";
             match = {
               strong_rec_thresh = 0.10;
