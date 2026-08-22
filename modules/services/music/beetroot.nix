@@ -37,6 +37,10 @@ _: {
           "${config.sops.secrets."beetroot".path}:/run/secrets/beetroot:ro"
         ];
         user = "1000:100";
+
+            labels = {
+              "io.containers.autoupdate" = "registry";
+            };
         environment = {
           NODE_ENV = "production";
           CONFIG_PATH = "/run/secrets/beetroot";
