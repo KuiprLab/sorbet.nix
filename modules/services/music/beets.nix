@@ -1,11 +1,7 @@
 # Beets auto-import pipeline and home-manager configuration
 _: {
   flake = {
-
-    nixosModules.beets = {
-      pkgs,
-      ...
-    }: let
+    nixosModules.beets = {pkgs, ...}: let
       musicFolder = "/media/data/music/beetroot";
     in {
       sops.secrets."beets/acoustid_key" = {
