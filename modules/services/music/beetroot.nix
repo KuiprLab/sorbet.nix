@@ -38,9 +38,9 @@ _: {
         ];
         user = "1000:100";
 
-            labels = {
-              "io.containers.autoupdate" = "registry";
-            };
+        labels = {
+          "io.containers.autoupdate" = "registry";
+        };
         environment = {
           NODE_ENV = "production";
           CONFIG_PATH = "/run/secrets/beetroot";
