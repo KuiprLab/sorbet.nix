@@ -36,6 +36,8 @@ fi
 
 rsync -a --partial "$SRC" "${HOST}:${INBOX}/"
 
-BEET_ARGS+=("${INBOX}/$(basename "$SRC")")
+SRC_NAME="$(basename "${SRC%/}")"
+REMOTE_PATH="${INBOX}/${SRC_NAME}"
+REMOTE_ARG="$(printf '%q' "${REMOTE_PATH}")"
 
-ssh "$HOST" "beet import ${BEET_ARGS[*]}"
+ssh -t "$HOST" "beet import ${BEET_ARGS[*]:-} ${REMOTE_ARG}"
