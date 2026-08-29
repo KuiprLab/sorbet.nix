@@ -46,7 +46,10 @@ in {
         extraPackages = [pkgs.podman-compose];
         dockerCompat = true;
         dockerSocket.enable = true;
-        defaultNetwork.settings.dns_enabled = true;
+        defaultNetwork.settings = {
+          ipv6_enabled = true;
+          dns_enabled = true;
+        };
         autoPrune = {
           enable = true;
           dates = "weekly";
