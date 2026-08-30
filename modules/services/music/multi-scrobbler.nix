@@ -66,9 +66,10 @@
           TZ = "Europe/Berlin";
           # Used as base for OAuth redirect URIs (Spotify, Last.fm).
           BASE_URL = "https://scrobble.int.kuipr.de";
+          NODE_OPTIONS = "--dns-result-order=ipv6first";
         };
         ports = ["127.0.0.1:9078:9078"];
-        extraOptions = ["--network=msv6"];
+        extraOptions = ["--network=podman" "--network=msv6"];
         labels = {
           "io.containers.autoupdate" = "registry";
         };
