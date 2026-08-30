@@ -51,10 +51,6 @@ in {
           dns_enabled = true;
           subnets = [
             {
-              subnet = "10.88.0.0/16";
-              gateway = "10.88.0.1";
-            }
-            {
               subnet = "fd00::/64";
               gateway = "fd00::1";
             }
