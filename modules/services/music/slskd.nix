@@ -5,12 +5,12 @@
 # slskd. soulbeet has been replaced by ./harvest.nix; only slskd remains here.
 _: {
   flake = {
-    caddyVirtualHosts."slskd.int.kuipr.de" = {
-      extraConfig = ''
-        reverse_proxy 127.0.0.1:5030
-      '';
-      name = "SLSKD";
-    };
+    # caddyVirtualHosts."slskd.int.kuipr.de" = {
+    #   extraConfig = ''
+    #     reverse_proxy 127.0.0.1:5030
+    #   '';
+    #   name = "SLSKD";
+    # };
 
     nixosModules.slskd = {config, ...}: {
       # sops.secrets."slskd" = {
