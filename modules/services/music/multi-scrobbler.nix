@@ -3,7 +3,7 @@
 #
 # Config: full config.json encrypted with sops at secrets/sorbet/multi-scrobbler.
 # Auth sessions (spotify tokens, last.fm sessions) stored in podman volume.
-_: {
+{config, ...}: {
   flake = {
     caddyVirtualHosts."scrobble.int.kuipr.de" = {
       extraConfig = ''
@@ -38,6 +38,24 @@ _: {
         "d /var/lib/multi-scrobbler 0755 root root - -"
       ];
 
+      # Dedicated bridge network with IPv6, so the container can reach
+      # api.listenbrainz.org over IPv6 (IPv4 to that host fails on this
+      # network). Kept separate from the default podman network, so other
+      # containers are not reconfigured.
+      systemd.services.podman-network-msv6 = {
+        description = "Ensure podman msv6 network (IPv6) exists";
+        before = ["podman-multi-scrobbler.service"];
+        wantedBy = ["podman-multi-scrobbler.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          ${config.virtualisation.podman.package}/bin/podman network exists msv6 || \
+            ${config.virtualisation.podman.package}/bin/podman network create --ipv6 msv6
+        '';
+      };
+
       virtualisation.oci-containers.containers.multi-scrobbler = {
         image = "ghcr.io/foxxmd/multi-scrobbler:edge";
         volumes = [
@@ -50,6 +68,7 @@ _: {
           BASE_URL = "https://scrobble.int.kuipr.de";
         };
         ports = ["127.0.0.1:9078:9078"];
+        extraOptions = ["--network=msv6"];
         labels = {
           "io.containers.autoupdate" = "registry";
         };

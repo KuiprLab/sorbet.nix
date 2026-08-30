@@ -49,12 +49,6 @@ in {
         defaultNetwork.settings = {
           ipv6_enabled = true;
           dns_enabled = true;
-          subnets = [
-            {
-              subnet = "fd00::/64";
-              gateway = "fd00::1";
-            }
-          ];
         };
         autoPrune = {
           enable = true;
