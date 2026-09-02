@@ -75,7 +75,7 @@ _: {
         subtidal = {
           image = "ghcr.io/frostplexx/subtidal:latest";
           volumes = [
-            "/home/daniel/subtidal:/data"
+            "/home/daniel/subtidal:/data:rw"
             "${config.sops.secrets."subtidal".path}:/config/subtidal/settings.toml:ro"
           ];
           ports = ["4234:8000"];
