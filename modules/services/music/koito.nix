@@ -78,6 +78,7 @@ _: {
             "/home/daniel/subtidal:/data:rw"
             "${config.sops.secrets."subtidal".path}:/config/subtidal/settings.toml:ro"
           ];
+          user = "1000:100";
           ports = ["4234:8000"];
           environment = {
             TZ = "Europe/Berlin";
